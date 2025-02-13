@@ -156,201 +156,201 @@ INSERT INTO Tasks (ProjectID, TaskPointID, TaskStatusID, TaskName, TaskDescripti
 INSERT INTO ProjectCollaborators (UserID, ProjectID, RoleID, JoinedAt, isActive) VALUES
 (1, 1, 1, '2023-01-01 09:00:00', 1),
 (2, 1, 2, '2023-01-03 10:30:00', 1),
-(3, 1, 3, '2023-01-05 11:30:00', 1);
+(3, 1, 2, '2023-01-05 11:30:00', 1);
 
 
 -- Project 2: Mobile App Development
 INSERT INTO ProjectCollaborators (UserID, ProjectID, RoleID, JoinedAt, isActive) VALUES
 (4, 2, 1, '2023-02-01 09:00:00', 1),
 (5, 2, 2, '2023-02-02 10:00:00', 1),
-(6, 2, 3, '2023-02-05 12:30:00', 1);
+(6, 2, 2, '2023-02-05 12:30:00', 1);
 
 -- Project 3: E-Commerce Platform
 INSERT INTO ProjectCollaborators (UserID, ProjectID, RoleID, JoinedAt, isActive) VALUES
 (7, 3, 1, '2023-03-01 10:00:00', 1),
 (8, 3, 2, '2023-03-02 11:00:00', 1),
-(9, 3, 3, '2023-03-04 14:00:00', 1),
-(10, 3, 4, '2023-03-06 15:00:00', 1);
+(9, 3, 2, '2023-03-04 14:00:00', 1),
+(10, 3, 2, '2023-03-06 15:00:00', 1);
 
 -- Project 4: Blog Platform
 INSERT INTO ProjectCollaborators (UserID, ProjectID, RoleID, JoinedAt, isActive) VALUES
 (11, 4, 1, '2023-04-01 12:00:00', 1),
 (12, 4, 2, '2023-04-02 13:00:00', 1),
-(13, 4, 3, '2023-04-04 14:00:00', 1),
-(14, 4, 4, '2023-04-06 15:00:00', 0); -- Inactive user
+(13, 4, 2, '2023-04-04 14:00:00', 1),
+(14, 4, 2, '2023-04-06 15:00:00', 0); -- Inactive user
 
 -- Project 5: AI Chatbot
 INSERT INTO ProjectCollaborators (UserID, ProjectID, RoleID, JoinedAt, isActive) VALUES
 (15, 5, 1, '2023-05-01 09:00:00', 1),
 (16, 5, 2, '2023-05-02 11:30:00', 1),
-(17, 5, 3, '2023-05-05 14:00:00', 1);
+(17, 5, 2, '2023-05-05 14:00:00', 1);
 
 -- Project 6: Fitness App
 INSERT INTO ProjectCollaborators (UserID, ProjectID, RoleID, JoinedAt, isActive) VALUES
 (18, 6, 1, '2023-06-01 09:30:00', 1),
 (19, 6, 2, '2023-06-02 10:30:00', 1),
-(20, 6, 3, '2023-06-03 11:00:00', 1);
+(20, 6, 2, '2023-06-03 11:00:00', 1);
 
 -- Project 7: Social Media Platform
 INSERT INTO ProjectCollaborators (UserID, ProjectID, RoleID, JoinedAt, isActive) VALUES
 (21, 7, 1, '2023-07-01 09:00:00', 1),
 (22, 7, 2, '2023-07-02 10:30:00', 1),
-(23, 7, 3, '2023-07-03 11:30:00', 1);
+(23, 7, 2, '2023-07-03 11:30:00', 1);
 
 -- Project 8: Task Management Tool
 INSERT INTO ProjectCollaborators (UserID, ProjectID, RoleID, JoinedAt, isActive) VALUES
 (24, 8, 1, '2023-08-01 10:30:00', 1),
 (25, 8, 2, '2023-08-02 11:30:00', 1),
-(26, 8, 3, '2023-08-03 12:00:00', 1),
-(27, 8, 4, '2023-08-04 12:30:00', 0); -- Inactive user
+(26, 8, 2, '2023-08-03 12:00:00', 1),
+(27, 8, 2, '2023-08-04 12:30:00', 0); -- Inactive user
 
 -- Project 9: Food Delivery App
 INSERT INTO ProjectCollaborators (UserID, ProjectID, RoleID, JoinedAt, isActive) VALUES
 (28, 9, 1, '2023-09-01 13:00:00', 1),
 (29, 9, 2, '2023-09-02 14:30:00', 1),
-(30, 9, 3, '2023-09-03 15:00:00', 1);
+(30, 9, 2, '2023-09-03 15:00:00', 1);
 
 -- Project 10: Real Estate Platform
 INSERT INTO ProjectCollaborators (UserID, ProjectID, RoleID, JoinedAt, isActive) VALUES
 (31, 10, 1, '2023-10-01 10:00:00', 1),
 (32, 10, 2, '2023-10-02 11:00:00', 1),
-(33, 10, 3, '2023-10-03 12:00:00', 0); -- Inactive user
+(33, 10, 2, '2023-10-03 12:00:00', 0); -- Inactive user
 
 -- Project 11: Online Learning Platform
 INSERT INTO ProjectCollaborators (UserID, ProjectID, RoleID, JoinedAt, isActive) VALUES
 (34, 11, 1, '2023-11-01 09:00:00', 1),
 (35, 11, 2, '2023-11-02 10:00:00', 1),
-(36, 11, 3, '2023-11-03 11:00:00', 1),
-(37, 11, 4, '2023-11-04 12:00:00', 1);
+(36, 11, 2, '2023-11-03 11:00:00', 1),
+(37, 11, 2, '2023-11-04 12:00:00', 1);
 
 -- TaskCollaborators
 -- Task 1: Website Redesign - Design homepage
 INSERT INTO TaskCollaborators (UserID, RoleID, TaskID, JoinedAt, isActive) VALUES
-(1, 2, 1, '2023-01-15 10:00:00', 1),
+(1, 3, 1, '2023-01-15 10:00:00', 1),
 (2, 4, 1, '2023-01-20 11:00:00', 1),
 (3, 4, 1, '2023-01-25 09:30:00', 1),
 (4, 4, 1, '2023-01-28 12:00:00', 1);
 
 -- Task 2: Mobile App Development - App login screen
 INSERT INTO TaskCollaborators (UserID, RoleID, TaskID, JoinedAt, isActive) VALUES
-(3, 2, 2, '2023-02-01 09:00:00', 1),
+(3, 3, 2, '2023-02-01 09:00:00', 1),
 (4, 4, 2, '2023-02-10 10:30:00', 1),
 (5, 4, 2, '2023-02-15 11:15:00', 1);
 
 -- Task 3: E-Commerce Platform - Product page layout
 INSERT INTO TaskCollaborators (UserID, RoleID, TaskID, JoinedAt, isActive) VALUES
-(5, 4, 3, '2023-03-05 09:00:00', 1),
+(5, 3, 3, '2023-03-05 09:00:00', 1),
 (6, 4, 3, '2023-03-10 10:30:00', 1),
 (7, 4, 3, '2023-03-15 12:00:00', 1);
 
 -- Task 4: Blog Platform - User profile design
 INSERT INTO TaskCollaborators (UserID, RoleID, TaskID, JoinedAt, isActive) VALUES
-(6, 4, 4, '2023-04-05 10:00:00', 1),
+(6, 3, 4, '2023-04-05 10:00:00', 1),
 (7, 4, 4, '2023-04-07 11:30:00', 1),
 (8, 4, 4, '2023-04-10 12:30:00', 1);
 
 -- Task 5: AI Chatbot - AI model training
 INSERT INTO TaskCollaborators (UserID, RoleID, TaskID, JoinedAt, isActive) VALUES
-(9, 4, 5, '2023-05-01 13:00:00', 1),
+(9, 3, 5, '2023-05-01 13:00:00', 1),
 (10, 4, 5, '2023-05-03 10:00:00', 1),
 (11, 4, 5, '2023-05-10 09:30:00', 1);
 
 -- Task 6: Fitness App - Workout logging feature
 INSERT INTO TaskCollaborators (UserID, RoleID, TaskID, JoinedAt, isActive) VALUES
-(12, 4, 6, '2023-06-01 10:00:00', 1),
+(12, 3, 6, '2023-06-01 10:00:00', 1),
 (13, 4, 6, '2023-06-05 11:30:00', 1),
 (14, 4, 6, '2023-06-10 13:00:00', 1);
 
 -- Task 7: Social Media Platform - Create user feed
 INSERT INTO TaskCollaborators (UserID, RoleID, TaskID, JoinedAt, isActive) VALUES
-(15, 4, 7, '2023-06-15 12:00:00', 1),
+(15, 3, 7, '2023-06-15 12:00:00', 1),
 (16, 4, 7, '2023-06-18 13:30:00', 1),
 (17, 4, 7, '2023-06-20 11:00:00', 1);
 
 -- Task 8: Task Management Tool - Task filtering
 INSERT INTO TaskCollaborators (UserID, RoleID, TaskID, JoinedAt, isActive) VALUES
-(18, 4, 8, '2023-07-01 10:00:00', 1),
+(18, 3, 8, '2023-07-01 10:00:00', 1),
 (19, 4, 8, '2023-07-05 09:00:00', 1),
 (20, 4, 8, '2023-07-07 12:00:00', 1);
 
 -- Task 9: Food Delivery App - Restaurant profile page
 INSERT INTO TaskCollaborators (UserID, RoleID, TaskID, JoinedAt, isActive) VALUES
-(21, 4, 9, '2023-07-15 13:00:00', 1),
+(21, 3, 9, '2023-07-15 13:00:00', 1),
 (22, 4, 9, '2023-07-20 14:30:00', 1),
 (23, 4, 9, '2023-07-25 10:00:00', 1);
 
 -- Task 10: Real Estate Platform - Property search functionality
 INSERT INTO TaskCollaborators (UserID, RoleID, TaskID, JoinedAt, isActive) VALUES
-(24, 4, 10, '2023-08-01 12:00:00', 1),
+(24, 3, 10, '2023-08-01 12:00:00', 1),
 (25, 4, 10, '2023-08-05 13:30:00', 1),
 (26, 4, 10, '2023-08-07 14:00:00', 1);
 
 -- Task 11: Online Learning Platform - Course listing page
 INSERT INTO TaskCollaborators (UserID, RoleID, TaskID, JoinedAt, isActive) VALUES
-(27, 4, 11, '2023-08-10 10:00:00', 1),
+(27, 3, 11, '2023-08-10 10:00:00', 1),
 (28, 4, 11, '2023-08-15 12:30:00', 1),
 (29, 4, 11, '2023-08-18 13:00:00', 1);
 
 -- Task 12: Website Redesign - Footer design
 INSERT INTO TaskCollaborators (UserID, RoleID, TaskID, JoinedAt, isActive) VALUES
-(1, 2, 12, '2023-01-20 12:00:00', 1),
+(1, 3, 12, '2023-01-20 12:00:00', 1),
 (2, 4, 12, '2023-01-23 11:00:00', 1);
 
 -- Task 13: Mobile App Development - Splash screen design
 INSERT INTO TaskCollaborators (UserID, RoleID, TaskID, JoinedAt, isActive) VALUES
-(3, 2, 13, '2023-02-03 10:00:00', 1),
+(3, 3, 13, '2023-02-03 10:00:00', 1),
 (4, 4, 13, '2023-02-07 12:00:00', 1);
 
 -- Task 14: E-Commerce Platform - Payment gateway integration
 INSERT INTO TaskCollaborators (UserID, RoleID, TaskID, JoinedAt, isActive) VALUES
-(5, 4, 14, '2023-03-12 09:00:00', 1),
+(5, 3, 14, '2023-03-12 09:00:00', 1),
 (6, 4, 14, '2023-03-15 10:30:00', 1),
 (7, 4, 14, '2023-03-17 11:00:00', 1);
 
 -- Task 15: Blog Platform - Content creation feature
 INSERT INTO TaskCollaborators (UserID, RoleID, TaskID, JoinedAt, isActive) VALUES
-(8, 4, 15, '2023-04-12 10:00:00', 1),
+(8, 3, 15, '2023-04-12 10:00:00', 1),
 (9, 4, 15, '2023-04-15 11:30:00', 1),
 (10, 4, 15, '2023-04-17 12:30:00', 1);
 
 -- Task 16: AI Chatbot - Integrate speech recognition
 INSERT INTO TaskCollaborators (UserID, RoleID, TaskID, JoinedAt, isActive) VALUES
-(11, 4, 16, '2023-06-02 14:00:00', 1),
+(11, 3, 16, '2023-06-02 14:00:00', 1),
 (12, 4, 16, '2023-06-07 13:00:00', 1),
 (13, 4, 16, '2023-06-10 11:00:00', 1);
 
 -- Task 17: Fitness App - Fitness goals page
 INSERT INTO TaskCollaborators (UserID, RoleID, TaskID, JoinedAt, isActive) VALUES
-(14, 4, 17, '2023-07-01 10:30:00', 1),
+(14, 3, 17, '2023-07-01 10:30:00', 1),
 (15, 4, 17, '2023-07-05 12:00:00', 1),
 (16, 4, 17, '2023-07-10 14:00:00', 1);
 
 -- Task 18: Social Media Platform - Post creation feature
 INSERT INTO TaskCollaborators (UserID, RoleID, TaskID, JoinedAt, isActive) VALUES
-(17, 4, 18, '2023-07-15 10:00:00', 1),
+(17, 3, 18, '2023-07-15 10:00:00', 1),
 (18, 4, 18, '2023-07-20 12:30:00', 1),
 (19, 4, 18, '2023-07-25 14:00:00', 1);
 
 -- Task 19: Task Management Tool - Task notifications
 INSERT INTO TaskCollaborators (UserID, RoleID, TaskID, JoinedAt, isActive) VALUES
-(20, 4, 19, '2023-07-30 10:30:00', 1),
+(20, 3, 19, '2023-07-30 10:30:00', 1),
 (21, 4, 19, '2023-08-02 11:00:00', 1),
 (22, 4, 19, '2023-08-05 13:30:00', 1);
 
 -- Task 20: Food Delivery App - Food delivery feature
 INSERT INTO TaskCollaborators (UserID, RoleID, TaskID, JoinedAt, isActive) VALUES
-(23, 4, 20, '2023-08-10 10:00:00', 1),
+(23, 3, 20, '2023-08-10 10:00:00', 1),
 (24, 4, 20, '2023-08-12 11:30:00', 1),
 (25, 4, 20, '2023-08-15 13:00:00', 1);
 
 -- Task 21: Real Estate Platform - Agent dashboard
 INSERT INTO TaskCollaborators (UserID, RoleID, TaskID, JoinedAt, isActive) VALUES
-(26, 4, 21, '2023-08-18 14:00:00', 1),
+(26, 3, 21, '2023-08-18 14:00:00', 1),
 (27, 4, 21, '2023-08-22 12:00:00', 1),
 (28, 4, 21, '2023-08-25 13:30:00', 1);
 
 -- Task 22: Online Learning Platform - Admin panel design
 INSERT INTO TaskCollaborators (UserID, RoleID, TaskID, JoinedAt, isActive) VALUES
-(29, 4, 22, '2023-08-28 10:00:00', 1),
+(29, 3, 22, '2023-08-28 10:00:00', 1),
 (30, 4, 22, '2023-09-01 11:30:00', 1),
 (31, 4, 22, '2023-09-03 13:00:00', 1);
