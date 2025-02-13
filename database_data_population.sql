@@ -1,4 +1,5 @@
 -- Users (48 Users)
+
 INSERT INTO Users (GitHubID, JoinedAt) VALUES
 ('johnDoe', '2023-01-15 10:00:00'),
 ('janeSmith', '2023-02-20 11:30:00'),
