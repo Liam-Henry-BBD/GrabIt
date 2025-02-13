@@ -1,6 +1,7 @@
 -- Users (48 Users)
 
 INSERT INTO Users (GitHubID, JoinedAt) VALUES
+
 ('johnDoe', '2023-01-15 10:00:00'),
 ('janeSmith', '2023-02-20 11:30:00'),
 ('bobJones', '2023-03-10 09:00:00'),
@@ -71,6 +72,7 @@ INSERT INTO TaskPoints (PointValue) VALUES
 (5),
 (10),
 (15);
+-- Check something
 
 -- TaskStatus (4 Statuses)
 INSERT INTO TaskStatus (StatusName) VALUES
