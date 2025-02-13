@@ -9,7 +9,7 @@ GO
 
 -- Create Users table
 CREATE TABLE Users (
-    UserID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    UserID INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
     GitHubID VARCHAR(100) NOT NULL UNIQUE,
     JoinedAt DATETIME NOT NULL
 );
@@ -17,14 +17,14 @@ GO
 
 -- Create Roles table
 CREATE TABLE Roles (
-    RoleID TINYINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    RoleID TINYINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
     RoleTitle VARCHAR(50) NOT NULL
 );
 GO
 
 -- Create Projects table
 CREATE TABLE Projects (
-    ProjectID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    ProjectID INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
     ProjectName VARCHAR(50) NOT NULL,
     ProjectDescription VARCHAR(255) NOT NULL,
     CreatedAt DATETIME NOT NULL,
@@ -34,23 +34,23 @@ GO
 
 -- Create TaskPoints table
 CREATE TABLE TaskPoints (
-    TaskPointID TINYINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    TaskPointID VARCHAR(20) PRIMARY KEY NOT NULL,
     PointValue TINYINT NOT NULL
 );
 GO
 
 -- Create TaskStatus table
 CREATE TABLE TaskStatus (
-    TaskStatusID VARCHAR(20) PRIMARY KEY NOT NULL,
+    TaskStatusID TINYINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
     StatusName VARCHAR(50) NOT NULL
 );
 GO
 
 -- Create Tasks table
 CREATE TABLE Tasks (
-    TaskID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    TaskID INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
     ProjectID INT NOT NULL,
-    TaskPointID TINYINT NOT NULL,
+    TaskPointID VARCHAR(20) NOT NULL,
     TaskStatusID TINYINT NOT NULL,
     TaskName VARCHAR(50) NOT NULL,
     TaskDescription VARCHAR(255) NOT NULL,
@@ -67,7 +67,7 @@ GO
 
 -- Create ProjectCollaborators table
 CREATE TABLE ProjectCollaborators (
-    ProjectCollaboratorID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    ProjectCollaboratorID INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
     UserID INT NOT NULL,
     ProjectID INT NOT NULL,
     RoleID TINYINT NOT NULL,
@@ -81,7 +81,7 @@ GO
 
 -- Create TaskCollaborators table
 CREATE TABLE TaskCollaborators (
-    TaskCollaboratorID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    TaskCollaboratorID INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
     UserID INT NOT NULL,
     RoleID TINYINT NOT NULL,
     TaskID INT NOT NULL,
