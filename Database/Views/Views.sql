@@ -1,7 +1,7 @@
 USE GrabIt
 GO
 
--- View for available tasks
+-- View of available tasks
 CREATE VIEW vwAvaliableTasks
 AS
 SELECT 
@@ -15,7 +15,7 @@ WHERE
     t.TaskStatusID = 1;
 GO
 
--- View for grabbed tasks
+-- View of grabbed tasks
 CREATE VIEW vwGrabbedTasks
 AS
 SELECT 
@@ -29,7 +29,7 @@ WHERE
     t.TaskStatusID = 2;
 GO
 
--- View for review tasks
+-- View of review tasks
 CREATE VIEW vwReviewTasks
 AS
 SELECT 
@@ -43,7 +43,7 @@ WHERE
     t.TaskStatusID = 3;
 GO
 
--- View for completed tasks
+-- View of completed tasks
 CREATE VIEW vwCompletedTasks
 AS
 SELECT 
@@ -58,7 +58,7 @@ WHERE
     t.TaskStatusID = 4;
 GO
 
--- View for user project roles
+-- View of user project roles
 CREATE VIEW vwUserProjectRoles
 AS
 SELECT 
@@ -78,7 +78,7 @@ JOIN
     Projects p ON pc.ProjectID = p.ProjectID;
 GO
 
--- View for project completion rate
+-- View of project completion rate
 CREATE VIEW vwProjectCompletionRate
 AS
 SELECT 
@@ -101,7 +101,7 @@ GROUP BY
     t.ProjectID;
 GO
 
--- View for Total Points For all Projects
+-- View of Total Points for all Projects
 CREATE VIEW vwProjectLeaderBoards AS
 SELECT 
     u.UserID, 
@@ -131,7 +131,7 @@ GROUP BY
     u.UserID, u.GitHubID
 GO
 
--- view for users and associated tasks
+-- view of users and associated tasks
 CREATE VIEW vwUserTasks AS
 SELECT 
     tc.UserID, 
@@ -147,7 +147,7 @@ JOIN
     Projects p ON t.ProjectID = p.ProjectID;
 GO
 
--- view for users that are inactive on a project
+-- view of users that are inactive on a project
 CREATE VIEW vwInactiveProjectUsers
 SELECT DISTINCT u.UserID, u.GitHubID, t.ProjectID
 FROM 
@@ -160,7 +160,7 @@ WHERE
     pc.isActive = 0;
 GO
 
--- view for which users are inactive on a task
+-- view of which users are inactive on a task
 CREATE VIEW vwInactiveTaskUsers
 SELECT DISTINCT u.UserID, u.GitHubID, tc.TaskID, t.ProjectID
 FROM 
@@ -217,7 +217,7 @@ GROUP BY
     pc.ProjectID;
 GO
 
--- view of the number of collaborators on each project
+-- view of the number of collaborators on each task
 CREATE VIEW vwTaskCollaboratorCount AS
 SELECT 
     tc.TaskID, 
@@ -226,4 +226,21 @@ FROM
     TaskCollaborators tc
 GROUP BY 
     tc.TaskID;
+GO
+
+-- view of users collaboration counts (total number of projects and tasks)
+CREATE VIEW vwUserCollaborationCount AS
+SELECT 
+    u.UserID, 
+    u.GitHubID, 
+    COUNT(DISTINCT tc.TaskID) AS TaskCount, 
+    COUNT(DISTINCT pc.ProjectID) AS ProjectCount
+FROM 
+    Users u
+LEFT JOIN 
+    TaskCollaborators tc ON u.UserID = tc.UserID
+LEFT JOIN 
+    ProjectCollaborators pc ON u.UserID = pc.UserID
+GROUP BY 
+    u.UserID, u.GitHubID;
 GO
