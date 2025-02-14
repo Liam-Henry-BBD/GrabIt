@@ -149,6 +149,7 @@ GO
 
 -- view of users that are inactive on a project
 CREATE VIEW vwInactiveProjectUsers
+AS
 SELECT DISTINCT u.UserID, u.GitHubID, t.ProjectID
 FROM 
     Users u
@@ -162,6 +163,7 @@ GO
 
 -- view of which users are inactive on a task
 CREATE VIEW vwInactiveTaskUsers
+AS
 SELECT DISTINCT u.UserID, u.GitHubID, tc.TaskID, t.ProjectID
 FROM 
     Users u

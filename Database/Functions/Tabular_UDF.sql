@@ -1,3 +1,6 @@
+USE GrabIt
+GO
+
 -- Retrieve all tasks that are grabbed by a specific user including their role.
 CREATE FUNCTION [dbo].[udfTasksGrabbedByUserAndTheirRole] (@UserID INT)
 RETURNS TABLE

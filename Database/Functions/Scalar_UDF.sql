@@ -1,3 +1,6 @@
+USE GrabIt
+GO
+
 -- Get the total number of tasks in a specific project using a project ID.
 CREATE FUNCTION [dbo].[udfTotalTasksUsingProjectID] (@ProjectID INT)
 RETURNS INT

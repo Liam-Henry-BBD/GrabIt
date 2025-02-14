@@ -1,7 +1,6 @@
 USE GrabIt;
 GO
 
-
 -- UPDATE TASKS TASKCOMPLETEDAT
 CREATE TRIGGER trgAfterUpdateTasks 
 ON Tasks
@@ -170,7 +169,7 @@ BEGIN
 
 	
 	INSERT TaskCollaborators
-	SELECT UserID, RoleID, isActive
+	SELECT UserID, RoleID, TaskID, JoinedAt, isActive
 	FROM INSERTED
 END
 GO
