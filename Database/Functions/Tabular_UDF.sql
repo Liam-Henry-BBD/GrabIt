@@ -94,4 +94,28 @@ RETURN (
 		LEFT JOIN TaskCollaborators ON Tasks.TaskID = TaskCollaborators.TaskID
 		WHERE ProjectCollaborators.ProjectID = @ProjectID
 		);
-	GO
+GO
+
+-- Get the total time spent on tasks by a user in a project (difference between created and completed times).
+CREATE FUNCTION [dbo].[udfTotalTimeSpentOnTasks] (
+	@UserID INT,
+	@ProjectID INT
+	)
+RETURNS TABLE
+AS
+RETURN (
+		SELECT Users.GitHubID AS Username,
+			Tasks.TaskName AS Task,
+			SUM(DATEDIFF(hour, Tasks.TaskCreatedAt, Tasks.TaskCompletedAt)) AS TotalHours
+		FROM Users
+		JOIN TaskCollaborators ON TaskCollaborators.UserID = @UserID
+		JOIN Tasks ON TaskCollaborators.TaskID = Tasks.TaskID
+		JOIN Projects ON Projects.ProjectID = Tasks.ProjectID
+		WHERE Users.UserID = @UserID
+			AND Projects.ProjectID = @ProjectID
+		GROUP BY Users.GitHubID,
+			Tasks.TaskName
+		)
+GO
+
+

@@ -229,4 +229,20 @@ BEGIN
 END
 GO
 
+-- Get the average time spent on tasks in a specific project.
+CREATE FUNCTION [dbo].[udfAverageTimeOnTasks] (@ProjectID INT)
+RETURNS INT
+AS
+BEGIN
+	DECLARE @AveTimeOnTask INT
+
+	SELECT @AveTimeOnTask = (AVG(DATEDIFF(hour, Tasks.TaskCreatedAt, Tasks.TaskCompletedAt)))
+	FROM Tasks
+	JOIN Projects ON Tasks.ProjectID = Projects.ProjectID
+	WHERE Projects.ProjectID = @ProjectID
+
+	RETURN @AveTimeOnTask
+END
+GO
+
 
