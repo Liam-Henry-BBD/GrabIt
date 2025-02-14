@@ -5,7 +5,7 @@ AS
 RETURN (
 		SELECT Tasks.TaskID,
 			Tasks.TaskName,
-			TaskStatus.StatusName,
+			TaskStatus.StatusName
 		FROM Tasks
 		JOIN TaskStatus ON Tasks.TaskStatusID = TaskStatus.TaskStatusID
 		JOIN TaskCollaborators ON Tasks.TaskID = TaskCollaborators.TaskID
