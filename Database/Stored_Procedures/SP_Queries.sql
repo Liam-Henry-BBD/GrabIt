@@ -1,107 +1,157 @@
----------- stored Procudure queries ----------
-
--- tored procedure to allow a user 
+-- Stored procedure to allow a user 
 -- to grab a task, 
 -- update its status to "grabbed," and add the user as a collaborator.--
 
-CREATE PROCEDURE GrabTask
+CREATE PROCEDURE GrabbedTask
     @UserID INT,
     @TaskID INT
 AS
 BEGIN
-    UPDATE Tasks
-    SET TaskStatusID = 2
-    WHERE TaskID = @TaskID;
+    BEGIN TRY
+        BEGIN TRANSACTION;
 
-    INSERT INTO TaskCollaborators (UserID, TaskID, RoleID, JoinedAt)
-    VALUES (@UserID, @TaskID, 2, GETDATE());
-END;
-
--- Stored procedure to change the status of a task to "review" after it has been grabbed and is ready for review.--
-
-CREATE PROCEDURE ReviewTask
-    @TaskID INT
-    @
-AS
-BEGIN
-    UPDATE Tasks
-    SET TaskStatusID = 3
-    WHERE TaskID = @TaskID;
-END;
-
--- Stored procedure to mark a task as "complete," update its status, and record the completion date. --
-
-CREATE PROCEDURE CompleteTask
-    @TaskID INT
-AS
-
-BEGIN
-    UPDATE Tasks
-    SET TaskStatusID = 4, TaskCompletedAt = GETDATE()
-    WHERE TaskID = @TaskID;
-END;
-
--- Stored procedure to assign a user to a task and update the task status to "grabbed" if the task is available. --
-
-CREATE PROCEDURE AssignUserToTask
-    @UserID INT,
-    @TaskID INT
-AS
-BEGIN
-    DECLARE @TaskStatusID INT;
-
-    SELECT @TaskStatusID = TaskStatusID
-    FROM Tasks
-    WHERE TaskID = @TaskID;
-
-    IF @TaskStatusID = 1
-    BEGIN
         UPDATE Tasks
         SET TaskStatusID = 2
         WHERE TaskID = @TaskID;
 
         INSERT INTO TaskCollaborators (UserID, TaskID, RoleID, JoinedAt)
         VALUES (@UserID, @TaskID, 2, GETDATE());
-    END;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
 END;
 
--- Stored procedure to remove a user as a collaborator from a task and revert the task's status if necessary.switching IsActive column from 1-0 --
+-- Stored procedure to change the status of a task to "review" after it has been grabbed and is ready for review.--
+
+CREATE PROCEDURE ReviewTask
+    @TaskID INT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        UPDATE Tasks
+        SET TaskStatusID = 3
+        WHERE TaskID = @TaskID;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END;
+
+-- Stored procedure to mark a task as "complete," update its status, and record the completion date. --
+
+CREATE PROCEDURE CompletedTask
+    @TaskID INT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        UPDATE Tasks
+        SET TaskStatusID = 4, TaskCompletedAt = GETDATE()
+        WHERE TaskID = @TaskID;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END;
+
+-- Stored procedure to assign a user to a task and update the task status to "grabbed" if the task is available. --
+
+CREATE PROCEDURE AssignedUserToTask
+    @UserID INT,
+    @TaskID INT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        DECLARE @TaskStatusID INT;
+
+        SELECT @TaskStatusID = TaskStatusID
+        FROM Tasks
+        WHERE TaskID = @TaskID;
+
+        IF @TaskStatusID = 1
+        BEGIN
+            UPDATE Tasks
+            SET TaskStatusID = 2
+            WHERE TaskID = @TaskID;
+
+            INSERT INTO TaskCollaborators (UserID, TaskID, RoleID, JoinedAt)
+            VALUES (@UserID, @TaskID, 2, GETDATE());
+        END;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END;
+
+-- Stored procedure to remove a user as a collaborator from a task and revert the task's status if necessary. --
 
 CREATE PROCEDURE RemoveUserFromTask
     @UserID INT,
     @TaskID INT
 AS
 BEGIN
-    DECLARE @TaskStatusID INT;
+    BEGIN TRY
+        BEGIN TRANSACTION;
 
-    SELECT @TaskStatusID = TaskStatusID
-    FROM Tasks
-    WHERE TaskID = @TaskID;
+        DECLARE @TaskStatusID INT;
 
-    WHERE UserID = @UserID AND TaskID = @TaskID;
-
-    IF @TaskStatusID = 2
-    BEGIN
-        UPDATE Tasks
-        SET TaskStatusID = 1
+        SELECT @TaskStatusID = TaskStatusID
+        FROM Tasks
         WHERE TaskID = @TaskID;
-    END;
-END;
 
+        DELETE FROM TaskCollaborators
+        WHERE UserID = @UserID AND TaskID = @TaskID;
+
+        IF @TaskStatusID = 2
+        BEGIN
+            UPDATE Tasks
+            SET TaskStatusID = 1
+            WHERE TaskID = @TaskID;
+        END;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END;
 
 -- Stored procedure to retrieve all tasks assigned to a specific user, along with their statuses and deadlines. --
 
-CREATE PROCEDURE GetTasksByUser
+CREATE PROCEDURE GetALLTasksByUser
     @UserID INT
 AS
 BEGIN
-    SELECT t.TaskID, t.TaskName, ts.TaskStatusName, t.TaskDeadline
-    FROM Tasks t
-    INNER JOIN TaskStatuses ts ON t.TaskStatusID = ts.TaskStatusID
-    INNER JOIN TaskCollaborators tc ON t.TaskID = tc.TaskID
-    WHERE tc.UserID = @UserID;
+    BEGIN TRY
+        SELECT t.TaskID, t.TaskName, ts.TaskStatusName, t.TaskDeadline
+        FROM Tasks t
+        INNER JOIN TaskStatuses ts ON t.TaskStatusID = ts.TaskStatusID
+        INNER JOIN TaskCollaborators tc ON t.TaskID = tc.TaskID
+        WHERE tc.UserID = @UserID;
+    END TRY
+    BEGIN CATCH
+        THROW;
+    END CATCH
 END;
-
 
 -- Stored procedure to calculate the number of completed tasks in a project and return the total. --
 
@@ -109,37 +159,47 @@ CREATE PROCEDURE GetCompletedTasksByProject
     @ProjectID INT
 AS
 BEGIN
-    SELECT COUNT(*)
-    FROM Tasks
-    WHERE ProjectID = @ProjectID AND TaskStatusID = 4;
+    BEGIN TRY
+        SELECT COUNT(*)
+        FROM Tasks
+        WHERE ProjectID = @ProjectID AND TaskStatusID = 4;
+    END TRY
+    BEGIN CATCH
+        THROW;
+    END CATCH
 END;
 
 -- Stored procedure to check if a user is eligible to grab a task based on their role and the task's status. --
 
-CREATE PROCEDURE CheckEligibilityToGrabTask
+CREATE PROCEDURE CheckEligibilityToGrabbedTask
     @UserID INT,
     @TaskID INT
 AS
 BEGIN
-    DECLARE @UserRoleID INT;
-    DECLARE @TaskStatusID INT;
+    BEGIN TRY
+        DECLARE @UserRoleID INT;
+        DECLARE @TaskStatusID INT;
 
-    SELECT @UserRoleID = RoleID
-    FROM UserRoles
-    WHERE UserID = @UserID;
+        SELECT @UserRoleID = RoleID
+        FROM UserRoles
+        WHERE UserID = @UserID;
 
-    SELECT @TaskStatusID = TaskStatusID
-    FROM Tasks
-    WHERE TaskID = @TaskID;
+        SELECT @TaskStatusID = TaskStatusID
+        FROM Tasks
+        WHERE TaskID = @TaskID;
 
-    IF @UserRoleID = 1 AND @TaskStatusID = 1
-    BEGIN
-        SELECT 'Eligible to grab task';
-    END
-    ELSE
-    BEGIN
-        SELECT 'Not eligible to grab task';
-    END;
+        IF @UserRoleID = 1 AND @TaskStatusID = 1
+        BEGIN
+            SELECT 'Eligible to grab task';
+        END
+        ELSE
+        BEGIN
+            SELECT 'Not eligible to grab task';
+        END;
+    END TRY
+    BEGIN CATCH
+        THROW;
+    END CATCH
 END;
 
 -- Stored procedure to update a task's deadline after it has been grabbed but before it is completed. --
@@ -149,9 +209,19 @@ CREATE PROCEDURE UpdateTaskDeadline
     @NewDeadline DATE
 AS
 BEGIN
-    UPDATE Tasks
-    SET TaskDeadline = @NewDeadline
-    WHERE TaskID = @TaskID;
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        UPDATE Tasks
+        SET TaskDeadline = @NewDeadline
+        WHERE TaskID = @TaskID;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
 END;
 
 -- Create a stored procedure to list all tasks in a project, 
@@ -159,16 +229,21 @@ END;
 --deadlines, 
 --and assigned collaborators. --
 
-CREATE PROCEDURE GetTasksByProject
+CREATE PROCEDURE GetTasksPerProject
     @ProjectID INT
 AS
 BEGIN
-    SELECT t.TaskID, t.TaskName, ts.TaskStatusName, t.TaskDeadline, u.UserName
-    FROM Tasks t
-    JOIN TaskStatuses ts ON t.TaskStatusID = ts.TaskStatusID
-    JOIN TaskCollaborators tc ON t.TaskID = tc.TaskID
-    JOIN Users u ON tc.UserID = u.UserID
-    WHERE t.ProjectID = @ProjectID;
+    BEGIN TRY
+        SELECT t.TaskID, t.TaskName, ts.TaskStatusName, t.TaskDeadline, u.UserName
+        FROM Tasks t
+        JOIN TaskStatuses ts ON t.TaskStatusID = ts.TaskStatusID
+        JOIN TaskCollaborators tc ON t.TaskID = tc.TaskID
+        JOIN Users u ON tc.UserID = u.UserID
+        WHERE t.ProjectID = @ProjectID;
+    END TRY
+    BEGIN CATCH
+        THROW;
+    END CATCH
 END;
 
 -- Stored procedure to return all tasks in review for a specific project and include their collaborators. --
@@ -177,27 +252,36 @@ CREATE PROCEDURE GetTasksInReviewByProject
     @ProjectID INT
 AS
 BEGIN
-    SELECT t.TaskID, t.TaskName, u.UserName
-    FROM Tasks t
-    JOIN TaskCollaborators tc ON t.TaskID = tc.TaskID
-    JOIN Users u ON tc.UserID = u.UserID
-    WHERE t.ProjectID = @ProjectID AND t.TaskStatusID = 3;
+    BEGIN TRY
+        SELECT t.TaskID, t.TaskName, u.UserName
+        FROM Tasks t
+        JOIN TaskCollaborators tc ON t.TaskID = tc.TaskID
+        JOIN Users u ON tc.UserID = u.UserID
+        WHERE t.ProjectID = @ProjectID AND t.TaskStatusID = 3;
+    END TRY
+    BEGIN CATCH
+        THROW;
+    END CATCH
 END;
 
 -- Create a stored procedure to get all tasks in a project that are not yet completed, and return their statuses and collaborators. --
 
-CREATE PROCEDURE GetTasksInProgressByProject
+CREATE PROCEDURE GetTasksInProgressPerProject
     @ProjectID INT
 AS
 BEGIN
-    SELECT t.TaskID, t.TaskName, ts.TaskStatusName, u.UserName
-    FROM Tasks t
-    JOIN TaskStatuses ts ON t.TaskStatusID = ts.TaskStatusID
-    JOIN TaskCollaborators tc ON t.TaskID = tc.TaskID
-    JOIN Users u ON tc.UserID = u.UserID
-    WHERE t.ProjectID = @ProjectID AND t.TaskStatusID != 4;
+    BEGIN TRY
+        SELECT t.TaskID, t.TaskName, ts.TaskStatusName, u.UserName
+        FROM Tasks t
+        JOIN TaskStatuses ts ON t.TaskStatusID = ts.TaskStatusID
+        JOIN TaskCollaborators tc ON t.TaskID = tc.TaskID
+        JOIN Users u ON tc.UserID = u.UserID
+        WHERE t.ProjectID = @ProjectID AND t.TaskStatusID != 4;
+    END TRY
+    BEGIN CATCH
+        THROW;
+    END CATCH
 END;
-
 
 -- Create a stored procedure to prevent further edits to a task once it is marked as completed. --
 
@@ -205,7 +289,34 @@ CREATE PROCEDURE PreventEditsToCompletedTask
     @TaskID INT
 AS
 BEGIN
-    UPDATE Tasks
-    SET TaskStatusID = 5
-    WHERE TaskID = @TaskID;
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        UPDATE Tasks
+        SET TaskStatusID = 5
+        WHERE TaskID = @TaskID;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
 END;
+
+-- Stored procedure to get all tasks that are overdue in a project, --
+
+CREATE PROCEDURE GetOverdueTasksByProject
+    @ProjectID INT
+AS
+BEGIN
+    BEGIN TRY
+        SELECT t.TaskID, t.TaskName, t.TaskDeadline
+        FROM Tasks t
+        WHERE t.ProjectID = @ProjectID AND t.TaskDeadline < GETDATE();
+    END TRY
+    BEGIN CATCH
+        THROW;
+    END CATCH
+END;
+
