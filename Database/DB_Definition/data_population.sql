@@ -220,6 +220,7 @@ INSERT INTO ProjectCollaborators (UserID, ProjectID, RoleID, JoinedAt, isActive)
 (25, 8, 2, '2023-08-02 11:30:00', 1),
 (26, 8, 2, '2023-08-03 12:00:00', 1),
 (21, 8, 1, '2023-08-01 11:00:00', 1),
+
 (27, 8, 2, '2023-08-04 12:30:00', 0); -- Inactive user
 GO 
 
