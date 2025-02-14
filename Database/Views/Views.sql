@@ -2,7 +2,7 @@ USE GrabIt
 GO
 
 -- View of available tasks
-CREATE VIEW vwAvaliableTasks
+CREATE VIEW vwAvailableTasks
 AS
 SELECT 
     t.TaskID,
