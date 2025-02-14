@@ -1,6 +1,6 @@
 
 -- UPDATE TASKS TASKCOMPLETEDAT
-ALTER TRIGGER trgTaskStatusUpdate 
+CREATE TRIGGER trgTaskStatusUpdate 
 ON Tasks
 AFTER UPDATE 
 AS
@@ -45,7 +45,7 @@ GO
 
 
 -- PREVENT TASK CHANGE FROM COMPLETE TO GRAB
-ALTER TRIGGER trgPreventChangeCompleted
+CREATE TRIGGER trgPreventChangeCompleted
 ON Tasks
 INSTEAD OF UPDATE
 AS
@@ -108,7 +108,7 @@ END
 GO
 
 -- Cannot collaborate twice on a task
-ALTER TRIGGER trgPreventReCollaborateOnTask
+CREATE TRIGGER trgPreventReCollaborateOnTask
 ON TaskCollaborators
 INSTEAD OF INSERT
 AS
@@ -131,7 +131,7 @@ END
 GO
 
 -- Cannot remove task collaborator after a day
-ALTER TRIGGER trgCannotRemoveCollaboratorAfterOneDay
+CREATE TRIGGER trgCannotRemoveCollaboratorAfterOneDay
 ON TaskCollaborators
 INSTEAD OF UPDATE
 AS
