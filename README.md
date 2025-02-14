@@ -18,7 +18,7 @@ The GrabIt system is a project management tool designed for teams to manage task
 4. **Team Members Task Grab**  
    Team members browse the list of available tasks. When they select a task to work on, it is removed from the "Available Tasks" list and transferred to the "Tasks Grabbed" list.
 
-   **Tragectory of a Task**
+   **Trajectory of a Task**
    Available
    Grabbed
    Reviewed
@@ -65,7 +65,7 @@ The system provides tracking of scores for team members and the entire project:
 
 ## Features
 
-- **Login System**: Every user logs into the system using GitHub Authentification.
+- **Login System**: Every user logs into the system using GitHub Authentication.
 - **Project Setup**: Team leads can set up new projects, add tasks, and manage team members.
 - **Task Grab**: Team members can grab available tasks and track progress.
 - **Task Assignment**: Tasks can be assigned difficulty points (simple, medium, hard).
