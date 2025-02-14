@@ -1,6 +1,9 @@
+USE GrabIt;
+GO
+
 
 -- UPDATE TASKS TASKCOMPLETEDAT
-CREATE TRIGGER trgTaskStatusUpdate 
+CREATE TRIGGER trgAfterUpdateTasks 
 ON Tasks
 AFTER UPDATE 
 AS
@@ -35,17 +38,9 @@ BEGIN
 END
 GO
 
---SELECT * FROM Tasks
-
-
---UPDATE Tasks
---SET TaskStatusID = 4
---WHERE TaskID = 2
-
-
 
 -- PREVENT TASK CHANGE FROM COMPLETE TO GRAB
-CREATE TRIGGER trgPreventChangeCompleted
+CREATE TRIGGER trgBeforeUpdateTasks
 ON Tasks
 INSTEAD OF UPDATE
 AS
@@ -94,13 +89,42 @@ BEGIN
 		RETURN
 	END
 
+
+	IF EXISTS (
+		SELECT 1 
+		FROM INSERTED new
+		JOIN DELETED old
+		ON old.TaskID = new.TaskID
+		WHERE new.TaskDeadline <> old.TaskDeadline
+		AND old.TaskStatusID = 4
+	)
+	BEGIN
+		RAISERROR('Cannot change deadline date after finishing task', 16, 1)
+		ROLLBACK TRANSACTION
+		RETURN
+	END
+
+	IF EXISTS (
+		SELECT 1 
+		FROM INSERTED new
+		JOIN DELETED old
+		ON new.TaskID = old.TaskID
+		WHERE new.TaskDeadline < old.TaskCreatedAt
+	)
+	BEGIN
+		RAISERROR('Deadline cannot precede CreatedAt Date.', 16, 1)
+		ROLLBACK TRANSACTION
+		RETURN
+	END
+	
 	UPDATE Tasks
 	SET TaskUpdatedAt = GETDATE(), 
 		TaskName = new.TaskName,
 		TaskDescription = new.TaskDescription,
 		TaskPointID = new.TaskPointID,
 		TaskStatusID = new.TaskStatusID,
-		TaskReviewRequestedAt = new.TaskReviewRequestedAt
+		TaskReviewRequestedAt = new.TaskReviewRequestedAt,
+		TaskDeadline = new.TaskDeadline
 	FROM INSERTED new
 	WHERE Tasks.TaskID = new.TaskID
 
@@ -108,7 +132,7 @@ END
 GO
 
 -- Cannot collaborate twice on a task
-CREATE TRIGGER trgPreventReCollaborateOnTask
+CREATE TRIGGER trgBeforeInsertTaskCollaborators
 ON TaskCollaborators
 INSTEAD OF INSERT
 AS
@@ -126,12 +150,34 @@ BEGIN
 	BEGIN
 		RAISERROR('Cannot be a collaborator more than once on a single task', 16, 1)
 		ROLLBACK TRANSACTION
+		RETURN
 	END
+
+	-- DECLINE LATE JOINS
+	IF EXISTS (
+		SELECT new.TaskCollaboratorID
+		FROM INSERTED new
+		JOIN Tasks task
+		ON task.TaskID = new.TaskID
+		WHERE task.TaskDeadline < GETDATE()
+		AND new.JoinedAt > task.TaskDeadline
+	)
+	BEGIN
+		RAISERROR('Cannot join a task after a deadline.', 16, 1)
+		ROLLBACK TRANSACTION
+		RETURN
+	END
+
+	
+	INSERT TaskCollaborators
+	SELECT UserID, RoleID, isActive
+	FROM INSERTED
 END
 GO
 
+
 -- Cannot remove task collaborator after a day
-CREATE TRIGGER trgCannotRemoveCollaboratorAfterOneDay
+CREATE TRIGGER trgBeforeUpdateTaskCollaborators
 ON TaskCollaborators
 INSTEAD OF UPDATE
 AS
@@ -170,6 +216,23 @@ BEGIN
 		RETURN
 	END
 
+	-- CANNOT CHANGE COLLAB AFTER COMPLETION
+	IF EXISTS (
+		SELECT new.TaskCollaboratorID
+		FROM INSERTED new
+		JOIN DELETED old
+		ON old.TaskCollaboratorID = new.TaskCollaboratorID
+		JOIN Tasks task
+		ON task.TaskID = old.TaskID
+		WHERE task.TaskStatusID = 4
+		AND new.UserID <> old.UserID
+	)
+	BEGIN
+		RAISERROR('Cannot change a collaborator after a task has been completed.', 16, 1)
+		ROLLBACK TRANSACTION
+		RETURN
+	END
+
 
 	UPDATE TaskCollaborators
 	SET UserID = new.UserID,
@@ -179,5 +242,4 @@ BEGIN
 	WHERE TaskCollaborators.TaskCollaboratorID = new.TaskCollaboratorID
 END
 GO
-
 
