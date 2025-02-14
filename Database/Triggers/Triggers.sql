@@ -22,15 +22,30 @@ BEGIN
 		AND Tasks.TaskCompletedAt IS NULL
 		AND del.TaskStatusID <> @CompletedID
 
+	
 	UPDATE Tasks
-	SET TaskUpdatedAt = GETDATE()
+	SET TaskUpdatedAt = GETDATE(), 
+		TaskName = new.TaskName,
+		TaskDescription = new.TaskDescription,
+		TaskPointID = new.TaskPointID,
+		TaskStatusID = new.TaskStatusID,
+		TaskReviewRequestedAt = new.TaskReviewRequestedAt
+	FROM INSERTED new
 	WHERE Tasks.TaskID = @TaskID
-
 END
 GO
 
+--SELECT * FROM Tasks
+
+
+--UPDATE Tasks
+--SET TaskStatusID = 4
+--WHERE TaskID = 2
+
+
+
 -- PREVENT TASK CHANGE FROM COMPLETE TO GRAB
-CREATE TRIGGER trgPreventChangeCompleted
+ALTER TRIGGER trgPreventChangeCompleted
 ON Tasks
 INSTEAD OF UPDATE
 AS
@@ -46,6 +61,22 @@ BEGIN
 	BEGIN
 		RAISERROR('Cannot move task backwards after completion', 16, 1)
 		ROLLBACK TRANSACTION
+		RETURN
+	END
+
+	--
+	IF (
+		SELECT new.TaskID 
+		FROM INSERTED new 
+		JOIN DELETED del 
+		ON new.TaskID = del.TaskID
+		WHERE del.TaskStatusID <> 3
+		AND new.TaskStatusID = 4
+	) IS NOT NULL
+	BEGIN
+		RAISERROR('Cannot jump task to completion before review', 16, 1)
+		ROLLBACK TRANSACTION
+		RETURN
 	END
 
 	--
@@ -54,13 +85,25 @@ BEGIN
 		FROM INSERTED new
 		JOIN DELETED del 
 		ON new.TaskID = del.TaskID
-		WHERE new.TaskCreatedAt IS NOT NULL
+		WHERE new.TaskCompletedAt IS NOT NULL
 		AND del.TaskStatusID <> 4
 	) IS NOT NULL
 	BEGIN
 		RAISERROR('Cannot change completion date before finishing task', 16, 1)
 		ROLLBACK TRANSACTION
+		RETURN
 	END
+
+	UPDATE Tasks
+	SET TaskUpdatedAt = GETDATE(), 
+		TaskName = new.TaskName,
+		TaskDescription = new.TaskDescription,
+		TaskPointID = new.TaskPointID,
+		TaskStatusID = new.TaskStatusID,
+		TaskReviewRequestedAt = new.TaskReviewRequestedAt
+	FROM INSERTED new
+	WHERE Tasks.TaskID = new.TaskID
+
 END
 GO
 
@@ -109,6 +152,7 @@ BEGIN
 	BEGIN
 		RAISERROR('Cannot remove user as collaborator after a day', 16, 1)
 		ROLLBACK TRANSACTION;
+		RETURN
 	END
 	--
 
@@ -123,21 +167,17 @@ BEGIN
 	BEGIN
 		RAISERROR('Cannot remove user as collaborator after a task is in review or complete', 16, 1)
 		ROLLBACK TRANSACTION;
+		RETURN
 	END
 
 
-
+	UPDATE TaskCollaborators
+	SET UserID = new.UserID,
+		RoleID = new.RoleID,
+		isActive = new.IsActive
+	FROM INSERTED new
+	WHERE TaskCollaborators.TaskCollaboratorID = new.TaskCollaboratorID
 END
 GO
 
 
-
-
-
-
-UPDATE Tasks
-SET TaskName = 'mmmmm'
-WHERE TaskID = 2
-
-
-SELECT * FROM Tasks WHERE TaskID = 2;
