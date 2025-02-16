@@ -2,113 +2,102 @@ USE GrabIt
 GO
 
 -- Get the total number of tasks in a specific project using a project ID.
-CREATE FUNCTION [dbo].[udfTotalTasksUsingProjectID] (@ProjectID INT)
+CREATE FUNCTION [dbo].[udfTotalTasksUsingProject] (
+	@ProjectID INT = NULL,
+	@ProjectName VARCHAR(100) = NULL
+	)
 RETURNS INT
 AS
 BEGIN
-	DECLARE @TotalTasksPerProj INT
+	DECLARE @TotalTasksPerProj INT;
 
-	SELECT @TotalTasksPerProj = COUNT(TaskID)
+	SELECT @TotalTasksPerProj = COUNT(Tasks.TaskID)
 	FROM Tasks
-	WHERE ProjectID = @ProjectID
+	JOIN Projects ON Tasks.ProjectID = Projects.ProjectID
+	WHERE (
+			Projects.ProjectID = @ProjectID
+			OR @ProjectID IS NULL
+			)
+		AND (
+			Projects.ProjectName = @ProjectName
+			OR @ProjectName IS NULL
+			);
 
-	RETURN @TotalTasksPerProj
-END
-GO
-
-CREATE FUNCTION [dbo].[udfTotalTasksUsingProjectName] (@ProjectName VARCHAR(100))
-RETURNS INT
-AS
-BEGIN
-	DECLARE @TotalTasksPerProj INT
-
-	SELECT @TotalTasksPerProj = COUNT(TaskID)
-	FROM Tasks
-	JOIN Projects ON Projects.ProjectID = Tasks.ProjectID
-	WHERE ProjectName = @ProjectName
-
-	RETURN @TotalTasksPerProj
-END
+	RETURN @TotalTasksPerProj;
+END;
 GO
 
 -- Get the total number of projects a specific user is involved in.
-CREATE FUNCTION [dbo].[udfTotalUserProjectsPerUserID] (@UserID INT)
+CREATE FUNCTION [dbo].[udfTotalUserProjects] (
+	@UserID INT = NULL,
+	@GitHubID VARCHAR(100) = NULL
+	)
 RETURNS INT
 AS
 BEGIN
-	DECLARE @ProjectsPerUserID INT
+	DECLARE @TotalProjects INT;
 
-	SELECT @ProjectsPerUserID = COUNT(ProjectID)
-	FROM ProjectCollaborators
-	WHERE UserID = @UserID
-
-	RETURN @ProjectsPerUserID
-END
-GO
-
-CREATE FUNCTION [dbo].[udfTotalUserProjectsPerGitHubID] (@GitHubID VARCHAR(100))
-RETURNS INT
-AS
-BEGIN
-	DECLARE @ProjectsPerGitHubID INT
-
-	SELECT @ProjectsPerGitHubID = COUNT(ProjectID)
+	SELECT @TotalProjects = COUNT(ProjectCollaborators.ProjectID)
 	FROM ProjectCollaborators
 	JOIN Users ON ProjectCollaborators.UserID = Users.UserID
-	WHERE Users.GitHubID = @GitHubID
+	WHERE (
+			Users.UserID = @UserID
+			OR @UserID IS NULL
+			)
+		AND (
+			Users.GitHubID = @GitHubID
+			OR @GitHubID IS NULL
+			);
 
-	RETURN @ProjectsPerGitHubID
-END
+	RETURN @TotalProjects;
+END;
 GO
 
 -- Retrieve the role of a user for a specific task (e.g., task grabber or task collaborator).
-CREATE FUNCTION [dbo].[udfRoleOfUserInTask] (
+CREATE FUNCTION [dbo].[udfGetUserRoleForTask] (
 	@UserID INT,
 	@TaskID INT
 	)
 RETURNS VARCHAR(50)
 AS
 BEGIN
-	DECLARE @UserRole VARCHAR(50)
+	DECLARE @RoleTitle VARCHAR(50);
 
-	SELECT @UserRole = Roles.RoleTitle
+	SELECT @RoleTitle = Roles.RoleTitle
 	FROM TaskCollaborators
 	JOIN Roles ON TaskCollaborators.RoleID = Roles.RoleID
-	WHERE TaskCollaborators.TaskID = @TaskID
-		AND TaskCollaborators.UserID = @UserID
+	WHERE TaskCollaborators.UserID = @UserID
+		AND TaskCollaborators.TaskID = @TaskID
+		AND TaskCollaborators.isActive = 1;
 
-	RETURN @UserRole
-END
+	RETURN @RoleTitle;
+END;
 GO
 
 -- Get the total number of tasks a specific user is involved in.
-CREATE FUNCTION [dbo].[udfTotalUserTasksPerUserID] (@UserID INT)
+CREATE FUNCTION [dbo].[udfTotalUserTasks] (
+	@UserID INT = NULL,
+	@GitHubID VARCHAR(100) = NULL
+	)
 RETURNS INT
 AS
 BEGIN
-	DECLARE @TasksPerUserID INT
+	DECLARE @TotalTasks INT;
 
-	SELECT @TasksPerUserID = COUNT(TaskID)
-	FROM TaskCollaborators
-	WHERE UserID = @UserID
-
-	RETURN @TasksPerUserID
-END
-GO
-
-CREATE FUNCTION [dbo].[udfTotalUserTasksPerGitHubID] (@GitHubID VARCHAR(100))
-RETURNS INT
-AS
-BEGIN
-	DECLARE @TasksPerGitHubID INT
-
-	SELECT @TasksPerGitHubID = COUNT(TaskID)
+	SELECT @TotalTasks = COUNT(TaskCollaborators.TaskID)
 	FROM TaskCollaborators
 	JOIN Users ON TaskCollaborators.UserID = Users.UserID
-	WHERE Users.GitHubID = @GitHubID
+	WHERE (
+			Users.UserID = @UserID
+			OR @UserID IS NULL
+			)
+		AND (
+			Users.GitHubID = @GitHubID
+			OR @GitHubID IS NULL
+			);
 
-	RETURN @TasksPerGitHubID
-END
+	RETURN @TotalTasks;
+END;
 GO
 
 -- Get the average points per project.
@@ -159,34 +148,31 @@ END
 GO
 
 -- Get the total number of users in a specific role across all projects.
-CREATE FUNCTION [dbo].[udfTotalUsersInRole] (@RoleTitle VARCHAR(50))
+CREATE FUNCTION [dbo].[udfTotalUsersInRole] (
+	@RoleTitle VARCHAR(50) = NULL,
+	@RoleID INT = NULL
+	)
 RETURNS INT
 AS
 BEGIN
-	DECLARE @TotalUsersInRole INT
+	DECLARE @TotalUsersInRole INT;
 
 	SELECT @TotalUsersInRole = COUNT(ProjectCollaborators.UserID)
 	FROM ProjectCollaborators
 	JOIN Roles ON ProjectCollaborators.RoleID = Roles.RoleID
-	WHERE Roles.RoleTitle = @RoleTitle
+	JOIN TaskCollaborators ON ProjectCollaborators.UserID = TaskCollaborators.UserID
+	WHERE (
+			Roles.RoleTitle = @RoleTitle
+			OR @RoleTitle IS NULL
+			)
+		AND (
+			Roles.RoleID = @RoleID
+			OR @RoleID IS NULL
+			)
+		AND TaskCollaborators.TaskID IN (1, 2, 3, 4);
 
-	RETURN @TotalUsersInRole
-END
-GO
-
-CREATE FUNCTION [dbo].[udfTotalUsersInRoleUsingID] (@RoleID INT)
-RETURNS INT
-AS
-BEGIN
-	DECLARE @TotalUsersInRoleID INT
-
-	SELECT @TotalUsersInRoleID = COUNT(ProjectCollaborators.UserID)
-	FROM ProjectCollaborators
-	JOIN Roles ON ProjectCollaborators.RoleID = Roles.RoleID
-	WHERE Roles.RoleID = @RoleID
-
-	RETURN @TotalUsersInRoleID
-END
+	RETURN @TotalUsersInRole;
+END;
 GO
 
 -- Get the total number of tasks that are overdue (past deadline) for a specific project.
