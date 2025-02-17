@@ -2,7 +2,7 @@ USE GrabIt
 GO
 
 -- Get the total number of tasks in a specific project using a project ID.
-CREATE FUNCTION [dbo].[udfTotalTasksUsingProject] (
+CREATE FUNCTION udfTotalTasksUsingProject (
 	@ProjectID INT = NULL,
 	@ProjectName VARCHAR(100) = NULL
 	)
@@ -28,7 +28,7 @@ END;
 GO
 
 -- Get the total number of projects a specific user is involved in.
-CREATE FUNCTION [dbo].[udfTotalUserProjects] (
+CREATE FUNCTION udfTotalUserProjects (
 	@UserID INT = NULL,
 	@GitHubID VARCHAR(100) = NULL
 	)
@@ -54,7 +54,7 @@ END;
 GO
 
 -- Retrieve the role of a user for a specific task (e.g., task grabber or task collaborator).
-CREATE FUNCTION [dbo].[udfGetUserRoleForTask] (
+CREATE FUNCTION udfGetUserRoleForTask (
 	@UserID INT,
 	@TaskID INT
 	)
@@ -75,7 +75,7 @@ END;
 GO
 
 -- Get the total number of tasks a specific user is involved in.
-CREATE FUNCTION [dbo].[udfTotalUserTasks] (
+CREATE FUNCTION udfTotalUserTasks (
 	@UserID INT = NULL,
 	@GitHubID VARCHAR(100) = NULL
 	)
@@ -101,54 +101,54 @@ END;
 GO
 
 -- Get the average points per project.
-CREATE FUNCTION [dbo].[udfAverageTaskPointsPerProject] (@ProjectID INT)
+CREATE FUNCTION udfAverageTaskPointsPerProject (@ProjectID INT)
 RETURNS FLOAT
 AS
 BEGIN
-	DECLARE @AveragePoints FLOAT
+	DECLARE @AveragePoints FLOAT;
 
 	SELECT @AveragePoints = AVG(TaskPoints.PointValue)
 	FROM Tasks
 	JOIN TaskPoints ON Tasks.TaskPointID = TaskPoints.TaskPointID
-	WHERE Tasks.ProjectID = @ProjectID
+	WHERE Tasks.ProjectID = @ProjectID;
 
-	RETURN @AveragePoints
-END
+	RETURN @AveragePoints;
+END;
 GO
 
 -- Get the total number of tasks that were completed after a specific date.
-CREATE FUNCTION [dbo].[udfTotalCompletedTasksAfterDate] (@SpecificDate DATETIME)
+CREATE FUNCTION udfTotalCompletedTasksAfterDate (@SpecificDate DATETIME)
 RETURNS INT
 AS
 BEGIN
-	DECLARE @TotalCompletedTasks INT
+	DECLARE @TotalCompletedTasks INT;
 
 	SELECT @TotalCompletedTasks = COUNT(TaskID)
 	FROM Tasks
-	WHERE TaskCompletedAt > @SpecificDate
+	WHERE TaskCompletedAt > @SpecificDate;
 
-	RETURN @TotalCompletedTasks
-END
+	RETURN @TotalCompletedTasks;
+END;
 GO
 
 -- Get the total number of tasks in a specific status (e.g., "Review") across all projects.
-CREATE FUNCTION [dbo].[udfTotalTasksInStatus] (@StatusName VARCHAR(50))
+CREATE FUNCTION udfTotalTasksInStatus (@StatusName VARCHAR(50))
 RETURNS INT
 AS
 BEGIN
-	DECLARE @TotalTasks INT
+	DECLARE @TotalTasks INT;
 
 	SELECT @TotalTasks = COUNT(Tasks.TaskID)
 	FROM Tasks
 	JOIN TaskStatus ON Tasks.TaskStatusID = TaskStatus.TaskStatusID
-	WHERE TaskStatus.StatusName = @StatusName
+	WHERE TaskStatus.StatusName = @StatusName;
 
-	RETURN @TotalTasks
-END
+	RETURN @TotalTasks;
+END;
 GO
 
 -- Get the total number of users in a specific role across all projects.
-CREATE FUNCTION [dbo].[udfTotalUsersInRole] (
+CREATE FUNCTION udfTotalUsersInRole (
 	@RoleTitle VARCHAR(50) = NULL,
 	@RoleID INT = NULL
 	)
@@ -176,11 +176,11 @@ END;
 GO
 
 -- Get the total number of tasks that are overdue (past deadline) for a specific project.
-CREATE FUNCTION [dbo].[udfOverdueTasksPerProject] (@ProjectID INT)
+CREATE FUNCTION udfOverdueTasksPerProject (@ProjectID INT)
 RETURNS INT
 AS
 BEGIN
-	DECLARE @OverdueTasks INT
+	DECLARE @OverdueTasks INT;
 
 	SELECT @OverdueTasks = COUNT(TaskID)
 	FROM Tasks
@@ -190,18 +190,18 @@ BEGIN
 			SELECT TaskStatusID
 			FROM TaskStatus
 			WHERE StatusName = 'Completed'
-			)
+			);
 
-	RETURN @OverdueTasks
-END
+	RETURN @OverdueTasks;
+END;
 GO
 
 -- Get the total number of tasks that are overdue (past deadline) for a specific user.
-CREATE FUNCTION [dbo].[udfTotalOverdueTasksPerUser] (@UserID INT)
+CREATE FUNCTION udfTotalOverdueTasksPerUser (@UserID INT)
 RETURNS INT
 AS
 BEGIN
-	DECLARE @TotalOverdueTasks INT
+	DECLARE @TotalOverdueTasks INT;
 
 	SELECT @TotalOverdueTasks = COUNT(Tasks.TaskID)
 	FROM Tasks
@@ -212,26 +212,24 @@ BEGIN
 			SELECT TaskStatusID
 			FROM TaskStatus
 			WHERE StatusName = 'Completed'
-			)
+			);
 
-	RETURN @TotalOverdueTasks
-END
+	RETURN @TotalOverdueTasks;
+END;
 GO
 
 -- Get the average time spent on tasks in a specific project.
-CREATE FUNCTION [dbo].[udfAverageTimeOnTasks] (@ProjectID INT)
+CREATE FUNCTION udfAverageTimeOnTasks (@ProjectID INT)
 RETURNS INT
 AS
 BEGIN
-	DECLARE @AveTimeOnTask INT
+	DECLARE @AveTimeOnTask INT;
 
 	SELECT @AveTimeOnTask = (AVG(DATEDIFF(hour, Tasks.TaskCreatedAt, Tasks.TaskCompletedAt)))
 	FROM Tasks
 	JOIN Projects ON Tasks.ProjectID = Projects.ProjectID
-	WHERE Projects.ProjectID = @ProjectID
+	WHERE Projects.ProjectID = @ProjectID;
 
-	RETURN @AveTimeOnTask
-END
+	RETURN @AveTimeOnTask;
+END;
 GO
-
-
