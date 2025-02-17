@@ -134,7 +134,8 @@ GO
 -- view of users and associated tasks
 CREATE VIEW vwUserTasks AS
 SELECT 
-    tc.UserID, 
+    tc.UserID,
+	u.GitHubID,
     t.TaskID, 
     t.TaskName, 
     t.ProjectID, 
@@ -144,19 +145,23 @@ FROM
 JOIN 
     Tasks t ON tc.TaskID = t.TaskID
 JOIN 
-    Projects p ON t.ProjectID = p.ProjectID;
+    Projects p ON t.ProjectID = p.ProjectID
+JOIN 
+	Users u on tc.UserID = u.UserID
 GO
 
 -- view of users that are inactive on a project
 CREATE VIEW vwInactiveProjectUsers
 AS
-SELECT DISTINCT u.UserID, u.GitHubID, t.ProjectID
+SELECT DISTINCT u.UserID, u.GitHubID, t.ProjectID, p.ProjectName
 FROM 
     Users u
 JOIN 
     ProjectCollaborators pc ON u.UserID = pc.UserID
 JOIN 
     Tasks t ON pc.ProjectID = t.ProjectID
+JOIN 
+	Projects p  on pc.ProjectID = p.ProjectID
 WHERE 
     pc.isActive = 0;
 GO
@@ -245,4 +250,18 @@ LEFT JOIN
     ProjectCollaborators pc ON u.UserID = pc.UserID
 GROUP BY 
     u.UserID, u.GitHubID;
+GO
+
+-- view of Projects statuse
+CREATE VIEW vwProjectStatus
+AS
+SELECT p.ProjectName,
+	u.GitHubID as ProjectOwner,
+	p.CreatedAt,
+	p.UpdatedAt, 
+	iif(pc.isActive=1,'Open','Closed') as ProjectStatus 
+FROM Projects p 
+join ProjectCollaborators pc on p.ProjectID = pc.ProjectID 
+join Users u on pc.UserID = u.UserID
+where pc.RoleID=1
 GO
