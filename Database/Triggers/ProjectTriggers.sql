@@ -61,7 +61,6 @@ BEGIN
 		RETURN
 	END
 
-
 	--FINALLY
 	UPDATE ProjectCollaborators
 	SET RoleID = new.RoleID,
@@ -82,7 +81,19 @@ BEGIN
 	FROM DELETED
 	WHERE DELETED.ProjectCollaboratorID = ProjectCollaborators.ProjectCollaboratorID
 END
+GO
 
 
-
+CREATE TRIGGER trgBeforeDeleteProject
+ON Projects
+INSTEAD OF DELETE
+AS
+BEGIN
+	UPDATE ProjectCollaborators
+	SET isActive = 0
+	FROM DELETED old
+	WHERE old.ProjectID = ProjectCollaborators.ProjectID
+	AND ProjectCollaborators.RoleID = 1
+END
+GO
 

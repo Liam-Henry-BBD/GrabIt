@@ -1,7 +1,6 @@
 USE GrabIt;
 GO
 
-
 -- AFTER Task Updates
 CREATE TRIGGER trgAfterUpdateTasks 
 ON Tasks
@@ -133,7 +132,6 @@ BEGIN
 END
 GO
 
-
 -- 
 CREATE TRIGGER trgBeforeInsertTaskCollaborators
 ON TaskCollaborators
@@ -221,7 +219,6 @@ BEGIN
 END
 GO
 
-
 -- 
 CREATE TRIGGER trgBeforeUpdateTaskCollaborators
 ON TaskCollaborators
@@ -282,10 +279,12 @@ BEGIN
 	-- CANNOT CHANGE WHEN YOU JOINED A TASK
 	IF EXISTS (
 		SELECT new.TaskCollaboratorID
-		FROM INSERTED new
+		FROM TaskCollaborators
+		JOIN INSERTED new
+		ON new.TaskCollaboratorID = TaskCollaborators.TaskCollaboratorID
 		JOIN DELETED old
 		ON old.TaskID = new.TaskID
-		WHERE old.JoinedAt <> new.JoinedAt
+		WHERE TaskCollaborators.JoinedAt <> new.JoinedAt
 	)
 	BEGIN
 		RAISERROR('Cannot change when a user joined a task.', 16, 1)
@@ -326,4 +325,17 @@ BEGIN
 	SET isActive = 0
 	FROM DELETED
 	WHERE DELETED.TaskCollaboratorID = TaskCollaborators.TaskCollaboratorID
+END
+GO
+
+CREATE TRIGGER trgBeforeDeleteTasks
+ON Tasks
+INSTEAD OF DELETE
+AS
+BEGIN
+	UPDATE TaskCollaborators
+	SET isActive = 0,
+		RoleID = TaskCollaborators.RoleID
+	FROM DELETED old
+	WHERE TaskCollaborators.TaskID = old.TaskID
 END
