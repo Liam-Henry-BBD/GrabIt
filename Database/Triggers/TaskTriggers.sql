@@ -1,7 +1,7 @@
 USE GrabIt;
 GO
 
--- UPDATE TASKS TASKCOMPLETEDAT
+-- AFTER Task Updates
 CREATE TRIGGER trgAfterUpdateTasks 
 ON Tasks
 AFTER UPDATE 
@@ -37,13 +37,13 @@ BEGIN
 END
 GO
 
-
--- PREVENT TASK CHANGE FROM COMPLETE TO GRAB
+-- BEFORE Update Tasks
 CREATE TRIGGER trgBeforeUpdateTasks
 ON Tasks
 INSTEAD OF UPDATE
 AS
 BEGIN
+	--CANNOT MOVE TASK BACK AFTER COMPLETION
 	IF (
 		SELECT new.TaskID 
 		FROM INSERTED new 
@@ -58,7 +58,7 @@ BEGIN
 		RETURN
 	END
 
-	--
+	-- CANNOT JUMP TO COMPLETION BEFORE REVIEW
 	IF (
 		SELECT new.TaskID 
 		FROM INSERTED new 
@@ -73,7 +73,7 @@ BEGIN
 		RETURN
 	END
 
-	--
+	-- CANNOT CHANGE COMPLETION DATE
 	IF (
 		SELECT new.TaskID 
 		FROM INSERTED new
@@ -88,7 +88,7 @@ BEGIN
 		RETURN
 	END
 
-
+	-- CANNOT CHANGE DEADLINE AFTER COMPLETION
 	IF EXISTS (
 		SELECT 1 
 		FROM INSERTED new
@@ -103,6 +103,7 @@ BEGIN
 		RETURN
 	END
 
+	-- DEADLINE CANNOT BE IN THE PAST
 	IF EXISTS (
 		SELECT 1 
 		FROM INSERTED new
@@ -114,7 +115,8 @@ BEGIN
 		RAISERROR('Deadline cannot precede CreatedAt Date.', 16, 1)
 		ROLLBACK TRANSACTION
 		RETURN
-	END
+	END 
+
 	
 	UPDATE Tasks
 	SET TaskUpdatedAt = GETDATE(), 
@@ -130,7 +132,7 @@ BEGIN
 END
 GO
 
--- Cannot collaborate twice on a task
+-- 
 CREATE TRIGGER trgBeforeInsertTaskCollaborators
 ON TaskCollaborators
 INSTEAD OF INSERT
@@ -140,6 +142,8 @@ BEGIN
     DECLARE @UserID INT;
 
     SELECT @TaskID = TaskID, @UserID = UserID FROM INSERTED;
+	
+	-- CANNOT COLLAB MORE THAN ONCE ON A TASK
 	IF (
 		SELECT COUNT(TaskCollaborators.TaskID)
 		FROM TaskCollaborators
@@ -167,6 +171,47 @@ BEGIN
 		RETURN
 	END
 
+	-- CANNOT JOIN AFTER COMPLETION
+	IF EXISTS (
+		SELECT new.TaskCollaboratorID
+		FROM INSERTED new
+		JOIN Tasks task
+		ON task.TaskID = new.TaskID
+		WHERE task.TaskStatusID = 4
+	)
+	BEGIN
+		RAISERROR('Cannot join a task after completion.', 16, 1)
+		ROLLBACK TRANSACTION
+		RETURN
+	END
+
+	-- CANNOT JOIN AFTER COMPLETION
+	IF EXISTS (
+		SELECT new.TaskCollaboratorID
+		FROM INSERTED new
+		JOIN Tasks task
+		ON task.TaskID = new.TaskID
+		WHERE task.TaskStatusID = 4
+	)
+	BEGIN
+		RAISERROR('Cannot join a task after completion.', 16, 1)
+		ROLLBACK TRANSACTION
+		RETURN
+	END
+
+	--CANNOT MAKE ROLE AS LEAD OR MEMBER
+	IF EXISTS (
+		SELECT 1
+		FROM TaskCollaborators
+		JOIN INSERTED new
+		ON new.TaskCollaboratorID = TaskCollaborators.TaskCollaboratorID
+		WHERE (new.RoleID = 1 OR new.RoleID = 2)
+	)
+	BEGIN
+		RAISERROR('Cannot be a lead or member on a task.', 16, 1)
+		ROLLBACK TRANSACTION
+		RETURN
+	END
 	
 	INSERT TaskCollaborators
 	SELECT UserID, RoleID, TaskID, JoinedAt, isActive
@@ -174,8 +219,7 @@ BEGIN
 END
 GO
 
-
--- Cannot remove task collaborator after a day
+-- 
 CREATE TRIGGER trgBeforeUpdateTaskCollaborators
 ON TaskCollaborators
 INSTEAD OF UPDATE
@@ -231,8 +275,37 @@ BEGIN
 		ROLLBACK TRANSACTION
 		RETURN
 	END
-
-
+	
+	-- CANNOT CHANGE WHEN YOU JOINED A TASK
+	IF EXISTS (
+		SELECT new.TaskCollaboratorID
+		FROM TaskCollaborators
+		JOIN INSERTED new
+		ON new.TaskCollaboratorID = TaskCollaborators.TaskCollaboratorID
+		JOIN DELETED old
+		ON old.TaskID = new.TaskID
+		WHERE TaskCollaborators.JoinedAt <> new.JoinedAt
+	)
+	BEGIN
+		RAISERROR('Cannot change when a user joined a task.', 16, 1)
+		ROLLBACK TRANSACTION
+		RETURN
+	END
+	
+	--CANNOT MAKE ROLE AS LEAD OR MEMBER
+	IF EXISTS (
+		SELECT 1
+		FROM TaskCollaborators
+		JOIN INSERTED new
+		ON new.TaskCollaboratorID = TaskCollaborators.TaskCollaboratorID
+		WHERE (new.RoleID = 1 OR new.RoleID = 2)
+	)
+	BEGIN
+		RAISERROR('Cannot be a lead or member on a task.', 16, 1)
+		ROLLBACK TRANSACTION
+		RETURN
+	END
+	
 	UPDATE TaskCollaborators
 	SET UserID = new.UserID,
 		RoleID = new.RoleID,
@@ -242,3 +315,27 @@ BEGIN
 END
 GO
 
+-- BEFORE DELETION
+CREATE TRIGGER trgBeforeDeleteTaskCollaborators
+ON TaskCollaborators
+INSTEAD OF DELETE
+AS
+BEGIN
+	UPDATE TaskCollaborators
+	SET isActive = 0
+	FROM DELETED
+	WHERE DELETED.TaskCollaboratorID = TaskCollaborators.TaskCollaboratorID
+END
+GO
+
+CREATE TRIGGER trgBeforeDeleteTasks
+ON Tasks
+INSTEAD OF DELETE
+AS
+BEGIN
+	UPDATE TaskCollaborators
+	SET isActive = 0,
+		RoleID = TaskCollaborators.RoleID
+	FROM DELETED old
+	WHERE TaskCollaborators.TaskID = old.TaskID
+END
