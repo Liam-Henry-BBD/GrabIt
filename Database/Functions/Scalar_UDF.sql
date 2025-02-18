@@ -120,7 +120,7 @@ AS
 BEGIN
 	DECLARE @TotalCompletedTasks INT;
 
-	SELECT @TotalCompletedTasks = COUNT([grabit].TaskID)
+	SELECT @TotalCompletedTasks = COUNT([grabit].[Tasks].TaskID)
 	FROM [grabit].Tasks
 	WHERE [grabit].Tasks.TaskCompletedAt > @SpecificDate;
 
