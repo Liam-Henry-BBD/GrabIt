@@ -1,8 +1,8 @@
-USE GrabIt
+USE grabit
 GO
 
 -- Get the total number of tasks in a specific project using a project ID.
-CREATE FUNCTION udfTotalTasksUsingProject (
+CREATE FUNCTION [grabit].udfTotalTasksUsingProject (
 	@ProjectID INT = NULL,
 	@ProjectName VARCHAR(100) = NULL
 	)
@@ -28,7 +28,7 @@ END;
 GO
 
 -- Get the total number of projects a specific user is involved in.
-CREATE FUNCTION udfTotalUserProjects (
+CREATE FUNCTION [grabit].udfTotalUserProjects (
 	@UserID INT = NULL,
 	@GitHubID VARCHAR(100) = NULL
 	)
@@ -54,7 +54,7 @@ END;
 GO
 
 -- Retrieve the role of a user for a specific task (e.g., task grabber or task collaborator).
-CREATE FUNCTION udfGetUserRoleForTask (
+CREATE FUNCTION [grabit].udfGetUserRoleForTask (
 	@UserID INT,
 	@TaskID INT
 	)
@@ -75,7 +75,7 @@ END;
 GO
 
 -- Get the total number of tasks a specific user is involved in.
-CREATE FUNCTION udfTotalUserTasks (
+CREATE FUNCTION [grabit].udfTotalUserTasks (
 	@UserID INT = NULL,
 	@GitHubID VARCHAR(100) = NULL
 	)
@@ -101,7 +101,7 @@ END;
 GO
 
 -- Get the average points per project.
-CREATE FUNCTION udfAverageTaskPointsPerProject (@ProjectID INT)
+CREATE FUNCTION [grabit].udfAverageTaskPointsPerProject (@ProjectID INT)
 RETURNS FLOAT
 AS
 BEGIN
@@ -117,7 +117,7 @@ END;
 GO
 
 -- Get the total number of tasks that were completed after a specific date.
-CREATE FUNCTION udfTotalCompletedTasksAfterDate (@SpecificDate DATETIME)
+CREATE FUNCTION [grabit].udfTotalCompletedTasksAfterDate (@SpecificDate DATETIME)
 RETURNS INT
 AS
 BEGIN
@@ -132,7 +132,7 @@ END;
 GO
 
 -- Get the total number of tasks in a specific status (e.g., "Review") across all projects.
-CREATE FUNCTION udfTotalTasksInStatus (@StatusName VARCHAR(50))
+CREATE FUNCTION [grabit].udfTotalTasksInStatus (@StatusName VARCHAR(50))
 RETURNS INT
 AS
 BEGIN
@@ -148,7 +148,7 @@ END;
 GO
 
 -- Get the total number of users in a specific role across all projects.
-CREATE FUNCTION udfTotalUsersInRole (
+CREATE FUNCTION [grabit].udfTotalUsersInRole (
 	@RoleTitle VARCHAR(50) = NULL,
 	@RoleID INT = NULL
 	)
@@ -176,7 +176,7 @@ END;
 GO
 
 -- Get the total number of tasks that are overdue (past deadline) for a specific project.
-CREATE FUNCTION udfOverdueTasksPerProject (@ProjectID INT)
+CREATE FUNCTION [grabit].udfOverdueTasksPerProject (@ProjectID INT)
 RETURNS INT
 AS
 BEGIN
@@ -197,7 +197,7 @@ END;
 GO
 
 -- Get the total number of tasks that are overdue (past deadline) for a specific user.
-CREATE FUNCTION udfTotalOverdueTasksPerUser (@UserID INT)
+CREATE FUNCTION [grabit].udfTotalOverdueTasksPerUser (@UserID INT)
 RETURNS INT
 AS
 BEGIN
@@ -219,7 +219,7 @@ END;
 GO
 
 -- Get the average time spent on tasks in a specific project.
-CREATE FUNCTION udfAverageTimeOnTasks (@ProjectID INT)
+CREATE FUNCTION [grabit].udfAverageTimeOnTasks (@ProjectID INT)
 RETURNS INT
 AS
 BEGIN

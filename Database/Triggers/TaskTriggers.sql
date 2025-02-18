@@ -1,4 +1,4 @@
-USE GrabIt;
+USE grabit;
 GO
 
 -- AFTER Task Updates

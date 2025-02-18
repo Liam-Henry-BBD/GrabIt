@@ -1,10 +1,10 @@
-USE GrabIt
+USE grabit
 GO
 
 -- Stored procedure to allow a user 
 -- to grab a task, 
 -- update its status to "grabbed," and add the user as a collaborator.--
-CREATE PROCEDURE GrabbedTask @UserID INT,
+CREATE PROCEDURE [grabit].GrabbedTask @UserID INT,
 	@TaskID INT
 AS
 BEGIN
@@ -40,7 +40,7 @@ END;
 GO
 
 -- Stored procedure to change the status of a task to "review" after it has been grabbed and is ready for review.--
-CREATE PROCEDURE ReviewTask @TaskID INT
+CREATE PROCEDURE [grabit].ReviewTask @TaskID INT
 AS
 BEGIN
 	BEGIN TRY
@@ -62,7 +62,7 @@ END;
 GO
 
 -- Stored procedure to mark a task as "complete," update its status, and record the completion date. --
-CREATE PROCEDURE CompletedTask @TaskID INT
+CREATE PROCEDURE [grabit].CompletedTask @TaskID INT
 AS
 BEGIN
 	BEGIN TRY
@@ -85,7 +85,7 @@ END;
 GO
 
 -- Stored procedure to assign a user to a task and update the task status to "grabbed" if the task is available. --
-CREATE PROCEDURE AssignedUserToTask @UserID INT,
+CREATE PROCEDURE [grabit].AssignedUserToTask @UserID INT,
 	@TaskID INT
 AS
 BEGIN
@@ -130,7 +130,7 @@ END;
 GO
 
 -- Stored procedure to remove a user as a collaborator from a task and revert the task's status if necessary. --
-CREATE PROCEDURE RemoveUserFromTask @UserID INT,
+CREATE PROCEDURE [grabit].RemoveUserFromTask @UserID INT,
 	@TaskID INT
 AS
 BEGIN
@@ -167,7 +167,7 @@ END;
 GO
 
 -- Stored procedure to retrieve all tasks assigned to a specific user, along with their statuses and deadlines. --GO
-CREATE PROCEDURE GetALLTasksByUser @UserID INT
+CREATE PROCEDURE [grabit].GetALLTasksByUser @UserID INT
 AS
 BEGIN
 	BEGIN TRY
@@ -188,7 +188,7 @@ END;
 GO
 
 -- Stored procedure to calculate the number of completed tasks in a project and return the total. --
-CREATE PROCEDURE GetCompletedTasksByProject @ProjectID INT
+CREATE PROCEDURE [grabit].GetCompletedTasksByProject @ProjectID INT
 AS
 BEGIN
 	BEGIN TRY
@@ -205,7 +205,7 @@ END;
 GO
 
 -- Stored procedure to check if a user is eligible to grab a task based on their role and the task's status. --
-CREATE PROCEDURE CheckEligibilityToGrabbedTask @UserID INT,
+CREATE PROCEDURE [grabit].CheckEligibilityToGrabbedTask @UserID INT,
 	@TaskID INT
 AS
 BEGIN
@@ -239,7 +239,7 @@ END;
 GO
 
 -- Stored procedure to update a task's deadline after it has been grabbed but before it is completed. --
-CREATE PROCEDURE UpdateTaskDeadline @TaskID INT,
+CREATE PROCEDURE [grabit].UpdateTaskDeadline @TaskID INT,
 	@NewDeadline DATE
 AS
 BEGIN
@@ -265,7 +265,7 @@ GO
 --showing their statuses, 
 --deadlines, 
 --and assigned collaborators. --
-CREATE PROCEDURE GetTasksPerProject @ProjectID INT
+CREATE PROCEDURE [grabit].GetTasksPerProject @ProjectID INT
 AS
 BEGIN
 	BEGIN TRY
@@ -288,7 +288,7 @@ END;
 GO
 
 -- Stored procedure to return all tasks in review for a specific project and include their collaborators. --
-CREATE PROCEDURE GetTasksInReviewByProject @ProjectID INT
+CREATE PROCEDURE [grabit].GetTasksInReviewByProject @ProjectID INT
 AS
 BEGIN
 	BEGIN TRY
@@ -309,7 +309,7 @@ END;
 GO
 
 -- Create a stored procedure to get all tasks in a project that are not yet completed, and return their statuses and collaborators. --
-CREATE PROCEDURE GetTasksInProgressPerProject @ProjectID INT
+CREATE PROCEDURE [grabit].GetTasksInProgressPerProject @ProjectID INT
 AS
 BEGIN
 	BEGIN TRY
@@ -332,7 +332,7 @@ END;
 GO
 
 -- Create a stored procedure to prevent further edits to a task once it is marked as completed. --
-CREATE PROCEDURE PreventEditsToCompletedTask @TaskID INT
+CREATE PROCEDURE [grabit].PreventEditsToCompletedTask @TaskID INT
 AS
 BEGIN
 	BEGIN TRY
@@ -354,7 +354,7 @@ END;
 GO
 
 -- Stored procedure to get all tasks that are overdue in a project, --
-CREATE PROCEDURE GetOverdueTasksByProject @ProjectID INT
+CREATE PROCEDURE [grabit].GetOverdueTasksByProject @ProjectID INT
 AS
 BEGIN
 	BEGIN TRY

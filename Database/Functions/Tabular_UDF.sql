@@ -1,8 +1,8 @@
-USE GrabIt
+USE grabit
 GO
 
 -- Retrieve all tasks that are grabbed by a specific user including their role.
-CREATE FUNCTION udfTasksGrabbedByUserAndTheirRole (@UserID INT)
+CREATE FUNCTION [grabit].udfTasksGrabbedByUserAndTheirRole (@UserID INT)
 RETURNS TABLE
 AS
 RETURN (
@@ -19,7 +19,7 @@ RETURN (
 GO
 
 -- Retrieve all completed tasks for a given project, including the task completion date.
-CREATE FUNCTION udfCompletedTasksAndDates (@ProjectID INT)
+CREATE FUNCTION [grabit].udfCompletedTasksAndDates (@ProjectID INT)
 RETURNS TABLE
 AS
 RETURN (
@@ -35,7 +35,7 @@ RETURN (
 GO
 
 -- Get a list of active tasks (those that are either available or grabbed) within a specific project.
-CREATE FUNCTION udfActiveTasksAvailableAndGrabbed (@ProjectID INT)
+CREATE FUNCTION [grabit].udfActiveTasksAvailableAndGrabbed (@ProjectID INT)
 RETURNS TABLE
 AS
 RETURN (
@@ -50,7 +50,7 @@ RETURN (
 GO
 
 -- Retrieve all users who are collaborators on a specific task and include their roles in the result.
-CREATE FUNCTION udfTaskCollaboratorsWithRoles (@TaskID INT)
+CREATE FUNCTION [grabit].udfTaskCollaboratorsWithRoles (@TaskID INT)
 RETURNS TABLE
 AS
 RETURN (
@@ -65,7 +65,7 @@ RETURN (
 GO
 
 -- List all tasks within a specific project and show whether they are available, grabbed, in review, or completed, along with their deadlines.
-CREATE FUNCTION udfProjectTasksWithStatusAndDeadlines (@ProjectID INT)
+CREATE FUNCTION [grabit].udfProjectTasksWithStatusAndDeadlines (@ProjectID INT)
 RETURNS TABLE
 AS
 RETURN (
@@ -80,7 +80,7 @@ RETURN (
 GO
 
 -- Retrieve all users associated with a project, their roles, and tasks assigned to them in the given project.
-CREATE FUNCTION udfProjectUsersRolesTasks (@ProjectID INT)
+CREATE FUNCTION [grabit].udfProjectUsersRolesTasks (@ProjectID INT)
 RETURNS TABLE
 AS
 RETURN (
@@ -100,7 +100,7 @@ RETURN (
 GO
 
 -- Get the total time spent on tasks by a user in a project (difference between created and completed times).
-CREATE FUNCTION udfTotalTimeSpentOnTasks (
+CREATE FUNCTION [grabit].udfTotalTimeSpentOnTasks (
 	@UserID INT,
 	@ProjectID INT
 	)
