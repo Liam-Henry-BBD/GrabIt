@@ -1,5 +1,4 @@
 
-
 -- View of available tasks
 CREATE VIEW vwAvailableTasks
 AS
@@ -39,7 +38,6 @@ AS
 SELECT t.TaskID,
 	t.TaskName,
 	t.TaskDescription,
-	tp.TaskDifficulty,
 	t.TaskCompletedAt
 FROM [grabit].[Tasks] t
 WHERE t.TaskStatusID = 4;
@@ -120,7 +118,7 @@ SELECT DISTINCT u.UserID,
 	u.GitHubID,
 	t.ProjectID,
 	p.ProjectName
-FROM Users u
+FROM [grabit].[Users] u
 JOIN [grabit].[ProjectCollaborators] pc ON u.UserID = pc.UserID
 JOIN [grabit].[Tasks] t ON pc.ProjectID = t.ProjectID
 JOIN [grabit].[Projects] p ON pc.ProjectID = p.ProjectID
@@ -134,7 +132,7 @@ SELECT DISTINCT u.UserID,
 	u.GitHubID,
 	tc.TaskID,
 	t.ProjectID
-FROM Users u
+FROM [grabit].[Users] u
 JOIN [grabit].[TaskCollaborators] tc ON u.UserID = tc.UserID
 JOIN [grabit].[Tasks] t ON tc.TaskID = t.TaskID
 WHERE tc.isActive = 0;
@@ -204,7 +202,7 @@ SELECT p.ProjectName,
 	p.CreatedAt,
 	p.UpdatedAt,
 	iif(pc.isActive = 1, 'Open', 'Closed') AS ProjectStatus
-FROM Projects p
+FROM [grabit].[Projects] p
 JOIN [grabit].[ProjectCollaborators] pc ON p.ProjectID = pc.ProjectID
 JOIN [grabit].[Users] u ON pc.UserID = u.UserID
 WHERE pc.RoleID = 1
