@@ -1,7 +1,3 @@
-USE grabit
-GO
-
--- Users (48 Users)
 INSERT INTO [grabit].Users (
 	GitHubID,
 	JoinedAt
@@ -180,7 +176,6 @@ VALUES (
 	);
 GO
 
--- Roles (4 Roles)
 INSERT INTO [grabit].Roles (RoleTitle)
 VALUES ('Project Lead'),
 	('Project Member'),
@@ -188,7 +183,6 @@ VALUES ('Project Lead'),
 	('Task Collaborator');
 GO
 
--- Projects (11 Projects)
 INSERT INTO [grabit].Projects (
 	ProjectName,
 	ProjectDescription,
@@ -263,7 +257,6 @@ VALUES (
 	);
 GO
 
--- TaskPoints (3 Values: 5, 10, 15)
 INSERT INTO [grabit].TaskPoints (
 	TaskPointID,
 	PointValue
@@ -282,7 +275,6 @@ VALUES (
 	);
 GO
 
--- TaskStatus (4 Statuses)
 INSERT INTO [grabit].TaskStatus (StatusName)
 VALUES ('Available'),
 	('Grabbed'),
@@ -290,7 +282,6 @@ VALUES ('Available'),
 	('Complete');
 GO
 
--- Project 1: Website Redesign
 INSERT INTO [grabit].Tasks (
 	ProjectID,
 	TaskPointID,
@@ -348,7 +339,6 @@ VALUES (
 	);
 GO
 
--- Project 2: Mobile App Development
 INSERT INTO [grabit].Tasks (
 	ProjectID,
 	TaskPointID,
@@ -406,7 +396,6 @@ VALUES (
 	);
 GO
 
--- Project 3: E-Commerce Platform
 INSERT INTO [grabit].Tasks (
 	ProjectID,
 	TaskPointID,
@@ -453,7 +442,6 @@ VALUES (
 	);
 GO
 
--- Project 4: Blog Platform
 INSERT INTO [grabit].Tasks (
 	ProjectID,
 	TaskPointID,
@@ -500,7 +488,6 @@ VALUES (
 	);
 GO
 
--- Project 5: AI Chatbot
 INSERT INTO [grabit].Tasks (
 	ProjectID,
 	TaskPointID,
@@ -547,7 +534,6 @@ VALUES (
 	);
 GO
 
--- Project 6: Fitness App
 INSERT INTO [grabit].Tasks (
 	ProjectID,
 	TaskPointID,
@@ -594,7 +580,6 @@ VALUES (
 	);
 GO
 
--- Project 7: Social Media Platform
 INSERT INTO [grabit].Tasks (
 	ProjectID,
 	TaskPointID,
@@ -641,7 +626,6 @@ VALUES (
 	);
 GO
 
--- Project 8: Task Management Tool
 INSERT INTO [grabit].Tasks (
 	ProjectID,
 	TaskPointID,
@@ -677,7 +661,6 @@ VALUES (
 	);
 GO
 
--- Project 9: Food Delivery App
 INSERT INTO [grabit].Tasks (
 	ProjectID,
 	TaskPointID,
@@ -724,7 +707,6 @@ VALUES (
 	);
 GO
 
--- Project 10: Real Estate Platform
 INSERT INTO [grabit].Tasks (
 	ProjectID,
 	TaskPointID,
@@ -760,7 +742,6 @@ VALUES (
 	);
 GO
 
--- Project 11: Online Learning Platform
 INSERT INTO [grabit].Tasks (
 	ProjectID,
 	TaskPointID,
@@ -796,8 +777,6 @@ VALUES (
 	);
 GO
 
--- ProjectCollaborators (Expanded)
--- Project 1: Website Redesign
 INSERT INTO [grabit].ProjectCollaborators (
 	UserID,
 	ProjectID,
@@ -828,7 +807,6 @@ VALUES (
 	);
 GO
 
--- Project 2: Mobile App Development
 INSERT INTO [grabit].ProjectCollaborators (
 	UserID,
 	ProjectID,
@@ -859,7 +837,6 @@ VALUES (
 	);
 GO
 
--- Project 3: E-Commerce Platform
 INSERT INTO [grabit].ProjectCollaborators (
 	UserID,
 	ProjectID,
@@ -897,7 +874,6 @@ VALUES (
 	);
 GO
 
--- Project 4: Blog Platform
 INSERT INTO [grabit].ProjectCollaborators (
 	UserID,
 	ProjectID,
@@ -932,10 +908,9 @@ VALUES (
 	2,
 	'2023-04-06 15:23:57',
 	0
-	);-- Inactive user
+	);
 GO
 
--- Project 5: AI Chatbot
 INSERT INTO [grabit].ProjectCollaborators (
 	UserID,
 	ProjectID,
@@ -966,7 +941,6 @@ VALUES (
 	);
 GO
 
--- Project 6: Fitness App
 INSERT INTO [grabit].ProjectCollaborators (
 	UserID,
 	ProjectID,
@@ -997,7 +971,6 @@ VALUES (
 	);
 GO
 
--- Project 7: Social Media Platform
 INSERT INTO [grabit].ProjectCollaborators (
 	UserID,
 	ProjectID,
@@ -1028,7 +1001,6 @@ VALUES (
 	);
 GO
 
--- Project 8: Task Management Tool
 INSERT INTO [grabit].ProjectCollaborators (
 	UserID,
 	ProjectID,
@@ -1070,10 +1042,9 @@ VALUES (
 	2,
 	'2023-08-04 12:59:23',
 	0
-	);-- Inactive user
+	);
 GO
 
--- Project 9: Food Delivery App
 INSERT INTO [grabit].ProjectCollaborators (
 	UserID,
 	ProjectID,
@@ -1104,7 +1075,6 @@ VALUES (
 	);
 GO
 
--- Project 10: Real Estate Platform
 INSERT INTO [grabit].ProjectCollaborators (
 	UserID,
 	ProjectID,
@@ -1132,7 +1102,7 @@ VALUES (
 	2,
 	'2023-10-03 12:59:31',
 	0
-	), -- Inactive user
+	), 
 	(
 	37,
 	10,
@@ -1142,7 +1112,6 @@ VALUES (
 	)
 GO
 
--- Project 11: Online Learning Platform
 INSERT INTO [grabit].ProjectCollaborators (
 	UserID,
 	ProjectID,
@@ -1180,8 +1149,6 @@ VALUES (
 	);
 GO
 
--- TaskCollaborators
--- Task 1: Website Redesign - Design homepage
 INSERT INTO [grabit].TaskCollaborators (
 	UserID,
 	RoleID,
@@ -1205,7 +1172,6 @@ VALUES (
 	);
 GO
 
--- Task 2: Mobile App Development - App login screen
 INSERT INTO [grabit].TaskCollaborators (
 	UserID,
 	RoleID,
@@ -1229,7 +1195,6 @@ VALUES (
 	);
 GO
 
--- Task 3: E-Commerce Platform - Product page layout
 INSERT INTO [grabit].TaskCollaborators (
 	UserID,
 	RoleID,
@@ -1260,7 +1225,6 @@ VALUES (
 	);
 GO
 
--- Task 4: Blog Platform - User profile design
 INSERT INTO [grabit].TaskCollaborators (
 	UserID,
 	RoleID,
@@ -1291,7 +1255,6 @@ VALUES (
 	);
 GO
 
--- Task 5: AI Chatbot - AI model training
 INSERT INTO [grabit].TaskCollaborators (
 	UserID,
 	RoleID,
@@ -1315,7 +1278,6 @@ VALUES (
 	);
 GO
 
--- Task 6: Fitness App - Workout logging feature
 INSERT INTO [grabit].TaskCollaborators (
 	UserID,
 	RoleID,
@@ -1339,7 +1301,6 @@ VALUES (
 	);
 GO
 
--- Task 7: Social Media Platform - Create user feed
 INSERT INTO [grabit].TaskCollaborators (
 	UserID,
 	RoleID,
@@ -1401,7 +1362,6 @@ VALUES (
 	);
 GO
 
--- Task 9: Food Delivery App - Restaurant profile page
 INSERT INTO [grabit].TaskCollaborators (
 	UserID,
 	RoleID,
@@ -1425,7 +1385,6 @@ VALUES (
 	);
 GO
 
--- Task 10: Real Estate Platform - Property search functionality
 INSERT INTO [grabit].TaskCollaborators (
 	UserID,
 	RoleID,
@@ -1449,7 +1408,6 @@ VALUES (
 	);
 GO
 
--- Task 11: Online Learning Platform - Course listing page
 INSERT INTO [grabit].TaskCollaborators (
 	UserID,
 	RoleID,

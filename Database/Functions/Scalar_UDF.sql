@@ -1,6 +1,3 @@
-USE grabit
-GO
-
 -- Get the total number of tasks in a specific project using a project ID.
 CREATE FUNCTION [grabit].udfTotalTasksUsingProject (
 	@ProjectID INT = NULL,
@@ -11,15 +8,15 @@ AS
 BEGIN
 	DECLARE @TotalTasksPerProj INT;
 
-	SELECT @TotalTasksPerProj = COUNT(Tasks.TaskID)
+	SELECT @TotalTasksPerProj = COUNT([grabit].Tasks.TaskID)
 	FROM Tasks
-	JOIN Projects ON Tasks.ProjectID = Projects.ProjectID
+	JOIN [grabit].Projects ON [grabit].Tasks.ProjectID = [grabit].Projects.ProjectID
 	WHERE (
-			Projects.ProjectID = @ProjectID
+			[grabit].Projects.ProjectID = @ProjectID
 			OR @ProjectID IS NULL
 			)
 		AND (
-			Projects.ProjectName = @ProjectName
+			[grabit].Projects.ProjectName = @ProjectName
 			OR @ProjectName IS NULL
 			);
 
@@ -37,15 +34,15 @@ AS
 BEGIN
 	DECLARE @TotalProjects INT;
 
-	SELECT @TotalProjects = COUNT(ProjectCollaborators.ProjectID)
-	FROM ProjectCollaborators
-	JOIN Users ON ProjectCollaborators.UserID = Users.UserID
+	SELECT @TotalProjects = COUNT([grabit].ProjectCollaborators.ProjectID)
+	FROM [grabit].ProjectCollaborators
+	JOIN [grabit].Users ON [grabit].ProjectCollaborators.UserID = [grabit].Users.UserID
 	WHERE (
-			Users.UserID = @UserID
+			[grabit].Users.UserID = @UserID
 			OR @UserID IS NULL
 			)
 		AND (
-			Users.GitHubID = @GitHubID
+			[grabit].Users.GitHubID = @GitHubID
 			OR @GitHubID IS NULL
 			);
 
@@ -63,12 +60,12 @@ AS
 BEGIN
 	DECLARE @RoleTitle VARCHAR(50);
 
-	SELECT @RoleTitle = Roles.RoleTitle
-	FROM TaskCollaborators
-	JOIN Roles ON TaskCollaborators.RoleID = Roles.RoleID
-	WHERE TaskCollaborators.UserID = @UserID
-		AND TaskCollaborators.TaskID = @TaskID
-		AND TaskCollaborators.isActive = 1;
+	SELECT @RoleTitle = [grabit].Roles.RoleTitle
+	FROM [grabit].TaskCollaborators
+	JOIN [grabit].Roles ON [grabit].TaskCollaborators.RoleID = [grabit].Roles.RoleID
+	WHERE [grabit].TaskCollaborators.UserID = @UserID
+		AND [grabit].TaskCollaborators.TaskID = @TaskID
+		AND [grabit].TaskCollaborators.isActive = 1;
 
 	RETURN @RoleTitle;
 END;
@@ -84,15 +81,15 @@ AS
 BEGIN
 	DECLARE @TotalTasks INT;
 
-	SELECT @TotalTasks = COUNT(TaskCollaborators.TaskID)
-	FROM TaskCollaborators
-	JOIN Users ON TaskCollaborators.UserID = Users.UserID
+	SELECT @TotalTasks = COUNT([grabit].TaskCollaborators.TaskID)
+	FROM [grabit].TaskCollaborators
+	JOIN [grabit].Users ON [grabit].TaskCollaborators.UserID = [grabit].Users.UserID
 	WHERE (
-			Users.UserID = @UserID
+			[grabit].Users.UserID = @UserID
 			OR @UserID IS NULL
 			)
 		AND (
-			Users.GitHubID = @GitHubID
+			[grabit].Users.GitHubID = @GitHubID
 			OR @GitHubID IS NULL
 			);
 
@@ -107,10 +104,10 @@ AS
 BEGIN
 	DECLARE @AveragePoints FLOAT;
 
-	SELECT @AveragePoints = AVG(TaskPoints.PointValue)
-	FROM Tasks
-	JOIN TaskPoints ON Tasks.TaskPointID = TaskPoints.TaskPointID
-	WHERE Tasks.ProjectID = @ProjectID;
+	SELECT @AveragePoints = AVG([grabit].TaskPoints.PointValue)
+	FROM [grabit].Tasks
+	JOIN [grabit].TaskPoints ON [grabit].Tasks.TaskPointID = [grabit].TaskPoints.TaskPointID
+	WHERE [grabit].Tasks.ProjectID = @ProjectID;
 
 	RETURN @AveragePoints;
 END;
@@ -123,9 +120,9 @@ AS
 BEGIN
 	DECLARE @TotalCompletedTasks INT;
 
-	SELECT @TotalCompletedTasks = COUNT(TaskID)
-	FROM Tasks
-	WHERE TaskCompletedAt > @SpecificDate;
+	SELECT @TotalCompletedTasks = COUNT([grabit].TaskID)
+	FROM [grabit].Tasks
+	WHERE [grabit].Tasks.TaskCompletedAt > @SpecificDate;
 
 	RETURN @TotalCompletedTasks;
 END;
@@ -138,10 +135,10 @@ AS
 BEGIN
 	DECLARE @TotalTasks INT;
 
-	SELECT @TotalTasks = COUNT(Tasks.TaskID)
-	FROM Tasks
-	JOIN TaskStatus ON Tasks.TaskStatusID = TaskStatus.TaskStatusID
-	WHERE TaskStatus.StatusName = @StatusName;
+	SELECT @TotalTasks = COUNT([grabit].Tasks.TaskID)
+	FROM [grabit].Tasks
+	JOIN [grabit].TaskStatus ON [grabit].Tasks.TaskStatusID = [grabit].TaskStatus.TaskStatusID
+	WHERE [grabit].TaskStatus.StatusName = @StatusName;
 
 	RETURN @TotalTasks;
 END;
@@ -157,19 +154,19 @@ AS
 BEGIN
 	DECLARE @TotalUsersInRole INT;
 
-	SELECT @TotalUsersInRole = COUNT(ProjectCollaborators.UserID)
-	FROM ProjectCollaborators
-	JOIN Roles ON ProjectCollaborators.RoleID = Roles.RoleID
-	JOIN TaskCollaborators ON ProjectCollaborators.UserID = TaskCollaborators.UserID
+	SELECT @TotalUsersInRole = COUNT([grabit].ProjectCollaborators.UserID)
+	FROM [grabit].ProjectCollaborators
+	JOIN [grabit].Roles ON [grabit].ProjectCollaborators.RoleID = [grabit].Roles.RoleID
+	JOIN [grabit].TaskCollaborators ON [grabit].ProjectCollaborators.UserID = [grabit].TaskCollaborators.UserID
 	WHERE (
-			Roles.RoleTitle = @RoleTitle
+		[grabit].Roles.RoleTitle = @RoleTitle
 			OR @RoleTitle IS NULL
 			)
 		AND (
-			Roles.RoleID = @RoleID
+			[grabit].Roles.RoleID = @RoleID
 			OR @RoleID IS NULL
 			)
-		AND TaskCollaborators.TaskID IN (1, 2, 3, 4);
+		AND [grabit].TaskCollaborators.TaskID IN (1, 2, 3, 4);
 
 	RETURN @TotalUsersInRole;
 END;
@@ -182,13 +179,13 @@ AS
 BEGIN
 	DECLARE @OverdueTasks INT;
 
-	SELECT @OverdueTasks = COUNT(TaskID)
-	FROM Tasks
-	WHERE ProjectID = @ProjectID
-		AND TaskDeadline < GETDATE()
-		AND TaskStatusID <> (
+	SELECT @OverdueTasks = COUNT([grabit].Tasks.TaskID)
+	FROM [grabit].Tasks
+	WHERE [grabit].Tasks.ProjectID = @ProjectID
+		AND [grabit].Tasks.TaskDeadline < GETDATE()
+		AND [grabit].Tasks.TaskStatusID <> (
 			SELECT TaskStatusID
-			FROM TaskStatus
+			FROM [grabit].TaskStatus
 			WHERE StatusName = 'Completed'
 			);
 
@@ -203,14 +200,14 @@ AS
 BEGIN
 	DECLARE @TotalOverdueTasks INT;
 
-	SELECT @TotalOverdueTasks = COUNT(Tasks.TaskID)
-	FROM Tasks
-	JOIN TaskCollaborators ON Tasks.TaskID = TaskCollaborators.TaskID
-	WHERE TaskCollaborators.UserID = @UserID
-		AND Tasks.TaskDeadline < GETDATE()
-		AND Tasks.TaskStatusID <> (
+	SELECT @TotalOverdueTasks = COUNT([grabit].Tasks.TaskID)
+	FROM [grabit].Tasks
+	JOIN [grabit].TaskCollaborators ON [grabit].Tasks.TaskID = [grabit].TaskCollaborators.TaskID
+	WHERE [grabit].TaskCollaborators.UserID = @UserID
+		AND [grabit].Tasks.TaskDeadline < GETDATE()
+		AND [grabit].Tasks.TaskStatusID <> (
 			SELECT TaskStatusID
-			FROM TaskStatus
+			FROM [grabit].TaskStatus
 			WHERE StatusName = 'Completed'
 			);
 
@@ -225,10 +222,10 @@ AS
 BEGIN
 	DECLARE @AveTimeOnTask INT;
 
-	SELECT @AveTimeOnTask = (AVG(DATEDIFF(hour, Tasks.TaskCreatedAt, Tasks.TaskCompletedAt)))
-	FROM Tasks
-	JOIN Projects ON Tasks.ProjectID = Projects.ProjectID
-	WHERE Projects.ProjectID = @ProjectID;
+	SELECT @AveTimeOnTask = (AVG(DATEDIFF(hour, [grabit].Tasks.TaskCreatedAt, [grabit].Tasks.TaskCompletedAt)))
+	FROM [grabit].Tasks
+	JOIN [grabit].Projects ON [grabit].Tasks.ProjectID = [grabit].Projects.ProjectID
+	WHERE [grabit].Projects.ProjectID = @ProjectID;
 
 	RETURN @AveTimeOnTask;
 END;
