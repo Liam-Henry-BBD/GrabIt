@@ -1,5 +1,4 @@
-USE grabit
-GO
+
 
 -- View of available tasks
 CREATE VIEW vwAvailableTasks

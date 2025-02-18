@@ -1,3 +1,5 @@
+
+
 INSERT INTO [grabit].Users (
 	GitHubID,
 	JoinedAt
@@ -262,8 +264,8 @@ INSERT INTO [grabit].TaskPoints (
 	TaskPointID
 	)
 VALUES (
-	'Easy'
-	5,
+	'Easy',
+	5
 	),
 	(
 	'Medium',
@@ -281,7 +283,6 @@ VALUES ('Available'),
 	('Review'),
 	('Complete');
 GO
-
 INSERT INTO [grabit].Tasks (
 	ProjectID,
 	TaskPointID,
@@ -295,44 +296,44 @@ INSERT INTO [grabit].Tasks (
 	)
 VALUES (
 	1,
-	'Medium',
+	10,
 	1,
 	'Design homepage',
 	'Create the homepage layout and design',
-	'2023-02-01 12:00:00',
+	'2025-03-01 12:00:00',
 	'2023-01-12 09:00:00',
 	'2023-01-18 10:00:00',
 	NULL
 	),
 	(
 	1,
-	'Hard',
+	15,
 	1,
 	'Build navigation menu',
 	'Develop the main navigation menu for the website',
-	'2023-02-05 16:00:00',
+	'2025-03-05 16:00:00',
 	'2023-01-13 11:30:00',
 	'2023-01-19 12:15:00',
 	NULL
 	),
 	(
 	1,
-	'Hard',
+	15,
 	2,
 	'Footer design',
 	'Design the footer section of the homepage',
-	'2023-02-10 14:00:00',
+	'2025-03-10 14:00:00',
 	'2023-01-15 10:00:00',
 	'2023-02-06 11:00:00',
 	'2023-02-05 14:00:00'
 	),
 	(
 	1,
-	'Medium',
+	10,
 	1,
 	'About Us page',
 	'Create the layout for the About Us page',
-	'2023-02-25 17:00:00',
+	'2025-03-25 17:00:00',
 	'2023-01-20 12:30:00',
 	'2023-01-28 10:00:00',
 	NULL
@@ -352,44 +353,44 @@ INSERT INTO [grabit].Tasks (
 	)
 VALUES (
 	2,
-	'Easy',
+	5,
 	2,
 	'App login screen',
 	'Design and develop the login screen for the app',
-	'2023-02-25 09:00:00',
+	'2025-03-25 09:00:00',
 	'2023-02-02 09:30:00',
 	'2023-02-06 10:00:00',
 	'2023-02-05 10:00:00'
 	),
 	(
 	2,
-	'Medium',
+	10,
 	3,
 	'App dashboard',
 	'Design the main dashboard screen for the mobile app',
-	'2023-03-10 10:00:00',
+	'2025-04-10 10:00:00',
 	'2023-02-10 11:15:00',
 	'2023-02-22 12:10:00',
 	NULL
 	),
 	(
 	2,
-	'Hard',
+	15,
 	1,
 	'Splash screen design',
 	'Design the splash screen for the mobile app',
-	'2023-03-01 10:00:00',
+	'2025-04-01 10:00:00',
 	'2023-02-08 09:00:00',
 	'2023-02-14 11:30:00',
 	NULL
 	),
 	(
 	2,
-	'Easy',
+	5,
 	3,
 	'App settings page',
 	'Design the settings page for the app',
-	'2023-03-15 12:00:00',
+	'2025-04-15 12:00:00',
 	'2023-02-12 13:00:00',
 	'2023-02-18 14:00:00',
 	NULL
@@ -409,33 +410,33 @@ INSERT INTO [grabit].Tasks (
 	)
 VALUES (
 	3,
-	'Medium',
+	10,
 	1,
 	'Product page layout',
 	'Design the layout of the product detail page',
-	'2023-03-20 14:00:00',
+	'2025-04-20 14:00:00',
 	'2023-03-06 10:00:00',
 	'2023-03-12 09:30:00',
 	NULL
 	),
 	(
 	3,
-	'Medium',
+	10,
 	3,
 	'Payment gateway integration',
 	'Integrate payment gateways into the platform',
-	'2023-04-05 16:00:00',
+	'2025-05-05 16:00:00',
 	'2023-03-12 11:00:00',
 	'2023-03-20 13:00:00',
 	NULL
 	),
 	(
 	3,
-	'Easy',
+	5,
 	2,
 	'Product filtering feature',
 	'Add product filtering functionality',
-	'2023-04-10 14:00:00',
+	'2025-05-10 14:00:00',
 	'2023-03-18 09:30:00',
 	'2023-03-25 10:00:00',
 	'2023-03-24 10:00:00'
@@ -455,33 +456,33 @@ INSERT INTO [grabit].Tasks (
 	)
 VALUES (
 	4,
-	'Easy',
+	5,
 	3,
 	'User profile design',
 	'Design the user profile page for the blog platform',
-	'2023-04-10 10:00:00',
+	'2025-05-10 10:00:00',
 	'2023-04-01 09:00:00',
 	'2023-04-05 10:00:00',
 	NULL
 	),
 	(
 	4,
-	'Hard',
+	15,
 	1,
 	'Content creation feature',
 	'Create the content creation interface for users',
-	'2023-04-25 12:00:00',
+	'2025-05-25 12:00:00',
 	'2023-04-10 14:30:00',
 	'2023-04-12 10:00:00',
 	NULL
 	),
 	(
 	4,
-	'Medium',
+	10,
 	2,
 	'Search functionality',
 	'Implement search functionality for blog posts',
-	'2023-04-30 10:00:00',
+	'2025-05-30 10:00:00',
 	'2023-04-20 15:00:00',
 	'2023-04-26 11:30:00',
 	'2023-04-25 11:30:00'
@@ -501,33 +502,33 @@ INSERT INTO [grabit].Tasks (
 	)
 VALUES (
 	5,
-	'Hard',
+	15,
 	1,
 	'AI model training',
 	'Train the AI model for chatbot functionality',
-	'2023-06-15 12:00:00',
+	'2025-08-15 12:00:00',
 	'2023-05-01 13:00:00',
 	'2023-05-10 14:00:00',
 	NULL
 	),
 	(
 	5,
-	'Medium',
+	10,
 	2,
 	'Chatbot user interface',
 	'Design chatbot user interface',
-	'2023-07-10 16:00:00',
+	'2025-09-10 16:00:00',
 	'2023-06-15 11:00:00',
 	'2023-06-21 12:15:00',
 	'2023-06-20 12:15:00'
 	),
 	(
 	5,
-	'Hard',
+	15,
 	3,
 	'Integrate speech recognition',
 	'Integrate speech-to-text into chatbot',
-	'2023-07-05 15:00:00',
+	'2025-09-05 15:00:00',
 	'2023-06-01 14:00:00',
 	'2023-06-06 16:30:00',
 	NULL
@@ -547,33 +548,33 @@ INSERT INTO [grabit].Tasks (
 	)
 VALUES (
 	6,
-	'Easy',
+	5,
 	2,
 	'User profile setup',
 	'Setup the user profile screen for the fitness app',
-	'2023-06-30 14:00:00',
+	'2025-09-30 14:00:00',
 	'2023-06-10 11:00:00',
 	'2023-06-16 13:30:00',
 	NULL
 	),
 	(
 	6,
-	'Easy',
+	5,
 	2,
 	'Workout logging feature',
 	'Develop a feature for logging user workouts',
-	'2023-07-25 14:00:00',
+	'2025-10-25 14:00:00',
 	'2023-07-05 10:00:00',
 	'2023-07-11 11:00:00',
 	NULL
 	),
 	(
 	6,
-	'Hard',
+	15,
 	1,
 	'Fitness goals page',
 	'Design and develop a fitness goals tracking page',
-	'2023-08-05 12:00:00',
+	'2025-11-05 12:00:00',
 	'2023-07-10 13:00:00',
 	'2023-07-12 14:30:00',
 	NULL
@@ -593,33 +594,33 @@ INSERT INTO [grabit].Tasks (
 	)
 VALUES (
 	7,
-	'Medium',
+	10,
 	1,
 	'Profile page design',
 	'Create the user profile page design for the social platform',
-	'2023-07-15 10:00:00',
+	'2025-09-15 10:00:00',
 	'2023-07-01 09:00:00',
 	'2023-07-05 12:00:00',
 	NULL
 	),
 	(
 	7,
-	'Easy',
+	5,
 	2,
 	'Post creation feature',
 	'Develop the post creation page',
-	'2023-08-01 12:00:00',
+	'2025-10-01 12:00:00',
 	'2023-07-10 09:00:00',
 	'2023-07-13 15:00:00',
 	NULL
 	),
 	(
 	7,
-	'Medium',
+	10,
 	3,
 	'Create user feed',
 	'Design the user feed feature',
-	'2023-07-20 10:00:00',
+	'2025-09-20 10:00:00',
 	'2023-07-05 13:00:00',
 	'2023-07-08 14:00:00',
 	'2023-07-07 14:00:00'
@@ -639,22 +640,22 @@ INSERT INTO [grabit].Tasks (
 	)
 VALUES (
 	8,
-	'Medium',
+	10,
 	1,
 	'Task filtering',
 	'Implement task filtering functionality',
-	'2023-08-15 11:00:00',
+	'2025-09-15 11:00:00',
 	'2023-08-01 10:00:00',
 	'2023-08-06 12:00:00',
 	NULL
 	),
 	(
 	8,
-	'Hard',
+	15,
 	2,
 	'Assigning tasks feature',
 	'Create a feature to assign tasks to users',
-	'2023-08-20 13:00:00',
+	'2025-09-20 13:00:00',
 	'2023-08-05 14:00:00',
 	'2023-08-08 10:30:00',
 	'2023-08-07 10:30:00'
@@ -674,33 +675,33 @@ INSERT INTO [grabit].Tasks (
 	)
 VALUES (
 	9,
-	'Medium',
+	10,
 	1,
 	'Order history page',
 	'Design the order history page for users',
-	'2023-09-10 11:00:00',
+	'2025-10-10 11:00:00',
 	'2023-09-01 13:00:00',
 	'2023-09-06 14:30:00',
 	NULL
 	),
 	(
 	9,
-	'Easy',
+	5,
 	3,
 	'Restaurant profile page',
 	'Design the profile page for restaurant partners',
-	'2023-09-15 15:00:00',
+	'2025-10-15 15:00:00',
 	'2023-09-01 13:00:00',
 	'2023-09-06 14:00:00',
 	NULL
 	),
 	(
 	9,
-	'Medium',
+	10,
 	1,
 	'Order tracking feature',
 	'Develop the order tracking page for users',
-	'2023-09-20 17:00:00',
+	'2025-10-20 17:00:00',
 	'2023-09-05 12:00:00',
 	'2023-09-09 11:00:00',
 	NULL
@@ -720,22 +721,22 @@ INSERT INTO [grabit].Tasks (
 	)
 VALUES (
 	10,
-	'Medium',
+	10,
 	1,
 	'Property search functionality',
 	'Develop the property search functionality',
-	'2023-10-20 11:00:00',
+	'2025-11-20 11:00:00',
 	'2023-10-01 09:00:00',
 	'2023-10-05 10:00:00',
 	NULL
 	),
 	(
 	10,
-	'Hard',
+	15,
 	2,
 	'Property details UI',
 	'Design the property details page UI',
-	'2023-10-30 14:00:00',
+	'2025-11-30 14:00:00',
 	'2023-10-10 12:30:00',
 	'2023-10-16 11:30:00',
 	'2023-10-15 11:30:00'
@@ -755,27 +756,28 @@ INSERT INTO [grabit].Tasks (
 	)
 VALUES (
 	11,
-	'Hard',
+	15,
 	1,
 	'Course registration page',
 	'Create the course registration page',
-	'2023-11-15 12:00:00',
+	'2025-12-15 12:00:00',
 	'2023-11-01 14:00:00',
 	'2023-11-06 10:30:00',
 	NULL
 	),
 	(
 	11,
-	'Easy',
+	5,
 	3,
 	'Student dashboard',
 	'Design the student dashboard page',
-	'2023-11-20 15:00:00',
+	'2025-12-20 15:00:00',
 	'2023-11-10 13:00:00',
 	'2023-11-14 15:00:00',
 	'2023-11-12 15:00:00'
 	);
 GO
+
 
 INSERT INTO [grabit].ProjectCollaborators (
 	UserID,

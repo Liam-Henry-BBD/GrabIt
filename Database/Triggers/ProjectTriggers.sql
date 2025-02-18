@@ -1,5 +1,4 @@
-USE grabit;
-GO
+
 
 -- BEFORE CREATING PROJECT
 CREATE TRIGGER trgBeforeInsertProjectCollaborators ON [grabit].[ProjectCollaborators]
@@ -20,7 +19,7 @@ BEGIN
 	END
 
 	INSERT INTO [grabit].[ProjectCollaborators]
-	SELECT ProjectCollaboratorID,
+	SELECT
 		UserID,
 		ProjectID,
 		RoleID,

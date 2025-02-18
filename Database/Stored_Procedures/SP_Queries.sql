@@ -1,5 +1,3 @@
-USE grabit
-GO
 
 -- Stored procedure to allow a user 
 -- to grab a task, 

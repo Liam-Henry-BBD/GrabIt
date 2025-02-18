@@ -1,5 +1,4 @@
-USE grabit;
-GO
+
 
 -- AFTER Task Updates
 CREATE TRIGGER trgAfterUpdateTasks ON [grabit].[Tasks]
@@ -190,7 +189,7 @@ BEGIN
 	IF EXISTS (
 			SELECT new.TaskCollaboratorID
 			FROM INSERTED new
-			JOIN [grabit].[TaskCollaborators] task ON task.TaskID = new.TaskID
+			JOIN [grabit].[Tasks] task ON task.TaskID = new.TaskID
 			WHERE task.TaskDeadline < GETDATE()
 				AND new.JoinedAt > task.TaskDeadline
 			)
@@ -210,7 +209,7 @@ BEGIN
 	IF EXISTS (
 			SELECT new.TaskCollaboratorID
 			FROM INSERTED new
-			JOIN [grabit].[TaskCollaborators] task ON task.TaskID = new.TaskID
+			JOIN [grabit].[Tasks] task ON task.TaskID = new.TaskID
 			WHERE task.TaskStatusID = 4
 			)
 	BEGIN
@@ -229,7 +228,7 @@ BEGIN
 	IF EXISTS (
 			SELECT new.TaskCollaboratorID
 			FROM INSERTED new
-			JOIN [grabit].[TaskCollaborators] task ON task.TaskID = new.TaskID
+			JOIN [grabit].[Tasks] task ON task.TaskID = new.TaskID
 			WHERE task.TaskStatusID = 4
 			)
 	BEGIN
@@ -315,6 +314,7 @@ BEGIN
 			SELECT *
 			FROM INSERTED new
 			JOIN [grabit].[TaskCollaborators] ON [grabit].[TaskCollaborators].TaskID = new.TaskID
+			JOIN [grabit].[Tasks] ON [grabit].[Tasks].TaskID = [grabit].[TaskCollaborators].TaskID
 			WHERE new.UserID IS NULL
 				AND (
 					[grabit].[Tasks].TaskStatusID = 4
@@ -338,7 +338,7 @@ BEGIN
 			SELECT new.TaskCollaboratorID
 			FROM INSERTED new
 			JOIN DELETED old ON old.TaskCollaboratorID = new.TaskCollaboratorID
-			JOIN [grabit].[TaskCollaborators] task ON task.TaskID = old.TaskID
+			JOIN [grabit].[Tasks] task ON task.TaskID = old.TaskID
 			WHERE task.TaskStatusID = 4
 				AND new.UserID <> old.UserID
 			)
