@@ -46,7 +46,7 @@ BEGIN
 	BEGIN TRY
 		BEGIN TRANSACTION;
 
-		UPDATE Tasks
+		UPDATE [grabit].Tasks
 		SET TaskStatusID = 3
 		WHERE TaskID = @TaskID;
 
@@ -68,7 +68,7 @@ BEGIN
 	BEGIN TRY
 		BEGIN TRANSACTION;
 
-		UPDATE Tasks
+		UPDATE [grabit].Tasks
 		SET TaskStatusID = 4,
 			TaskCompletedAt = GETDATE()
 		WHERE TaskID = @TaskID;
@@ -150,7 +150,7 @@ BEGIN
 
 		IF @TaskStatusID = 2
 		BEGIN
-			UPDATE Tasks
+			UPDATE [grabit].Tasks
 			SET TaskStatusID = 1
 			WHERE TaskID = @TaskID;
 		END;
@@ -193,7 +193,7 @@ AS
 BEGIN
 	BEGIN TRY
 		SELECT COUNT(*)
-		FROM Tasks
+		FROM [grabit].Tasks
 		WHERE ProjectID = @ProjectID
 			AND TaskStatusID = 4;
 	END TRY
@@ -214,11 +214,11 @@ BEGIN
 		DECLARE @TaskStatusID INT;
 
 		SELECT @UserRoleID = RoleID
-		FROM TaskCollaborators
+		FROM [grabit].TaskCollaborators
 		WHERE UserID = @UserID;
 
 		SELECT @TaskStatusID = TaskStatusID
-		FROM Tasks
+		FROM [grabit].Tasks
 		WHERE TaskID = @TaskID;
 
 		IF @UserRoleID = 1
@@ -246,7 +246,7 @@ BEGIN
 	BEGIN TRY
 		BEGIN TRANSACTION;
 
-		UPDATE Tasks
+		UPDATE [grabit].Tasks
 		SET TaskDeadline = @NewDeadline
 		WHERE TaskID = @TaskID;
 
@@ -295,8 +295,8 @@ BEGIN
 		SELECT t.TaskID,
 			t.TaskName,
 			u.GitHubID
-		FROM Tasks t
-		JOIN TaskCollaborators tc ON t.TaskID = tc.TaskID
+		FROM [grabit].Tasks t
+		JOIN [grabit].TaskCollaborators tc ON t.TaskID = tc.TaskID
 		JOIN Users u ON tc.UserID = u.UserID
 		WHERE t.ProjectID = @ProjectID
 			AND t.TaskStatusID = 3;
@@ -317,10 +317,10 @@ BEGIN
 			t.TaskName,
 			ts.StatusName,
 			u.GitHubID
-		FROM Tasks t
-		JOIN TaskStatus ts ON t.TaskStatusID = ts.TaskStatusID
-		JOIN TaskCollaborators tc ON t.TaskID = tc.TaskID
-		JOIN Users u ON tc.UserID = u.UserID
+		FROM [grabit].Tasks t
+		JOIN [grabit].TaskStatus ts ON t.TaskStatusID = ts.TaskStatusID
+		JOIN [grabit].TaskCollaborators tc ON t.TaskID = tc.TaskID
+		JOIN [grabit].Users u ON tc.UserID = u.UserID
 		WHERE t.ProjectID = @ProjectID
 			AND t.TaskStatusID != 4;
 	END TRY
@@ -338,7 +338,7 @@ BEGIN
 	BEGIN TRY
 		BEGIN TRANSACTION;
 
-		UPDATE Tasks
+		UPDATE [grabit].Tasks
 		SET TaskStatusID = 5
 		WHERE TaskID = @TaskID;
 

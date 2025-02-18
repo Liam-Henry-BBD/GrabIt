@@ -258,12 +258,12 @@ VALUES (
 GO
 
 INSERT INTO [grabit].TaskPoints (
-	TaskPointID,
-	PointValue
+	TaskDifficulty,
+	TaskPointID
 	)
 VALUES (
-	'Easy',
-	5
+	'Easy'
+	5,
 	),
 	(
 	'Medium',

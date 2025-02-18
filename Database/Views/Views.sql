@@ -40,7 +40,7 @@ AS
 SELECT t.TaskID,
 	t.TaskName,
 	t.TaskDescription,
-	t.TaskPointID,
+	tp.TaskDifficulty,
 	t.TaskCompletedAt
 FROM [grabit].[Tasks] t
 WHERE t.TaskStatusID = 4;
@@ -83,7 +83,7 @@ CREATE VIEW vwProjectLeaderBoards
 AS
 SELECT u.UserID,
 	u.GitHubID,
-	SUM(COALESCE(tp.PointValue, 0)) AS TotalScore
+	SUM(COALESCE(tp.TaskPointID, 0)) AS TotalScore
 FROM (
 	SELECT DISTINCT tc.UserID,
 		tc.TaskID

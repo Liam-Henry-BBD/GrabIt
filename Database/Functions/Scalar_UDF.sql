@@ -104,7 +104,7 @@ AS
 BEGIN
 	DECLARE @AveragePoints FLOAT;
 
-	SELECT @AveragePoints = AVG([grabit].TaskPoints.PointValue)
+	SELECT @AveragePoints = AVG([grabit].TaskPoints.TaskPointID)
 	FROM [grabit].Tasks
 	JOIN [grabit].TaskPoints ON [grabit].Tasks.TaskPointID = [grabit].TaskPoints.TaskPointID
 	WHERE [grabit].Tasks.ProjectID = @ProjectID;
