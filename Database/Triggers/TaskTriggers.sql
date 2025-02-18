@@ -2,7 +2,7 @@ USE grabit;
 GO
 
 -- AFTER Task Updates
-CREATE TRIGGER trgAfterUpdateTasks ON Tasks
+CREATE TRIGGER trgAfterUpdateTasks ON [grabit].[Tasks]
 AFTER UPDATE
 AS
 BEGIN
@@ -17,16 +17,16 @@ BEGIN
 	SELECT @TaskID = TaskID
 	FROM INSERTED;
 
-	UPDATE Tasks
+	UPDATE [grabit].[Tasks]
 	SET TaskCompletedAt = GETDATE()
 	FROM INSERTED new
 	JOIN DELETED del ON del.TaskID = new.TaskID
 	WHERE new.TaskStatusID = @CompletedID
-		AND Tasks.TaskID = new.TaskID
-		AND Tasks.TaskCompletedAt IS NULL
+		AND [grabit].[Tasks].TaskID = new.TaskID
+		AND [grabit].[Tasks].TaskCompletedAt IS NULL
 		AND del.TaskStatusID <> @CompletedID
 
-	UPDATE Tasks
+	UPDATE [grabit].[Tasks]
 	SET TaskUpdatedAt = GETDATE(),
 		TaskName = new.TaskName,
 		TaskDescription = new.TaskDescription,
@@ -34,12 +34,12 @@ BEGIN
 		TaskStatusID = new.TaskStatusID,
 		TaskReviewRequestedAt = new.TaskReviewRequestedAt
 	FROM INSERTED new
-	WHERE Tasks.TaskID = @TaskID
+	WHERE [grabit].[Tasks].TaskID = @TaskID
 END
 GO
 
 -- BEFORE Update Tasks
-CREATE TRIGGER trgBeforeUpdateTasks ON Tasks
+CREATE TRIGGER trgBeforeUpdateTasks ON [grabit].[Tasks]
 INSTEAD OF UPDATE
 AS
 BEGIN
@@ -142,7 +142,7 @@ BEGIN
 		RETURN
 	END
 
-	UPDATE Tasks
+	UPDATE [grabit].[Tasks]
 	SET TaskUpdatedAt = GETDATE(),
 		TaskName = new.TaskName,
 		TaskDescription = new.TaskDescription,
@@ -151,12 +151,12 @@ BEGIN
 		TaskReviewRequestedAt = new.TaskReviewRequestedAt,
 		TaskDeadline = new.TaskDeadline
 	FROM INSERTED new
-	WHERE Tasks.TaskID = new.TaskID
+	WHERE [grabit].[Tasks].TaskID = new.TaskID
 END
 GO
 
 -- 
-CREATE TRIGGER trgBeforeInsertTaskCollaborators ON TaskCollaborators
+CREATE TRIGGER trgBeforeInsertTaskCollaborators ON [grabit].[TaskCollaborators]
 INSTEAD OF INSERT
 AS
 BEGIN
@@ -169,10 +169,10 @@ BEGIN
 
 	-- CANNOT COLLABORATE RATE MORE THAN ONCE ON A TASK
 	IF (
-			SELECT COUNT(TaskCollaborators.TaskID)
-			FROM TaskCollaborators
-			WHERE TaskCollaborators.TaskID = @TaskID
-				AND TaskCollaborators.UserID = TaskCollaborators.UserID
+			SELECT COUNT([grabit].[TaskCollaborators].TaskID)
+			FROM [grabit].[TaskCollaborators]
+			WHERE [grabit].[TaskCollaborators].TaskID = @TaskID
+				AND [grabit].[TaskCollaborators].UserID = [grabit].[TaskCollaborators].UserID
 			) > 1
 	BEGIN
 		RAISERROR (
@@ -190,7 +190,7 @@ BEGIN
 	IF EXISTS (
 			SELECT new.TaskCollaboratorID
 			FROM INSERTED new
-			JOIN Tasks task ON task.TaskID = new.TaskID
+			JOIN [grabit].[TaskCollaborators] task ON task.TaskID = new.TaskID
 			WHERE task.TaskDeadline < GETDATE()
 				AND new.JoinedAt > task.TaskDeadline
 			)
@@ -210,7 +210,7 @@ BEGIN
 	IF EXISTS (
 			SELECT new.TaskCollaboratorID
 			FROM INSERTED new
-			JOIN Tasks task ON task.TaskID = new.TaskID
+			JOIN [grabit].[TaskCollaborators] task ON task.TaskID = new.TaskID
 			WHERE task.TaskStatusID = 4
 			)
 	BEGIN
@@ -229,7 +229,7 @@ BEGIN
 	IF EXISTS (
 			SELECT new.TaskCollaboratorID
 			FROM INSERTED new
-			JOIN Tasks task ON task.TaskID = new.TaskID
+			JOIN [grabit].[TaskCollaborators] task ON task.TaskID = new.TaskID
 			WHERE task.TaskStatusID = 4
 			)
 	BEGIN
@@ -247,8 +247,8 @@ BEGIN
 	--CANNOT MAKE ROLE AS LEAD OR MEMBER
 	IF EXISTS (
 			SELECT 1
-			FROM TaskCollaborators
-			JOIN INSERTED new ON new.TaskCollaboratorID = TaskCollaborators.TaskCollaboratorID
+			FROM [grabit].[TaskCollaborators]
+			JOIN INSERTED new ON new.TaskCollaboratorID = [grabit].[TaskCollaborators].TaskCollaboratorID
 			WHERE (
 					new.RoleID = 1
 					OR new.RoleID = 2
@@ -266,7 +266,7 @@ BEGIN
 		RETURN
 	END
 
-	INSERT TaskCollaborators
+	INSERT [grabit].[TaskCollaborators]
 	SELECT UserID,
 		RoleID,
 		TaskID,
@@ -277,7 +277,7 @@ END
 GO
 
 -- 
-CREATE TRIGGER trgBeforeUpdateTaskCollaborators ON TaskCollaborators
+CREATE TRIGGER trgBeforeUpdateTaskCollaborators ON [grabit].[TaskCollaborators]
 INSTEAD OF UPDATE
 AS
 BEGIN
@@ -314,11 +314,11 @@ BEGIN
 	IF EXISTS (
 			SELECT *
 			FROM INSERTED new
-			JOIN Tasks ON Tasks.TaskID = new.TaskID
+			JOIN [grabit].[TaskCollaborators] ON [grabit].[TaskCollaborators].TaskID = new.TaskID
 			WHERE new.UserID IS NULL
 				AND (
-					Tasks.TaskStatusID = 4
-					OR Tasks.TaskStatusID = 3
+					[grabit].[Tasks].TaskStatusID = 4
+					OR [grabit].[Tasks].TaskStatusID = 3
 					)
 			)
 	BEGIN
@@ -338,7 +338,7 @@ BEGIN
 			SELECT new.TaskCollaboratorID
 			FROM INSERTED new
 			JOIN DELETED old ON old.TaskCollaboratorID = new.TaskCollaboratorID
-			JOIN Tasks task ON task.TaskID = old.TaskID
+			JOIN [grabit].[TaskCollaborators] task ON task.TaskID = old.TaskID
 			WHERE task.TaskStatusID = 4
 				AND new.UserID <> old.UserID
 			)
@@ -357,10 +357,10 @@ BEGIN
 	-- CANNOT CHANGE WHEN YOU JOINED A TASK
 	IF EXISTS (
 			SELECT new.TaskCollaboratorID
-			FROM TaskCollaborators
-			JOIN INSERTED new ON new.TaskCollaboratorID = TaskCollaborators.TaskCollaboratorID
+			FROM [grabit].[TaskCollaborators]
+			JOIN INSERTED new ON new.TaskCollaboratorID = [grabit].[TaskCollaborators].TaskCollaboratorID
 			JOIN DELETED old ON old.TaskID = new.TaskID
-			WHERE TaskCollaborators.JoinedAt <> new.JoinedAt
+			WHERE [grabit].[TaskCollaborators].JoinedAt <> new.JoinedAt
 			)
 	BEGIN
 		RAISERROR (
@@ -377,8 +377,8 @@ BEGIN
 	--CANNOT MAKE ROLE AS LEAD OR MEMBER
 	IF EXISTS (
 			SELECT 1
-			FROM TaskCollaborators
-			JOIN INSERTED new ON new.TaskCollaboratorID = TaskCollaborators.TaskCollaboratorID
+			FROM [grabit].[TaskCollaborators]
+			JOIN INSERTED new ON new.TaskCollaboratorID = [grabit].[TaskCollaborators].TaskCollaboratorID
 			WHERE (
 					new.RoleID = 1
 					OR new.RoleID = 2
@@ -396,34 +396,34 @@ BEGIN
 		RETURN
 	END
 
-	UPDATE TaskCollaborators
+	UPDATE [grabit].[TaskCollaborators]
 	SET UserID = new.UserID,
 		RoleID = new.RoleID,
 		isActive = new.IsActive
 	FROM INSERTED new
-	WHERE TaskCollaborators.TaskCollaboratorID = new.TaskCollaboratorID
+	WHERE [grabit].[TaskCollaborators].TaskCollaboratorID = new.TaskCollaboratorID
 END
 GO
 
 -- BEFORE DELETION
-CREATE TRIGGER trgBeforeDeleteTaskCollaborators ON TaskCollaborators
+CREATE TRIGGER trgBeforeDeleteTaskCollaborators ON [grabit].[TaskCollaborators]
 INSTEAD OF DELETE
 AS
 BEGIN
-	UPDATE TaskCollaborators
+	UPDATE [grabit].[TaskCollaborators]
 	SET isActive = 0
 	FROM DELETED
-	WHERE DELETED.TaskCollaboratorID = TaskCollaborators.TaskCollaboratorID
+	WHERE DELETED.TaskCollaboratorID = [grabit].[TaskCollaborators].TaskCollaboratorID
 END
 GO
 
-CREATE TRIGGER trgBeforeDeleteTasks ON Tasks
+CREATE TRIGGER trgBeforeDeleteTasks ON [grabit].[Tasks]
 INSTEAD OF DELETE
 AS
 BEGIN
-	UPDATE TaskCollaborators
+	UPDATE [grabit].[TaskCollaborators]
 	SET isActive = 0,
-		RoleID = TaskCollaborators.RoleID
+		RoleID = [grabit].[TaskCollaborators].RoleID
 	FROM DELETED old
-	WHERE TaskCollaborators.TaskID = old.TaskID
+	WHERE [grabit].[TaskCollaborators].TaskID = old.TaskID
 END

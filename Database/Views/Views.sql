@@ -8,7 +8,7 @@ SELECT t.TaskID,
 	t.TaskName,
 	t.TaskDescription,
 	t.TaskPointID
-FROM Tasks t
+FROM [grabit].[Tasks] t
 WHERE t.TaskStatusID = 1;
 GO
 
@@ -19,7 +19,7 @@ SELECT t.TaskID,
 	t.TaskName,
 	t.TaskDescription,
 	t.TaskPointID
-FROM Tasks t
+FROM [grabit].[Tasks] t
 WHERE t.TaskStatusID = 2;
 GO
 
@@ -30,7 +30,7 @@ SELECT t.TaskID,
 	t.TaskName,
 	t.TaskDescription,
 	t.TaskPointID
-FROM Tasks t
+FROM [grabit].[Tasks] t
 WHERE t.TaskStatusID = 3;
 GO
 
@@ -42,7 +42,7 @@ SELECT t.TaskID,
 	t.TaskDescription,
 	t.TaskPointID,
 	t.TaskCompletedAt
-FROM Tasks t
+FROM [grabit].[Tasks] t
 WHERE t.TaskStatusID = 4;
 GO
 
@@ -55,10 +55,10 @@ SELECT pc.UserID,
 	p.ProjectName,
 	r.RoleTitle,
 	pc.JoinedAt
-FROM ProjectCollaborators pc
-JOIN Roles r ON pc.RoleID = r.RoleID
-JOIN Users u ON pc.UserID = u.UserID
-JOIN Projects p ON pc.ProjectID = p.ProjectID;
+FROM [grabit].[ProjectCollaborators] pc
+JOIN [grabit].[Roles] r ON pc.RoleID = r.RoleID
+JOIN [grabit].[Users] u ON pc.UserID = u.UserID
+JOIN [grabit].[Projects] p ON pc.ProjectID = p.ProjectID;
 GO
 
 -- View of project completion rate
@@ -74,7 +74,7 @@ SELECT t.ProjectID,
 				WHEN t.TaskCompletedAt IS NOT NULL
 					THEN t.TaskID
 				END) * 100.0 / COUNT(t.TaskID)) AS CompletionRate
-FROM Tasks t
+FROM [grabit].[Tasks] t
 GROUP BY t.ProjectID;
 GO
 
@@ -87,13 +87,13 @@ SELECT u.UserID,
 FROM (
 	SELECT DISTINCT tc.UserID,
 		tc.TaskID
-	FROM TaskCollaborators tc
-	JOIN Tasks t ON t.TaskID = tc.TaskID
+	FROM [grabit].[TaskCollaborators] tc
+	JOIN [grabit].[Tasks] t ON t.TaskID = tc.TaskID
 	WHERE tc.isActive = 1 -- Filter active users 
 	) AS distinct_user_tasks
-JOIN Users u ON u.UserID = distinct_user_tasks.UserID
-JOIN Tasks t ON t.TaskID = distinct_user_tasks.TaskID
-JOIN TaskPoints tp ON tp.TaskPointID = t.TaskPointID
+JOIN [grabit].[Users] u ON u.UserID = distinct_user_tasks.UserID
+JOIN [grabit].[Tasks] t ON t.TaskID = distinct_user_tasks.TaskID
+JOIN [grabit].[TaskPoints] tp ON tp.TaskPointID = t.TaskPointID
 WHERE t.TaskStatusID = 1
 GROUP BY u.UserID,
 	u.GitHubID
@@ -108,10 +108,10 @@ SELECT tc.UserID,
 	t.TaskName,
 	t.ProjectID,
 	p.ProjectName
-FROM TaskCollaborators tc
-JOIN Tasks t ON tc.TaskID = t.TaskID
-JOIN Projects p ON t.ProjectID = p.ProjectID
-JOIN Users u ON tc.UserID = u.UserID
+FROM [grabit].[TaskCollaborators] tc
+JOIN [grabit].[Tasks] t ON tc.TaskID = t.TaskID
+JOIN [grabit].[Projects] p ON t.ProjectID = p.ProjectID
+JOIN [grabit].[Users] u ON tc.UserID = u.UserID
 GO
 
 -- view of users that are inactive on a project
@@ -122,9 +122,9 @@ SELECT DISTINCT u.UserID,
 	t.ProjectID,
 	p.ProjectName
 FROM Users u
-JOIN ProjectCollaborators pc ON u.UserID = pc.UserID
-JOIN Tasks t ON pc.ProjectID = t.ProjectID
-JOIN Projects p ON pc.ProjectID = p.ProjectID
+JOIN [grabit].[ProjectCollaborators] pc ON u.UserID = pc.UserID
+JOIN [grabit].[Tasks] t ON pc.ProjectID = t.ProjectID
+JOIN [grabit].[Projects] p ON pc.ProjectID = p.ProjectID
 WHERE pc.isActive = 0;
 GO
 
@@ -136,8 +136,8 @@ SELECT DISTINCT u.UserID,
 	tc.TaskID,
 	t.ProjectID
 FROM Users u
-JOIN TaskCollaborators tc ON u.UserID = tc.UserID
-JOIN Tasks t ON tc.TaskID = t.TaskID
+JOIN [grabit].[TaskCollaborators] tc ON u.UserID = tc.UserID
+JOIN [grabit].[Tasks] t ON tc.TaskID = t.TaskID
 WHERE tc.isActive = 0;
 GO
 
@@ -145,24 +145,24 @@ GO
 CREATE VIEW vwEasyTasks
 AS
 SELECT *
-FROM tasks
-WHERE tasks.TaskPointID = 'Easy'
+FROM [grabit].[Tasks]
+WHERE [grabit].[Tasks].TaskPointID = 'Easy'
 GO
 
 -- view of all medium tasks
 CREATE VIEW vwMediumTasks
 AS
 SELECT *
-FROM tasks
-WHERE tasks.TaskPointID = 'Medium'
+FROM [grabit].[Tasks]
+WHERE [grabit].[Tasks].TaskPointID = 'Medium'
 GO
 
 -- view of all hard tasks
 CREATE VIEW vwHardTasks
 AS
 SELECT *
-FROM tasks
-WHERE tasks.TaskPointID = 'Hard'
+FROM [grabit].[Tasks]
+WHERE [grabit].[Tasks].TaskPointID = 'Hard'
 GO
 
 -- view of the number of collaborators on each project
@@ -170,7 +170,7 @@ CREATE VIEW vwProjectCollaboratorCount
 AS
 SELECT pc.ProjectID,
 	COUNT(pc.UserID) AS CollaboratorCount
-FROM ProjectCollaborators pc
+FROM [grabit].[ProjectCollaborators] pc
 GROUP BY pc.ProjectID;
 GO
 
@@ -179,7 +179,7 @@ CREATE VIEW vwTaskCollaboratorCount
 AS
 SELECT tc.TaskID,
 	COUNT(tc.UserID) AS CollaboratorCount
-FROM TaskCollaborators tc
+FROM [grabit].[TaskCollaborators] tc
 GROUP BY tc.TaskID;
 GO
 
@@ -190,9 +190,9 @@ SELECT u.UserID,
 	u.GitHubID,
 	COUNT(DISTINCT tc.TaskID) AS TaskCount,
 	COUNT(DISTINCT pc.ProjectID) AS ProjectCount
-FROM Users u
-LEFT JOIN TaskCollaborators tc ON u.UserID = tc.UserID
-LEFT JOIN ProjectCollaborators pc ON u.UserID = pc.UserID
+FROM [grabit].[Users] u
+LEFT JOIN [grabit].[TaskCollaborators] tc ON u.UserID = tc.UserID
+LEFT JOIN [grabit].[ProjectCollaborators] pc ON u.UserID = pc.UserID
 GROUP BY u.UserID,
 	u.GitHubID;
 GO
@@ -206,7 +206,7 @@ SELECT p.ProjectName,
 	p.UpdatedAt,
 	iif(pc.isActive = 1, 'Open', 'Closed') AS ProjectStatus
 FROM Projects p
-JOIN ProjectCollaborators pc ON p.ProjectID = pc.ProjectID
-JOIN Users u ON pc.UserID = u.UserID
+JOIN [grabit].[ProjectCollaborators] pc ON p.ProjectID = pc.ProjectID
+JOIN [grabit].[Users] u ON pc.UserID = u.UserID
 WHERE pc.RoleID = 1
 GO
