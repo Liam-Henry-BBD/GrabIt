@@ -233,3 +233,5 @@ BEGIN
 	RETURN @AveTimeOnTask;
 END;
 GO
+
+
