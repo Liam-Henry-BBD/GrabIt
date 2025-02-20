@@ -8,5 +8,6 @@ import com.grabit.API.model.Task;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Integer> {
     // the rest of the methods that are inherited from JpaRepository go here
-    
+
+    Task findByTaskName(String taskName);
 }
