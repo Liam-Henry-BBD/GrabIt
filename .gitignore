@@ -35,3 +35,4 @@ API/### VS Code ###
 API/.vscode/
 
 API/target/
+/API/src/main/resources/application.properties
