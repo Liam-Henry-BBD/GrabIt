@@ -15,7 +15,7 @@ public class ProjectCollaborator {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ProjectCollaboratorID;
+    private int projectCollaboratorID;
 
     // @ManyToOne
     // @JoinColumn(name = "UserID", nullable = false)
