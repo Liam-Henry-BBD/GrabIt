@@ -22,15 +22,15 @@ public class ProjectCollaboratorService {
     }
 
     public ProjectCollaborator getProjectCollaboratorByID(Long id) {
-        return projectCollaboratorRepository.findById(id).orElse(null);
+        return projectCollaboratorRepository.findById(id.intValue()).orElse(null);
     }
 
     public ProjectCollaborator updateProjectCollaborator(Long id, ProjectCollaborator projectCollaborator) {
-        projectCollaborator.setProjectCollaboratorID(id);
+        projectCollaborator.setProjectCollaboratorID(id.intValue());
         return projectCollaboratorRepository.save(projectCollaborator);
     }
 
     public void deleteProjectCollaborator(Long id) {
-        projectCollaboratorRepository.deleteById(id);
+        projectCollaboratorRepository.deleteById(id.intValue());
     }
 }
