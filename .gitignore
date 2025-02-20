@@ -1,6 +1,6 @@
 .vs/
 ./.vs
-
+.vscode/
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
