@@ -3,6 +3,8 @@ package com.grabit.API.service;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.grabit.API.model.TaskCollaborators;
+import com.grabit.API.model.TaskStatus;
 import com.grabit.API.repository.ProjectRepository;
 import com.grabit.API.repository.TaskPointRepository;
 import com.grabit.API.repository.TaskStatusRepository;
@@ -61,28 +63,38 @@ public class TaskService {
     public Task updateTaskStatus(int taskID, byte taskStatusID) {
         Task task = taskRepository.findById(taskID).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
 
-        if (task.getTaskStatus().getStatusName().contains("COMPLETED")) {
+        if (task.getTaskStatus().getStatusName().contains("Complete")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task already completed");
         }
 
-        //To introduce enums later
-        if (taskStatusID == 4 && !task.getTaskStatus().getStatusName().contains("REVIEW")) {
+        if (taskStatusID == 4 && !task.getTaskStatus().getStatusName().contains("Review")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task must be reviewed before it can be completed");
         }
 
-        if (task.getTaskStatus().getStatusName().contains("REVIEW") && taskStatusID == 1) {
+        if (task.getTaskStatus().getStatusName().contains("Review") && taskStatusID == 1) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot move task from review to available.");
         }
+
+        if (task.getTaskStatus().getStatusName().contains("Available") && taskStatusID != 2) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task must move from available to grabbed.");
+        }
+
+        //TODO: If a task has been taken for a day, it cannot be move to available again
+        TaskStatus taskStatus = taskStatusRepository.findById((int) taskStatusID)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task status not found"));
+
+
+        task.setTaskStatus(taskStatus);
 
         return taskRepository.save(task);
     }
 
     public Task updateTask(Integer taskID, Task task) {
         Task updatedTask = taskRepository.findById(taskID)
-            .orElseThrow(() -> new RuntimeException("Task not found"));
+            .orElseThrow(() -> new RuntimeException("Task not found."));
 
-        if (updatedTask.getTaskStatus().getStatusName().contains("COMPLETED")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task is already completed");
+        if (updatedTask.getTaskStatus().getStatusName().contains("Complete")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task is already completed.");
         }
 
         if (task.getTaskDeadline() != null && task.getTaskDeadline().isBefore(LocalDate.now())) {
@@ -97,9 +109,14 @@ public class TaskService {
 
     public void deleteTask(Integer id) {
         Task task = taskRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Task not found"));
+            .orElseThrow(() -> new RuntimeException("Task not found."));
         
         taskRepository.delete(task);
+    }
+
+    public List<TaskCollaborators> getTaskCollaborators(Integer taskID) {
+//        re
+        return null;
     }
 
 }
