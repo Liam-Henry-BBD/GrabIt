@@ -6,10 +6,14 @@ import org.springframework.stereotype.Service;
 import com.grabit.API.model.Project;
 import com.grabit.API.model.ProjectCollaboratorModel;
 import com.grabit.API.model.Task;
+<<<<<<< Updated upstream
 import com.grabit.API.model.TaskCollaborators;
 import com.grabit.API.repository.ProjectCollaboratorRepository;
+=======
+import com.grabit.API.model.TaskCollaborator;
+>>>>>>> Stashed changes
 import com.grabit.API.repository.ProjectRepository;
-import com.grabit.API.repository.TaskCollaboratorsRepository;
+import com.grabit.API.repository.TaskCollaboratorRepository;
 import com.grabit.API.repository.TaskRepository;
 
 import java.util.List;
@@ -21,6 +25,7 @@ public class ProjectService extends Task {
     // private TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
     private final TaskRepository taskRepository;
+<<<<<<< Updated upstream
     private final TaskCollaboratorsRepository taskCollaboratorsRepository;
     private final ProjectCollaboratorRepository projectCollaboratorRepository;
 
@@ -33,6 +38,16 @@ public class ProjectService extends Task {
         this.taskCollaboratorsRepository = taskCollaboratorsRepository;
         this.projectCollaboratorRepository = projectCollaboratorRepository;
 
+=======
+    private final TaskCollaboratorRepository taskCollaboratorRepository;
+
+    @Autowired
+    public ProjectService(ProjectRepository projectRepository, TaskRepository taskRepository,
+            TaskCollaboratorRepository taskCollaboratorRepository) {
+        this.projectRepository = projectRepository;
+        this.taskRepository = taskRepository;
+        this.taskCollaboratorRepository = taskCollaboratorRepository;
+>>>>>>> Stashed changes
     }
 
     // Save a new project or update an existing one
@@ -60,16 +75,22 @@ public class ProjectService extends Task {
         return taskRepository.findByProject_ProjectID(projectID);
     }
 
-    public List<TaskCollaborators> getProjectLeaderboardByProjectId(Integer projectID) {
+    public List<TaskCollaborator> getProjectLeaderboardByProjectId(Integer projectID) {
         List<Task> tasks = taskRepository.findByProject_ProjectID(projectID);
+<<<<<<< Updated upstream
         List<Task> completedTasks = tasks.stream().filter(task -> task.getTaskStatus().getTaskStatusID() == 2)
                 .collect(Collectors.toList());
         List<TaskCollaborators> taskCollaborators = completedTasks.stream()
                 .flatMap(task -> taskCollaboratorsRepository.findById(task.getTaskID()).stream())
                 .collect(Collectors.toList());
         // List<Object>
+=======
+        List<Task> completedTasks = tasks.stream().filter(task -> task.getTaskStatus().getTaskStatusID() == 2).collect(Collectors.toList());
+        List<TaskCollaborator> taskCollaborator = completedTasks.stream().flatMap(task -> taskCollaboratorRepository.findById(task.getTaskID()).stream()).collect(Collectors.toList());
+        // List<Object> 
+>>>>>>> Stashed changes
 
-        return taskCollaborators;
+        return taskCollaborator;
     }
 
     public List<ProjectCollaboratorModel> getProjectCollaboratorsByProjectId(Integer projectID) {

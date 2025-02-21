@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "TaskCollaborators", schema = "grabit")
-public class TaskCollaborators {
+public class TaskCollaborator {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

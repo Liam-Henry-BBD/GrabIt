@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.grabit.API.model.Project;
 import com.grabit.API.model.ProjectCollaboratorModel;
 import com.grabit.API.model.Task;
-import com.grabit.API.model.TaskCollaborators;
+import com.grabit.API.model.TaskCollaborator;
 import com.grabit.API.service.ProjectService;
 
 import java.util.List;
@@ -62,7 +62,12 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}/leaderboard")
+<<<<<<< Updated upstream
     public ResponseEntity<List<TaskCollaborators>> getProjectLeaderboard(@PathVariable Integer id) {
         return ResponseEntity.ok(projectService.getProjectLeaderboardByProjectId(id));
+=======
+    public List<TaskCollaborator> getProjectLeaderboard(@PathVariable Integer id) {
+        return projectService.getProjectLeaderboardByProjectId(id);
+>>>>>>> Stashed changes
     }
 }

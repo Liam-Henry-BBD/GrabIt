@@ -1,0 +1,58 @@
+package com.grabit.API.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.grabit.API.model.TaskCollaborator;
+import com.grabit.API.service.TaskCollaboratorService;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/api/taskCollaborators")
+public class TaskCollaboratorController {
+
+    private final TaskCollaboratorService taskCollaboratorService;
+
+    @Autowired
+    public TaskCollaboratorController(TaskCollaboratorService taskCollaboratorService) {
+        this.taskCollaboratorService = taskCollaboratorService;
+    }
+
+    // Creating a task collaborator.
+    @PostMapping
+//    public ResponseEntity<TaskCollaborator> createTaskCollaborator(@RequestBody TaskCollaborator taskCollaborator) {
+//        TaskCollaborator savedTaskCollaborator = taskCollaboratorService.addTaskCollaborator(taskCollaborator);
+//        return new ResponseEntity<>(savedTaskCollaborator, HttpStatus.CREATED);
+//    }
+
+    // Updating a task collaborator.
+    @PutMapping("/{id}")
+    public ResponseEntity<TaskCollaborator> updateTaskCollaborator(@PathVariable Integer id, @RequestBody TaskCollaborator taskCollaborator) {
+        TaskCollaborator updatedTaskCollaborator = taskCollaboratorService.updateTaskCollaborator(id, taskCollaborator);
+        return new ResponseEntity<>(updatedTaskCollaborator, HttpStatus.OK);
+    }
+
+    // Getting all task collaborators in all the tasks.
+    @GetMapping
+    public List<TaskCollaborator> getAllTaskCollaborator() {
+        return taskCollaboratorService.getAllTaskCollaborator();
+    }
+
+    // Getting task collaborator by their ID.
+    @GetMapping("/{id}")
+    public ResponseEntity<TaskCollaborator> getTaskCollaboratorByID(@PathVariable Integer id) {
+        Optional<TaskCollaborator> taskCollaborator = Optional.ofNullable(taskCollaboratorService.getTaskCollaboratorByID(id));
+        return taskCollaborator.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // Deleting task collaborator by their ID.
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTaskCollaboratorByID(@PathVariable Integer id) {
+        taskCollaboratorService.deleteTaskCollaboratorByID(id);
+        return ResponseEntity.noContent().build();
+    }
+}
