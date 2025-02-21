@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.grabit.API.model.Project;
+import com.grabit.API.model.ProjectCollaboratorModel;
 import com.grabit.API.model.Task;
 import com.grabit.API.model.TaskCollaborators;
 import com.grabit.API.service.ProjectService;
@@ -33,20 +34,20 @@ public class ProjectController {
 
     // Get all projects
     @GetMapping
-    public List<Project> getAllProjects() {
-        return projectService.getAllProjects();
+    public ResponseEntity<List<Project>> getAllProjects() {
+        return ResponseEntity.ok(projectService.getAllProjects());
     }
 
     // Get a project by its ID
     @GetMapping("/{id}")
-    public Project getProjectById(@PathVariable Integer id) {
-        return projectService.getProjectById(id);
+    public ResponseEntity<Project> getProjectById(@PathVariable Integer id) {
+        return ResponseEntity.ok(projectService.getProjectById(id));
     }
 
-    // Delete a project by its ID
+    // close a project by its ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProject(@PathVariable Integer id) {
-        projectService.deleteProject(id);
+    public ResponseEntity<Void> closeProject(@PathVariable Integer id) {
+        projectService.closeProject(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -54,8 +55,14 @@ public class ProjectController {
     public List<Task> getProjectTasks(@PathVariable Integer id) {
         return projectService.getProjectTasksByProjectId(id);
     }
+
+    @GetMapping("/{id}/collaborators")
+    public ResponseEntity<List<ProjectCollaboratorModel>> getProjectCollaborators(@PathVariable Integer id) {
+        return ResponseEntity.ok(projectService.getProjectCollaboratorsByProjectId(id));
+    }
+
     @GetMapping("/{id}/leaderboard")
-    public List<TaskCollaborators> getProjectLeaderboard(@PathVariable Integer id) {
-        return projectService.getProjectLeaderboardByProjectId(id);
+    public ResponseEntity<List<TaskCollaborators>> getProjectLeaderboard(@PathVariable Integer id) {
+        return ResponseEntity.ok(projectService.getProjectLeaderboardByProjectId(id));
     }
 }

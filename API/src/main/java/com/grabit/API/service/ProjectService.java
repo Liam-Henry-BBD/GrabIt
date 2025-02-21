@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.grabit.API.model.Project;
+import com.grabit.API.model.ProjectCollaboratorModel;
 import com.grabit.API.model.Task;
 import com.grabit.API.model.TaskCollaborators;
+import com.grabit.API.repository.ProjectCollaboratorRepository;
 import com.grabit.API.repository.ProjectRepository;
 import com.grabit.API.repository.TaskCollaboratorsRepository;
 import com.grabit.API.repository.TaskRepository;
@@ -20,13 +22,17 @@ public class ProjectService extends Task {
     private final ProjectRepository projectRepository;
     private final TaskRepository taskRepository;
     private final TaskCollaboratorsRepository taskCollaboratorsRepository;
+    private final ProjectCollaboratorRepository projectCollaboratorRepository;
 
     @Autowired
     public ProjectService(ProjectRepository projectRepository, TaskRepository taskRepository,
-            TaskCollaboratorsRepository taskCollaboratorsRepository) {
+            TaskCollaboratorsRepository taskCollaboratorsRepository,
+            ProjectCollaboratorRepository projectCollaboratorRepository) {
         this.projectRepository = projectRepository;
         this.taskRepository = taskRepository;
         this.taskCollaboratorsRepository = taskCollaboratorsRepository;
+        this.projectCollaboratorRepository = projectCollaboratorRepository;
+
     }
 
     // Save a new project or update an existing one
@@ -45,7 +51,7 @@ public class ProjectService extends Task {
     }
 
     // Delete a project by ID
-    public void deleteProject(Integer id) {
+    public void closeProject(Integer id) {
         projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Project not found"));
         projectRepository.deleteById(id);
     }
@@ -56,10 +62,17 @@ public class ProjectService extends Task {
 
     public List<TaskCollaborators> getProjectLeaderboardByProjectId(Integer projectID) {
         List<Task> tasks = taskRepository.findByProject_ProjectID(projectID);
-        List<Task> completedTasks = tasks.stream().filter(task -> task.getTaskStatus().getTaskStatusID() == 2).collect(Collectors.toList());
-        List<TaskCollaborators> taskCollaborators = completedTasks.stream().flatMap(task -> taskCollaboratorsRepository.findById(task.getTaskID()).stream()).collect(Collectors.toList());
-        // List<Object> 
+        List<Task> completedTasks = tasks.stream().filter(task -> task.getTaskStatus().getTaskStatusID() == 2)
+                .collect(Collectors.toList());
+        List<TaskCollaborators> taskCollaborators = completedTasks.stream()
+                .flatMap(task -> taskCollaboratorsRepository.findById(task.getTaskID()).stream())
+                .collect(Collectors.toList());
+        // List<Object>
 
         return taskCollaborators;
+    }
+
+    public List<ProjectCollaboratorModel> getProjectCollaboratorsByProjectId(Integer projectID) {
+        return projectCollaboratorRepository.findByProject_ProjectID(projectID);
     }
 }
