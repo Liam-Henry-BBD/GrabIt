@@ -13,8 +13,9 @@ public class ProjectCollaboratorService {
     @Autowired
     private ProjectCollaboratorRepository projectCollaboratorRepository;
 
-    public List<ProjectCollaboratorModel> getAllProjectCollaborators() {
-        return projectCollaboratorRepository.findAll();
+    // getting all the project collaborators per specific project
+    public List<ProjectCollaboratorModel> getAllProjectCollaboratorsByProjectID(int projectId) {
+        return projectCollaboratorRepository.findByProject_ProjectID(projectId);
     }
 
     public ProjectCollaboratorModel addProjectCollaborator(ProjectCollaboratorModel projectCollaborator) {
