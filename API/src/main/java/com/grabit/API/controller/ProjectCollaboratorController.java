@@ -1,7 +1,7 @@
 // contain classes that handle HTTP requests and responses
 
 package com.grabit.API.controller;
-import com.grabit.API.model.ProjectCollaborator;
+import com.grabit.API.model.ProjectCollaboratorModel;
 import com.grabit.API.service.ProjectCollaboratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,22 +22,22 @@ public class ProjectCollaboratorController {
     private ProjectCollaboratorService projectCollaboratorService;
 
     @GetMapping
-    public List<ProjectCollaborator> getAProjectCollaborators(){
+    public List<ProjectCollaboratorModel> getAProjectCollaborators(){
         return projectCollaboratorService.getAllProjectCollaborators();
     }
 
     @PostMapping
-    public ProjectCollaborator addProjectCollaborator(@RequestBody ProjectCollaborator projectCollaborator){
+    public ProjectCollaboratorModel addProjectCollaborator(@RequestBody ProjectCollaboratorModel projectCollaborator){
         return projectCollaboratorService.addProjectCollaborator(projectCollaborator);
     }
 
     @GetMapping("/{id}")
-    public ProjectCollaborator getProjectCollaboratorByID(@PathVariable Long id){
+    public ProjectCollaboratorModel getProjectCollaboratorByID(@PathVariable Long id){
         return projectCollaboratorService.getProjectCollaboratorByID(id);
     }
 
     @PutMapping("/{id}")
-    public ProjectCollaborator updateProjectCollaborator(@PathVariable Long id, @RequestBody ProjectCollaborator projectCollaborator){
+    public ProjectCollaboratorModel updateProjectCollaborator(@PathVariable Long id, @RequestBody ProjectCollaboratorModel projectCollaborator){
         return projectCollaboratorService.updateProjectCollaborator(id, projectCollaborator);
     }
 

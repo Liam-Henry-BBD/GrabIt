@@ -1,6 +1,6 @@
 package com.grabit.API.service;
 
-import com.grabit.API.model.ProjectCollaborator;
+import com.grabit.API.model.ProjectCollaboratorModel;
 import com.grabit.API.repository.ProjectCollaboratorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,19 +13,19 @@ public class ProjectCollaboratorService {
     @Autowired
     private ProjectCollaboratorRepository projectCollaboratorRepository;
 
-    public List<ProjectCollaborator> getAllProjectCollaborators() {
+    public List<ProjectCollaboratorModel> getAllProjectCollaborators() {
         return projectCollaboratorRepository.findAll();
     }
 
-    public ProjectCollaborator addProjectCollaborator(ProjectCollaborator projectCollaborator) {
+    public ProjectCollaboratorModel addProjectCollaborator(ProjectCollaboratorModel projectCollaborator) {
         return projectCollaboratorRepository.save(projectCollaborator);
     }
 
-    public ProjectCollaborator getProjectCollaboratorByID(Long id) {
+    public ProjectCollaboratorModel getProjectCollaboratorByID(Long id) {
         return projectCollaboratorRepository.findById(id.intValue()).orElse(null);
     }
 
-    public ProjectCollaborator updateProjectCollaborator(Long id, ProjectCollaborator projectCollaborator) {
+    public ProjectCollaboratorModel updateProjectCollaborator(Long id, ProjectCollaboratorModel projectCollaborator) {
         projectCollaborator.setProjectCollaboratorID(id.intValue());
         return projectCollaboratorRepository.save(projectCollaborator);
     }
