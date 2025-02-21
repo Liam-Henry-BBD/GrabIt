@@ -3,6 +3,7 @@ package com.grabit.API.controller;
 import java.util.List;
 
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,33 +23,33 @@ public class TaskController {
     private final TaskService taskService;
 
     public TaskController(TaskService taskService) {
+
         this.taskService = taskService;
     }
 
     @GetMapping("/project/{projectID}")
-    public List<Task> getTasksByProjectID(@PathVariable Integer projectID) {
-        return taskService.getTasksByProjectID(projectID);
+    public ResponseEntity<List<Task>> getTasksByProjectID(@PathVariable Integer projectID) {
+        return ResponseEntity.ok( taskService.getTasksByProjectID(projectID));
     }
 
     @GetMapping("/{id}")
-    public Task getTaskById(@PathVariable Integer id) {
-        return taskService.getTaskById(id);
+    public ResponseEntity<Task> getTaskById(@PathVariable Integer id) {
+        return ResponseEntity.ok(taskService.getTaskById(id));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTask(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteTask(@PathVariable Integer id) {
         taskService.deleteTask(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping
-    public Task createTask(@Valid @RequestBody Task task) {
-        return taskService.createTask(task);
+    public ResponseEntity<Task> createTask(@Valid @RequestBody Task task) {
+        return ResponseEntity.ok(taskService.createTask(task));
     }
 
     @PutMapping("/{id}")
-    public Task updateTask(@PathVariable Integer id, @Valid @RequestBody Task task) {
-        return taskService.updateTask(id, task);
+    public ResponseEntity<Task> updateTask(@PathVariable Integer id, @Valid @RequestBody Task task) {
+        return ResponseEntity.accepted().body(taskService.updateTask(id, task));
     }
-    
-
 }
