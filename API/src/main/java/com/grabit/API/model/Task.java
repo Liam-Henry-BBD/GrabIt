@@ -2,22 +2,20 @@ package com.grabit.API.model;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "Tasks", schema = "grabit")
 public class Task {
 
@@ -27,17 +25,14 @@ public class Task {
     private int taskID;
 
     @ManyToOne
-//    @NotBlank(message = "Project ID is required.")
     @JoinColumn(name = "ProjectID", referencedColumnName = "ProjectID", nullable = false)
     private Project project;
 
     @ManyToOne
-//    @NotBlank(message = "Task point is required.")
     @JoinColumn(name = "TaskPointID", referencedColumnName = "TaskPointID", nullable = false)
     private TaskPoint taskPoint;
 
     @ManyToOne
-//    @NotBlank(message = "Task status is required.")
     @JoinColumn(name = "TaskStatusID", referencedColumnName = "TaskStatusID", nullable = false)
     private TaskStatus taskStatus;
 
@@ -53,7 +48,7 @@ public class Task {
     private LocalDate taskDeadline;
 
     @Column(name = "TaskCreatedAt", nullable = false)
-    private Date taskCreatedAt;
+    private LocalDateTime taskCreatedAt;
 
     @Column(name = "TaskUpdatedAt")
     private Date taskUpdatedAt;
@@ -64,4 +59,10 @@ public class Task {
     @Column(name = "TaskCompletedAt")
     private Date taskCompletedAt;
 
+    @PrePersist
+    void prePersist() {
+        if (taskCreatedAt == null) {
+            taskCreatedAt = LocalDateTime.now();
+        }
+    }
 }

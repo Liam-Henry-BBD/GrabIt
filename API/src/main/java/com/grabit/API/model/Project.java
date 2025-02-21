@@ -12,6 +12,7 @@ import java.util.Date;
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     private Integer projectID;
     @Getter
     @Setter
