@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.grabit.API.model.Project;
 import com.grabit.API.model.Task;
+import com.grabit.API.model.TaskCollaborators;
 import com.grabit.API.service.ProjectService;
 
 import java.util.List;
@@ -50,8 +51,11 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}/tasks")
-    public List<Task> getProjectLeaderboard(@PathVariable Integer id) {
+    public List<Task> getProjectTasks(@PathVariable Integer id) {
         return projectService.getProjectTasksByProjectId(id);
-    
+    }
+    @GetMapping("/{id}/leaderboard")
+    public List<TaskCollaborators> getProjectLeaderboard(@PathVariable Integer id) {
+        return projectService.getProjectLeaderboardByProjectId(id);
     }
 }
