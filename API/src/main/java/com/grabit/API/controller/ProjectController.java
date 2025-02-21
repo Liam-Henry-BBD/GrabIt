@@ -1,6 +1,7 @@
 package com.grabit.API.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.support.Repositories;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,4 +50,10 @@ public class ProjectController {
         projectService.deleteProject(id);
         return ResponseEntity.noContent().build();
     }
+
+    // @GetMapping("/{id}/leaderboard")
+    // public ResponseEntity<Project> getProjectLeaderboard(@PathVariable Integer id){
+    //     Optional<Project> project = projectService.getProjectLeaderboard(id);
+    //     return project.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    // }
 }

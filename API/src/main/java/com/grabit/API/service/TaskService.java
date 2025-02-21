@@ -17,9 +17,8 @@ public class TaskService {
         this.taskRepository = taskRepository;
     }
 
-    //TODO: to be removed later
-    public List<Task> getTasks() {
-        return taskRepository.findAll();
+    public List<Task> getTasksByProjectID(Integer projectID) {
+        return taskRepository.findByProject_ProjectID(projectID);
     }
 
     public Task getTaskById(Integer id) {
