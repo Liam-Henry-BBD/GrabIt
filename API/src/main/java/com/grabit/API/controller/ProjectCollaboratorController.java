@@ -21,11 +21,6 @@ public class ProjectCollaboratorController {
     @Autowired
     private ProjectCollaboratorService projectCollaboratorService;
 
-    @GetMapping
-    public List<ProjectCollaboratorModel> getAProjectCollaborators(){
-        return projectCollaboratorService.getAllProjectCollaborators();
-    }
-
     @PostMapping
     public ProjectCollaboratorModel addProjectCollaborator(@RequestBody ProjectCollaboratorModel projectCollaborator){
         return projectCollaboratorService.addProjectCollaborator(projectCollaborator);
