@@ -2,6 +2,7 @@ package com.grabit.API.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,9 +25,9 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @GetMapping
-    public List<Task> getTasks() {
-        return taskService.getTasks();
+    @GetMapping("/project/{projectID}")
+    public List<Task> getTasksByProjectID(@PathVariable Integer projectID) {
+        return taskService.getTasksByProjectID(projectID);
     }
 
     @GetMapping("/{id}")
@@ -40,13 +41,14 @@ public class TaskController {
     }
 
     @PostMapping
-    public Task createTask(Task task) {
+    public Task createTask(@Valid @RequestBody Task task) {
         return taskService.createTask(task);
     }
 
     @PutMapping("/{id}")
-    public Task updateTask(@PathVariable Integer id, @RequestBody Task task) {
+    public Task updateTask(@PathVariable Integer id, @Valid @RequestBody Task task) {
         return taskService.updateTask(id, task);
     }
+    
 
 }

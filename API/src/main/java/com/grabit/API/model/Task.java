@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,42 +26,42 @@ public class Task {
     @Column(name = "TaskID", nullable = false)
     private int taskID;
 
-    // @ManyToOne
-    // @JoinColumn(name = "ProjectID", referencedColumnName = "ProjectID", nullable = false)
-    // private Project project;
+    @ManyToOne
+//    @NotBlank(message = "Project ID is required.")
+    @JoinColumn(name = "ProjectID", referencedColumnName = "ProjectID", nullable = false)
+    private Project project;
 
     @ManyToOne
+//    @NotBlank(message = "Task point is required.")
     @JoinColumn(name = "TaskPointID", referencedColumnName = "TaskPointID", nullable = false)
     private TaskPoint taskPoint;
 
     @ManyToOne
+//    @NotBlank(message = "Task status is required.")
     @JoinColumn(name = "TaskStatusID", referencedColumnName = "TaskStatusID", nullable = false)
     private TaskStatus taskStatus;
 
+    @NotBlank(message = "Task name is required.")
     @Column(name = "TaskName", nullable = false, length = 50)
     private String taskName;
 
+    @NotBlank(message = "Task description is required.")
     @Column(name = "TaskDescription", nullable = false, length = 255)
     private String taskDescription;
 
     @Column(name = "TaskDeadline")
-    // @Temporal(TemporalType.TIMESTAMP)
     private LocalDate taskDeadline;
 
     @Column(name = "TaskCreatedAt", nullable = false)
-    // @Temporal(TemporalType.TIMESTAMP)
     private Date taskCreatedAt;
 
     @Column(name = "TaskUpdatedAt")
-    // @Temporal(TemporalType.TIMESTAMP)
     private Date taskUpdatedAt;
 
     @Column(name = "TaskReviewRequestedAt")
-    // @Temporal(TemporalType.TIMESTAMP)
     private Date taskReviewRequestedAt;
 
     @Column(name = "TaskCompletedAt")
-    // @Temporal(TemporalType.TIMESTAMP)
     private Date taskCompletedAt;
 
 }
