@@ -3,7 +3,7 @@ package com.grabit.API.service;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.grabit.API.model.TaskCollaborators;
+//import com.grabit.API.model.TaskCollaborators;
 import com.grabit.API.model.TaskStatus;
 import com.grabit.API.repository.ProjectRepository;
 import com.grabit.API.repository.TaskPointRepository;
@@ -114,9 +114,9 @@ public class TaskService {
         taskRepository.delete(task);
     }
 
-    public List<TaskCollaborators> getTaskCollaborators(Integer taskID) {
+//    public List<TaskCollaborators> getTaskCollaborators(Integer taskID) {
 //        re
-        return null;
-    }
+//        return null;
+//    }
 
 }

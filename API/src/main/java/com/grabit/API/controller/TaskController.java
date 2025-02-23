@@ -2,7 +2,7 @@ package com.grabit.API.controller;
 
 import java.util.List;
 
-import com.grabit.API.model.TaskCollaborators;
+import com.grabit.API.model.TaskCollaborator;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -54,10 +54,10 @@ public class TaskController {
         return ResponseEntity.accepted().body(taskService.updateTask(id, task));
     }
 
-    @GetMapping("/{id}/collaborators")
-    public ResponseEntity<List<TaskCollaborators>> getCollaboratorsByTaskID(@PathVariable Integer taskID) {
-        return ResponseEntity.ok(taskService.getTaskCollaborators(taskID));
-    }
+    // @GetMapping("/{id}/collaborators")
+    // public ResponseEntity<List<TaskCollaborator>> getCollaboratorByTaskID(@PathVariable Integer taskID) {
+    //     return ResponseEntity.ok(taskService.getTaskCollaborator(taskID));
+    // }
 
     @PutMapping("/{id}/status/{taskStatusID}")
     public ResponseEntity<Task> updateTaskStatus(@PathVariable Integer id, @PathVariable Byte taskStatusID) {

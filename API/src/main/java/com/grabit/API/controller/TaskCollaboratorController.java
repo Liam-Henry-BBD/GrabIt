@@ -24,22 +24,15 @@ public class TaskCollaboratorController {
 
     // Creating a task collaborator.
     @PostMapping
-//    public ResponseEntity<TaskCollaborator> createTaskCollaborator(@RequestBody TaskCollaborator taskCollaborator) {
-//        TaskCollaborator savedTaskCollaborator = taskCollaboratorService.addTaskCollaborator(taskCollaborator);
-//        return new ResponseEntity<>(savedTaskCollaborator, HttpStatus.CREATED);
-//    }
-
-    // Updating a task collaborator.
-    @PutMapping("/{id}")
-    public ResponseEntity<TaskCollaborator> updateTaskCollaborator(@PathVariable Integer id, @RequestBody TaskCollaborator taskCollaborator) {
-        TaskCollaborator updatedTaskCollaborator = taskCollaboratorService.updateTaskCollaborator(id, taskCollaborator);
-        return new ResponseEntity<>(updatedTaskCollaborator, HttpStatus.OK);
+    public ResponseEntity<TaskCollaborator> createTaskCollaborator(@RequestBody TaskCollaborator taskCollaborator) {
+        TaskCollaborator savedTaskCollaborator = taskCollaboratorService.addTaskCollaborator(taskCollaborator);
+        return new ResponseEntity<>(savedTaskCollaborator, HttpStatus.CREATED);
     }
 
-    // Getting all task collaborators in all the tasks.
+    // Getting all task collaborators in all tasks.
     @GetMapping
-    public List<TaskCollaborator> getAllTaskCollaborator() {
-        return taskCollaboratorService.getAllTaskCollaborator();
+    public List<TaskCollaborator> getAllTaskCollaborators() {
+        return taskCollaboratorService.getAllTaskCollaborators();
     }
 
     // Getting task collaborator by their ID.
@@ -54,5 +47,12 @@ public class TaskCollaboratorController {
     public ResponseEntity<Void> deleteTaskCollaboratorByID(@PathVariable Integer id) {
         taskCollaboratorService.deleteTaskCollaboratorByID(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // Getting all collaborators for a specific task.
+    @GetMapping("/task/{taskID}")
+    public ResponseEntity<List<TaskCollaborator>> getCollaboratorsByTaskID(@PathVariable Integer taskID) {
+        List<TaskCollaborator> collaborators = taskCollaboratorService.getCollaboratorsByTaskID(taskID);
+        return new ResponseEntity<>(collaborators, HttpStatus.OK);
     }
 }

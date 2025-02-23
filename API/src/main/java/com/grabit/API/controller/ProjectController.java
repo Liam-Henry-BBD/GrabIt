@@ -26,48 +26,47 @@ public class ProjectController {
     }
 
     // Create or update a project
-    @PostMapping
-    public ResponseEntity<Project> createProject(@RequestBody Project project) {
-        Project savedProject = projectService.saveProject(project);
-        return new ResponseEntity<>(savedProject, HttpStatus.CREATED);
-    }
+//    @PostMapping
+//    public ResponseEntity<Project> createProject(@RequestBody Project project) {
+//        Project savedProject = projectService.saveProject(project);
+//        return new ResponseEntity<>(savedProject, HttpStatus.CREATED);
+//    }
 
     // Get all projects
-    @GetMapping
-    public ResponseEntity<List<Project>> getAllProjects() {
-        return ResponseEntity.ok(projectService.getAllProjects());
-    }
+//    @GetMapping
+//    public ResponseEntity<List<Project>> getAllProjects() {
+//        return ResponseEntity.ok(projectService.getAllProjects());
+//    }
 
     // Get a project by its ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Project> getProjectById(@PathVariable Integer id) {
-        return ResponseEntity.ok(projectService.getProjectById(id));
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<Project> getProjectById(@PathVariable Integer id) {
+//        return ResponseEntity.ok(projectService.getProjectById(id));
+//    }
 
     // close a project by its ID
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> closeProject(@PathVariable Integer id) {
-        projectService.closeProject(id);
-        return ResponseEntity.noContent().build();
-    }
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Void> closeProject(@PathVariable Integer id) {
+//        projectService.closeProject(id);
+//        return ResponseEntity.noContent().build();
+//    }
 
-    @GetMapping("/{id}/tasks")
-    public List<Task> getProjectTasks(@PathVariable Integer id) {
-        return projectService.getProjectTasksByProjectId(id);
-    }
+//    @GetMapping("/{id}/tasks")
+//    public List<Task> getProjectTasks(@PathVariable Integer id) {
+//        return projectService.getProjectTasksByProjectId(id);
+//    }
 
-    @GetMapping("/{id}/collaborators")
-    public ResponseEntity<List<ProjectCollaboratorModel>> getProjectCollaborators(@PathVariable Integer id) {
-        return ResponseEntity.ok(projectService.getProjectCollaboratorsByProjectId(id));
-    }
+//    @GetMapping("/{id}/collaborators")
+//    public ResponseEntity<List<ProjectCollaboratorModel>> getProjectCollaborators(@PathVariable Integer id) {
+//        return ResponseEntity.ok(projectService.getProjectCollaboratorsByProjectId(id));
+//    }
 
-    @GetMapping("/{id}/leaderboard")
-<<<<<<< Updated upstream
-    public ResponseEntity<List<TaskCollaborators>> getProjectLeaderboard(@PathVariable Integer id) {
-        return ResponseEntity.ok(projectService.getProjectLeaderboardByProjectId(id));
-=======
-    public List<TaskCollaborator> getProjectLeaderboard(@PathVariable Integer id) {
-        return projectService.getProjectLeaderboardByProjectId(id);
->>>>>>> Stashed changes
-    }
+    // @GetMapping("/{id}/leaderboard")
+    // public ResponseEntity<List<TaskCollaborator>> getProjectLeaderboard(@PathVariable Integer id) {
+    //     return ResponseEntity.ok(projectService.getProjectLeaderboardByProjectId(id));
+    // }
+
+    // public List<TaskCollaborator> getProjectLeaderboard(@PathVariable Integer id) {
+    //     return projectService.getProjectLeaderboardByProjectId(id);
+    // }
 }
