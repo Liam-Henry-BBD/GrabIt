@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.grabit.API.dto.ProjectLeaderboardDTO;
 import com.grabit.API.model.Project;
 import com.grabit.API.model.ProjectCollaboratorModel;
 import com.grabit.API.model.Task;
@@ -61,7 +60,7 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}/leaderboard")
-    public ResponseEntity<List<ProjectLeaderboardDTO>> getProjectLeaderboard(@PathVariable Integer id) {
+    public ResponseEntity<Object> getProjectLeaderboard(@PathVariable Integer id) {
         return ResponseEntity.ok(projectService.getProjectLeaderboardByProjectId(id));
     }
 }

@@ -54,20 +54,24 @@ public class ProjectService extends Task {
         projectRepository.deleteById(id);
     }
 
+    // Get all tasks for a specific project ID
     public List<Task> getProjectTasksByProjectId(Integer projectID) {
         return taskRepository.findByProject_ProjectID(projectID);
     }
-
-    public List<ProjectLeaderboardDTO> getProjectLeaderboardByProjectId(Integer projectId) {
+    
+    // Get the leaderboard for a specific project ID
+    public Object getProjectLeaderboardByProjectId(Integer projectId) {
         List<Object[]> results = projectRepository.getProjectLeaderboard(projectId);
 
-        // Convert List<Object[]> to DTO and sort by TotalScore (Descending)
+        if (results.isEmpty()) {
+            return "No tasks have been completed yet.";
+        }
+
         List<ProjectLeaderboardDTO> leaderboard = results.stream()
                 .map(row -> new ProjectLeaderboardDTO(null, (Integer) row[0], (String) row[1], (Integer) row[2]))
                 .sorted((a, b) -> b.getTotalScore().compareTo(a.getTotalScore()))
                 .collect(Collectors.toList());
 
-        // Assign positions (1-based index)
         for (int i = 0; i < leaderboard.size(); i++) {
             leaderboard.get(i).setPosition(i + 1);
         }
