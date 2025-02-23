@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 @Service
 public class ProjectService extends Task {
 
-    // private TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
     private final TaskRepository taskRepository;
     private final ProjectCollaboratorRepository projectCollaboratorRepository;
@@ -30,7 +29,6 @@ public class ProjectService extends Task {
         this.projectRepository = projectRepository;
         this.taskRepository = taskRepository;
         this.projectCollaboratorRepository = projectCollaboratorRepository;
-
     }
 
     // Save a new project or update an existing one
@@ -79,6 +77,7 @@ public class ProjectService extends Task {
         return leaderboard;
     }
 
+    // Get all collaborators for a specific project ID
     public List<ProjectCollaboratorModel> getProjectCollaboratorsByProjectId(Integer projectID) {
         return projectCollaboratorRepository.findByProject_ProjectID(projectID);
     }
