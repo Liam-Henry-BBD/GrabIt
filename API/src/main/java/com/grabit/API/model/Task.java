@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,14 +26,17 @@ public class Task {
     private int taskID;
 
     @ManyToOne
+    @NotNull(message = "Project ID is required.")
     @JoinColumn(name = "ProjectID", referencedColumnName = "ProjectID", nullable = false)
     private Project project;
 
     @ManyToOne
+    @NotNull(message = "Task Point ID is required.")
     @JoinColumn(name = "TaskPointID", referencedColumnName = "TaskPointID", nullable = false)
     private TaskPoint taskPoint;
 
     @ManyToOne
+    @NotNull(message = "Task status ID is required.")
     @JoinColumn(name = "TaskStatusID", referencedColumnName = "TaskStatusID", nullable = false)
     private TaskStatus taskStatus;
 
@@ -54,7 +58,7 @@ public class Task {
     private Date taskUpdatedAt;
 
     @Column(name = "TaskReviewRequestedAt")
-    private Date taskReviewRequestedAt;
+    private LocalDateTime taskReviewRequestedAt;
 
     @Column(name = "TaskCompletedAt")
     private Date taskCompletedAt;
