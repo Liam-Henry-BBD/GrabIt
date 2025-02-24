@@ -1,7 +1,9 @@
 package com.grabit.API.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -9,6 +11,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "TaskCollaborators", schema = "grabit")
 public class TaskCollaborator {
 
@@ -17,14 +21,17 @@ public class TaskCollaborator {
     @Column(name = "TaskCollaboratorID", nullable = false)
     private Integer taskCollaboratorID;
 
-    @Column(name = "UserID", nullable = false)
-    private Integer userID;
+    @JoinColumn(name = "UserID", referencedColumnName = "UserID", nullable = false)
+    @ManyToOne
+    private User user;
 
-    @Column(name = "RoleID", nullable = false)
-    private Byte roleID;
+    @JoinColumn(name = "RoleID", referencedColumnName = "RoleID", nullable = false)
+    @ManyToOne
+    private Role role;
 
-    @Column(name = "TaskID", nullable = false)
-    private Integer taskID;
+    @JoinColumn(name = "TaskID", referencedColumnName = "TaskID", nullable = false)
+    @ManyToOne
+    private Task task;
 
     @Column(name = "JoinedAt", nullable = false)
     private LocalDateTime joinedAt;

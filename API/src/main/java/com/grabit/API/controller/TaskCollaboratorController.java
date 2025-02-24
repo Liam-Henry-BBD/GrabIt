@@ -22,37 +22,44 @@ public class TaskCollaboratorController {
         this.taskCollaboratorService = taskCollaboratorService;
     }
 
-    // Creating a task collaborator.
+    // Creating a task collaborator
     @PostMapping
-    public ResponseEntity<TaskCollaborator> createTaskCollaborator(@RequestBody TaskCollaborator taskCollaborator) {
-        TaskCollaborator savedTaskCollaborator = taskCollaboratorService.addTaskCollaborator(taskCollaborator);
-        return new ResponseEntity<>(savedTaskCollaborator, HttpStatus.CREATED);
+    public ResponseEntity<TaskCollaborator> addTaskCollaborator(@RequestBody TaskCollaborator taskCollaborator) {
+        TaskCollaborator savedCollaborator = taskCollaboratorService.addTaskCollaborator(taskCollaborator);
+        return new ResponseEntity<>(savedCollaborator, HttpStatus.CREATED);
     }
 
-    // Getting all task collaborators in all tasks.
+    // Getting all task collaborators
     @GetMapping
     public List<TaskCollaborator> getAllTaskCollaborators() {
         return taskCollaboratorService.getAllTaskCollaborators();
     }
 
-    // Getting task collaborator by their ID.
-    @GetMapping("/{id}")
-    public ResponseEntity<TaskCollaborator> getTaskCollaboratorByID(@PathVariable Integer id) {
-        Optional<TaskCollaborator> taskCollaborator = Optional.ofNullable(taskCollaboratorService.getTaskCollaboratorByID(id));
+    // Getting task collaborator by their ID
+    @GetMapping("/{taskCollabID}")
+    public ResponseEntity<TaskCollaborator> getTaskCollaboratorByID(@PathVariable Integer taskCollabID) {
+        Optional<TaskCollaborator> taskCollaborator = Optional.ofNullable(taskCollaboratorService.getTaskCollaboratorByID(taskCollabID));
         return taskCollaborator.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Deleting task collaborator by their ID.
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTaskCollaboratorByID(@PathVariable Integer id) {
-        taskCollaboratorService.deleteTaskCollaboratorByID(id);
-        return ResponseEntity.noContent().build();
+    // Deactivating task collaborator by their ID
+    @DeleteMapping("/{taskCollabID}")
+    public ResponseEntity<Void> deactivateTaskCollaboratorByID(@PathVariable Integer taskCollabID) {
+        taskCollaboratorService.deactivateTaskCollaboratorByID(taskCollabID);
+        return ResponseEntity.accepted().build();
     }
 
-    // Getting all collaborators for a specific task.
+    // Activating task collaborator by their ID
+    @PutMapping("/{taskCollabID}/activate")
+    public ResponseEntity<Void> activateTaskCollaboratorByID(@PathVariable Integer taskCollabID) {
+        taskCollaboratorService.activateTaskCollaboratorByID(taskCollabID);
+        return ResponseEntity.ok().build();
+    }
+
+    // Getting all collaborators for a specific task
     @GetMapping("/task/{taskID}")
-    public ResponseEntity<List<TaskCollaborator>> getCollaboratorsByTaskID(@PathVariable Integer taskID) {
-        List<TaskCollaborator> collaborators = taskCollaboratorService.getCollaboratorsByTaskID(taskID);
+    public ResponseEntity<List<TaskCollaborator>> getCollaboratorByTaskID(@PathVariable Integer taskID) {
+        List<TaskCollaborator> collaborators = taskCollaboratorService.getCollaboratorByTaskID(taskID);
         return new ResponseEntity<>(collaborators, HttpStatus.OK);
     }
 }
