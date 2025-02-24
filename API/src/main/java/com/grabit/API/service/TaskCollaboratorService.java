@@ -25,7 +25,7 @@ public class TaskCollaboratorService {
 
     public TaskCollaborator addTaskCollaborator(TaskCollaborator taskCollaborator) {
         // Check if the task exists
-        Task task = taskRepository.findById(taskCollaborator.getTask().getTaskID())
+        Task task = taskRepository.findById(taskCollaborator.getTaskID())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
 
         // Need to check if user exists but I will need a user model and user repository for those... will revisit.
