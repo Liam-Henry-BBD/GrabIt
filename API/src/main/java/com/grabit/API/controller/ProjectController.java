@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.grabit.API.dataTransferObject.ProjectCreationDTO;
 import com.grabit.API.model.Project;
 import com.grabit.API.model.ProjectCollaboratorModel;
 import com.grabit.API.model.Task;
@@ -29,15 +30,20 @@ public class ProjectController {
 
     // Create or update a project
   @PostMapping
-    public ResponseEntity<Project> createProject(@RequestBody Project project, @RequestBody ProjectCollaboratorModel projectCollaborator) {
-        Project savedProject = projectService.createProject(project);
-        projectCollaborator.setProject(savedProject);
-        projectCollaborator.setRoleID(1);
-        projectCollaborator.setJoinedAt(LocalDateTime.now());
-        projectCollaborator.setIsActive((byte) 1);
-        projectCollaboratorService.addProjectCollaborator(projectCollaborator);
-        return new ResponseEntity<>(savedProject, HttpStatus.CREATED);
-    }
+
+  public ResponseEntity<Project> createProject(@RequestBody ProjectCreationDTO request) {
+      Project project = request.getProject();
+      ProjectCollaboratorModel projectCollaborator = request.getProjectCollaborator();
+  
+      Project savedProject = projectService.createProject(project);
+      projectCollaborator.setProject(savedProject);
+      projectCollaborator.setRoleID(1);
+      projectCollaborator.setJoinedAt(LocalDateTime.now());
+      projectCollaborator.setIsActive((byte) 1);
+      projectCollaboratorService.addProjectCollaborator(projectCollaborator);
+  
+      return new ResponseEntity<>(savedProject, HttpStatus.CREATED);
+  }
 
     // Get all projects
     @GetMapping
