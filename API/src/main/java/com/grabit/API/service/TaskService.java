@@ -4,14 +4,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 //import com.grabit.API.model.TaskCollaborators;
+import com.grabit.API.model.TaskCollaborator;
 import com.grabit.API.model.TaskStatus;
-import com.grabit.API.repository.ProjectRepository;
-import com.grabit.API.repository.TaskPointRepository;
-import com.grabit.API.repository.TaskStatusRepository;
+import com.grabit.API.repository.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import com.grabit.API.model.Task;
-import com.grabit.API.repository.TaskRepository;
 import org.springframework.web.server.ResponseStatusException;
 
 
@@ -24,14 +22,20 @@ public class TaskService {
     private final TaskStatusRepository taskStatusRepository;
     private final TaskPointRepository taskPointRepository;
     private final ProjectRepository projectRepository;
+    private final TaskCollaboratorRepository taskCollaboratorRepository;
 
 
-
-    public TaskService(TaskRepository taskRepository, TaskStatusRepository taskStatusRepository, TaskPointRepository taskPointRepository, ProjectRepository projectRepository) {
+    public TaskService(TaskRepository taskRepository,
+                       TaskStatusRepository taskStatusRepository,
+                       TaskPointRepository taskPointRepository,
+                       ProjectRepository projectRepository,
+                       TaskCollaboratorRepository taskCollabRepository
+    ) {
         this.taskRepository = taskRepository;
         this.taskStatusRepository = taskStatusRepository;
         this.taskPointRepository = taskPointRepository;
         this.projectRepository = projectRepository;
+        this.taskCollaboratorRepository = taskCollabRepository;
     }
 
 
@@ -114,9 +118,14 @@ public class TaskService {
         taskRepository.delete(task);
     }
 
-//    public List<TaskCollaborators> getTaskCollaborators(Integer taskID) {
-//        re
-//        return null;
-//    }
+    public List<TaskCollaborator> getTaskCollaborators(Integer taskID) {
+
+        Boolean taskExists = taskRepository.existsById(taskID);
+        if (!taskExists) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
+        }
+
+        return taskCollaboratorRepository.findByTaskID(taskID);
+    }
 
 }
