@@ -10,29 +10,23 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/project-collaborators")
 public class ProjectCollaboratorController {
-    // i am getting endpoint to the project collaborator
-    //1. get all project collaborators
-    //2. get project collaborator by id
-    //3. add project collaborator
-    //4. update project collaborator
-    //5. delete project collaborator
- 
+    // Endpoints for project collaborators
+    // 1. Get all project collaborators
+    // 2. Get project collaborator by ID
+    // 3. Add a new project collaborator
+    // 4. Update project collaborator
+    // 5. Deactivate project collaborator
+
     @Autowired
     private ProjectCollaboratorService projectCollaboratorService;
 
-    @PostMapping
-    public ProjectCollaboratorModel addProjectCollaborator(@RequestBody ProjectCollaboratorModel projectCollaborator){
-        return projectCollaboratorService.addProjectCollaborator(projectCollaborator);
-    }
-
     @GetMapping("/{id}")
-    public ProjectCollaboratorModel getProjectCollaboratorByID(@PathVariable Long id){
+    public ProjectCollaboratorModel getProjectCollaboratorByID(@PathVariable Long id) {
         return projectCollaboratorService.getProjectCollaboratorByID(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deactivateProjectCollaborator(@PathVariable Long id){
+    public void deactivateProjectCollaborator(@PathVariable Long id) {
         projectCollaboratorService.deactivateProjectCollaborator(id);
     }
-    
 }

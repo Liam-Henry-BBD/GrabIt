@@ -19,6 +19,7 @@ public class ProjectCollaboratorService {
     }
 
     public ProjectCollaboratorModel addProjectCollaborator(ProjectCollaboratorModel projectCollaborator) {
+        projectCollaboratorRepository.findByProject_ProjectID(projectCollaborator.getProject().getProjectID());
         return projectCollaboratorRepository.save(projectCollaborator);
     }
 
@@ -28,5 +29,10 @@ public class ProjectCollaboratorService {
 
     public void deactivateProjectCollaborator(Long id) {
         projectCollaboratorRepository.deleteById(id.intValue());
+    }
+
+    // get all the active project collaborators
+    public List<ProjectCollaboratorModel> getAllActiveProjectCollaborators() {
+        return projectCollaboratorRepository.findByIsActive(true);
     }
 }

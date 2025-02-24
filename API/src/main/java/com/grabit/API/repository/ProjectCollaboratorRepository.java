@@ -74,22 +74,5 @@ public interface ProjectCollaboratorRepository extends JpaRepository<ProjectColl
     // Get collaborators who joined before a specific date for a project
     List<ProjectCollaboratorModel> findByProject_ProjectIDAndJoinedAtBefore(int projectID, LocalDateTime date);
     
-    
-    
+   
 }
-
-
-// Find all projects a specific user is involved in, CAN USE THIS ONE YET
-// @Query("SELECT p FROM ProjectCollaboratorModel pc JOIN pc.project p WHERE pc.user.userID = :userID")
-// List<ProjectCollaboratorModel> findProjectsByUser(@Param("userID") int userID);
-
-
-// Find project with most collaborators
-// @Query("SELECT p.projectID, p.projectName, COUNT(pc) FROM ProjectCollaboratorModel pc " + "JOIN pc.project p GROUP BY p.projectID ORDER BY COUNT(pc) DESC")
-// List<Object[]> findProjectWithMostCollaborators();
-
-
-// Get active and inactive collaborators count per project
-// @Query("SELECT p.projectID, p.projectName, SUM(CASE WHEN pc.isActive = true THEN 1 ELSE 0 END) AS activeCount, " + "SUM(CASE WHEN pc.isActive = false THEN 1 ELSE 0 END) AS inactiveCount FROM ProjectCollaboratorModel pc " +
-//    "JOIN pc.project p GROUP BY p.projectID, p.projectName")
-// List<Object[]> countActiveAndInactiveCollaboratorsByProject();
