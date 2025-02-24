@@ -6,7 +6,6 @@ import com.grabit.API.service.ProjectCollaboratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/project-collaborators")
@@ -37,8 +36,8 @@ public class ProjectCollaboratorController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteProjectCollaborator(@PathVariable Long id){
-        projectCollaboratorService.deleteProjectCollaborator(id);
+    public void deactivateProjectCollaborator(@PathVariable Long id){
+        projectCollaboratorService.deactivateProjectCollaborator(id);
     }
     
 }

@@ -28,19 +28,14 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @GetMapping("/project/{projectID}")
-    public ResponseEntity<List<Task>> getTasksByProjectID(@PathVariable Integer projectID) {
-        return ResponseEntity.ok( taskService.getTasksByProjectID(projectID));
+    @GetMapping("/{taskID}")
+    public ResponseEntity<Task> getTaskById(@PathVariable Integer taskID) {
+        return ResponseEntity.ok(taskService.getTaskById(taskID));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Task> getTaskById(@PathVariable Integer id) {
-        return ResponseEntity.ok(taskService.getTaskById(id));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable Integer id) {
-        taskService.deleteTask(id);
+    @DeleteMapping("/{taskID}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Integer taskID) {
+        taskService.deleteTask(taskID);
         return ResponseEntity.noContent().build();
     }
 
@@ -50,8 +45,8 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable Integer id, @Valid @RequestBody Task task) {
-        return ResponseEntity.accepted().body(taskService.updateTask(id, task));
+    public ResponseEntity<Task> updateTask(@PathVariable Integer taskID, @Valid @RequestBody Task task) {
+        return ResponseEntity.accepted().body(taskService.updateTask(taskID, task));
     }
 
     // @GetMapping("/{id}/collaborators")
@@ -59,8 +54,10 @@ public class TaskController {
     //     return ResponseEntity.ok(taskService.getTaskCollaborator(taskID));
     // }
 
-    @PutMapping("/{id}/status/{taskStatusID}")
-    public ResponseEntity<Task> updateTaskStatus(@PathVariable Integer id, @PathVariable Byte taskStatusID) {
-        return ResponseEntity.accepted().body(taskService.updateTaskStatus(id, taskStatusID));
+    @PutMapping("/{taskID}/status/{taskStatusID}")
+    public ResponseEntity<Task> updateTaskStatus(@PathVariable Integer taskID, @PathVariable Byte taskStatusID) {
+        return ResponseEntity.accepted().body(taskService.updateTaskStatus(taskID, taskStatusID));
     }
+
+    // check if a task has already been taken by a user
 }

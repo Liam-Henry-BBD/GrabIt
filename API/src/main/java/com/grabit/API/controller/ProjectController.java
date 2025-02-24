@@ -63,4 +63,8 @@ public class ProjectController {
     public ResponseEntity<Object> getProjectLeaderboard(@PathVariable Integer id) {
         return ResponseEntity.ok(projectService.getProjectLeaderboardByProjectId(id));
     }
+
+    // update a project by its ID
+    // @PutMapping("/{id}");
+    // adding a project to project table, update project collaborator table, and role
 }

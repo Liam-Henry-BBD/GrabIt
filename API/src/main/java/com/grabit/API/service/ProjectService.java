@@ -3,7 +3,7 @@ package com.grabit.API.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.grabit.API.dto.ProjectLeaderboardDTO;
+import com.grabit.API.dataTransferObject.ProjectLeaderboardDTO;
 import com.grabit.API.model.Project;
 import com.grabit.API.model.ProjectCollaboratorModel;
 import com.grabit.API.model.Task;

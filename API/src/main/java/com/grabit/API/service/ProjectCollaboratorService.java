@@ -26,12 +26,7 @@ public class ProjectCollaboratorService {
         return projectCollaboratorRepository.findById(id.intValue()).orElse(null);
     }
 
-    public ProjectCollaboratorModel updateProjectCollaborator(Long id, ProjectCollaboratorModel projectCollaborator) {
-        projectCollaborator.setProjectCollaboratorID(id.intValue());
-        return projectCollaboratorRepository.save(projectCollaborator);
-    }
-
-    public void deleteProjectCollaborator(Long id) {
+    public void deactivateProjectCollaborator(Long id) {
         projectCollaboratorRepository.deleteById(id.intValue());
     }
 }
