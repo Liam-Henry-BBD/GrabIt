@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+// import java.util.Optional;
 
 @Service
 public class TaskCollaboratorService {
@@ -28,7 +28,7 @@ public class TaskCollaboratorService {
         Task task = taskRepository.findById(taskCollaborator.getTask().getTaskID())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
 
-        // TODO: Need to check if user exists but I will need a user model and user repository for those... will revisit.
+        // Need to check if user exists but I will need a user model and user repository for those... will revisit.
         // Check if the task is complete
         if (task.getTaskStatus().getStatusName().contains("Complete")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot add collaborator: Task is already complete");
