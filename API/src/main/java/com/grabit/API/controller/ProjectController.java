@@ -34,7 +34,7 @@ public class ProjectController {
         projectCollaborator.setProject(savedProject);
         projectCollaborator.setRoleID(1);
         projectCollaborator.setJoinedAt(LocalDateTime.now());
-        projectCollaborator.setActive(true);
+        projectCollaborator.setIsActive((byte) 1);
         projectCollaboratorService.addProjectCollaborator(projectCollaborator);
         return new ResponseEntity<>(savedProject, HttpStatus.CREATED);
     }
@@ -80,5 +80,4 @@ public class ProjectController {
         return ResponseEntity.ok(updatedProject);
     }
 
-    // adding a project to project table, update project collaborator table, and role
 }
