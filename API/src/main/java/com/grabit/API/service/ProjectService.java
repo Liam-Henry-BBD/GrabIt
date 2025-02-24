@@ -12,6 +12,7 @@ import com.grabit.API.repository.ProjectRepository;
 import com.grabit.API.repository.TaskCollaboratorRepository;
 import com.grabit.API.repository.TaskRepository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,8 +32,10 @@ public class ProjectService extends Task {
         this.projectCollaboratorRepository = projectCollaboratorRepository;
     }
 
-    // Save a new project or update an existing one
-    public Project saveProject(Project project) {
+    // Save a new project
+    public Project createProject(Project project) {
+        project.setCreatedAt(new Date());
+        project.setUpdatedAt(new Date());
         return projectRepository.save(project);
     }
 
@@ -56,7 +59,7 @@ public class ProjectService extends Task {
     public List<Task> getProjectTasksByProjectId(Integer projectID) {
         return taskRepository.findByProject_ProjectID(projectID);
     }
-    
+
     // Get the leaderboard for a specific project ID
     public Object getProjectLeaderboardByProjectId(Integer projectId) {
         List<Object[]> results = projectRepository.getProjectLeaderboard(projectId);
@@ -81,4 +84,14 @@ public class ProjectService extends Task {
     public List<ProjectCollaboratorModel> getProjectCollaboratorsByProjectId(Integer projectID) {
         return projectCollaboratorRepository.findByProject_ProjectID(projectID);
     }
+
+    public Project updateProject(Integer id, Project project) {
+        Project existingProject = projectRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+        existingProject.setProjectName(project.getProjectName());
+        existingProject.setProjectDescription(project.getProjectDescription());
+        existingProject.setUpdatedAt(new Date());
+        return projectRepository.save(existingProject);
+    }
+
 }

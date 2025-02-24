@@ -30,11 +30,6 @@ public class ProjectCollaboratorController {
         return projectCollaboratorService.getProjectCollaboratorByID(id);
     }
 
-    @PutMapping("/{id}")
-    public ProjectCollaboratorModel updateProjectCollaborator(@PathVariable Long id, @RequestBody ProjectCollaboratorModel projectCollaborator){
-        return projectCollaboratorService.updateProjectCollaborator(id, projectCollaborator);
-    }
-
     @DeleteMapping("/{id}")
     public void deactivateProjectCollaborator(@PathVariable Long id){
         projectCollaboratorService.deactivateProjectCollaborator(id);

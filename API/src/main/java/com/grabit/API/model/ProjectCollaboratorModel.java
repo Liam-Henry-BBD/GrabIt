@@ -29,7 +29,7 @@ public class ProjectCollaboratorModel {
     private Project project;
 
     @Column(name = "RoleID", nullable = false)
-    private Byte roleID;
+    private Integer roleID;
 
     // @ManyToOne
     // @JoinColumn(name = "RoleID", nullable = false)

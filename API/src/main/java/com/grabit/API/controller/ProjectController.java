@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.*;
 import com.grabit.API.model.Project;
 import com.grabit.API.model.ProjectCollaboratorModel;
 import com.grabit.API.model.Task;
+import com.grabit.API.service.ProjectCollaboratorService;
 import com.grabit.API.service.ProjectService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -17,16 +19,23 @@ import java.util.List;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final ProjectCollaboratorService projectCollaboratorService;
 
     @Autowired
-    public ProjectController(ProjectService projectService) {
+    public ProjectController(ProjectService projectService, ProjectCollaboratorService projectCollaboratorService) {
         this.projectService = projectService;
+        this.projectCollaboratorService = projectCollaboratorService;
     }
 
     // Create or update a project
-    @PostMapping
-    public ResponseEntity<Project> createProject(@RequestBody Project project) {
-        Project savedProject = projectService.saveProject(project);
+  @PostMapping
+    public ResponseEntity<Project> createProject(@RequestBody Project project, @RequestBody ProjectCollaboratorModel projectCollaborator) {
+        Project savedProject = projectService.createProject(project);
+        projectCollaborator.setProject(savedProject);
+        projectCollaborator.setRoleID(1);
+        projectCollaborator.setJoinedAt(LocalDateTime.now());
+        projectCollaborator.setActive(true);
+        projectCollaboratorService.addProjectCollaborator(projectCollaborator);
         return new ResponseEntity<>(savedProject, HttpStatus.CREATED);
     }
 
@@ -65,6 +74,11 @@ public class ProjectController {
     }
 
     // update a project by its ID
-    // @PutMapping("/{id}");
+    @PutMapping("/{id}")
+    public ResponseEntity<Project> updateProject(@PathVariable Integer id, @RequestBody Project project) {
+        Project updatedProject = projectService.updateProject(id, project);
+        return ResponseEntity.ok(updatedProject);
+    }
+
     // adding a project to project table, update project collaborator table, and role
 }
