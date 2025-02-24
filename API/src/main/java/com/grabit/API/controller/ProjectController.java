@@ -37,7 +37,6 @@ public class ProjectController {
   
       Project savedProject = projectService.createProject(project);
       projectCollaborator.setProject(savedProject);
-      projectCollaborator.setUserID(1);
       projectCollaborator.setRoleID(1);
       projectCollaborator.setJoinedAt(LocalDateTime.now());
       projectCollaborator.setActive(true);
