@@ -39,7 +39,7 @@ public class ProjectCollaboratorModel {
     private LocalDateTime joinedAt;
 
     @Column(name = "isActive", nullable = false)
-    private byte isActive;
+    private boolean isActive;
 
     // Lombok will generate getters and setters
 }
