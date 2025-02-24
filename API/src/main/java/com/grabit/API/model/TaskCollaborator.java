@@ -31,4 +31,11 @@ public class TaskCollaborator {
 
     @Column(name = "isActive", nullable = false)
     private Boolean isActive = true;
+
+    @PrePersist
+    void prePersist() {
+        if (joinedAt == null) {
+            joinedAt = LocalDateTime.now();
+        }
+    }
 }
