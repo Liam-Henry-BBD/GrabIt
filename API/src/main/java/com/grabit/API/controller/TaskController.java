@@ -44,15 +44,15 @@ public class TaskController {
         return ResponseEntity.ok(taskService.createTask(task));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{taskID}")
     public ResponseEntity<Task> updateTask(@PathVariable Integer taskID, @Valid @RequestBody Task task) {
         return ResponseEntity.accepted().body(taskService.updateTask(taskID, task));
     }
 
-    // @GetMapping("/{id}/collaborators")
-    // public ResponseEntity<List<TaskCollaborator>> getCollaboratorByTaskID(@PathVariable Integer taskID) {
-    //     return ResponseEntity.ok(taskService.getTaskCollaborator(taskID));
-    // }
+     @GetMapping("/{taskID}/collaborators")
+     public ResponseEntity<List<TaskCollaborator>> getCollaboratorByTaskID(@PathVariable Integer taskID) {
+         return ResponseEntity.ok(taskService.getTaskCollaborators(taskID));
+     }
 
     @PutMapping("/{taskID}/status/{taskStatusID}")
     public ResponseEntity<Task> updateTaskStatus(@PathVariable Integer taskID, @PathVariable Byte taskStatusID) {
