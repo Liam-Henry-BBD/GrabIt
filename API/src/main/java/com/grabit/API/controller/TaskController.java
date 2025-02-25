@@ -1,9 +1,11 @@
 package com.grabit.API.controller;
 
-import java.util.List;
-
 import com.grabit.API.model.TaskCollaborator;
+import com.grabit.API.model.Task;
+import com.grabit.API.service.TaskService;
+
 import jakarta.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,13 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.grabit.API.model.Task;
-import com.grabit.API.service.TaskService;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskController {
-    
+
     private final TaskService taskService;
 
     public TaskController(TaskService taskService) {
@@ -48,15 +49,13 @@ public class TaskController {
         return ResponseEntity.accepted().body(taskService.updateTask(taskID, task));
     }
 
-     @GetMapping("/{taskID}/collaborators")
-     public ResponseEntity<List<TaskCollaborator>> getCollaboratorByTaskID(@PathVariable Integer taskID) {
-         return ResponseEntity.ok(taskService.getTaskCollaborators(taskID));
-     }
+    @GetMapping("/{taskID}/collaborators")
+    public ResponseEntity<List<TaskCollaborator>> getCollaboratorByTaskID(@PathVariable Integer taskID) {
+        return ResponseEntity.ok(taskService.getTaskCollaborators(taskID));
+    }
 
     @PutMapping("/{taskID}/status/{taskStatusID}")
     public ResponseEntity<Task> updateTaskStatus(@PathVariable Integer taskID, @PathVariable Byte taskStatusID) {
         return ResponseEntity.accepted().body(taskService.updateTaskStatus(taskID, taskStatusID));
     }
-
-    // check if a task has already been taken by a user
 }

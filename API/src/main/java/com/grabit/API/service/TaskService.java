@@ -6,30 +6,27 @@ import java.util.List;
 import com.grabit.API.model.TaskCollaborator;
 import com.grabit.API.model.TaskStatus;
 import com.grabit.API.repository.*;
+import com.grabit.API.model.Task;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import com.grabit.API.model.Task;
 import org.springframework.web.server.ResponseStatusException;
-
 
 @Service
 public class TaskService {
-    
+
     private final TaskRepository taskRepository;
 
-    //Other repos
     private final TaskStatusRepository taskStatusRepository;
     private final TaskPointRepository taskPointRepository;
     private final ProjectRepository projectRepository;
     private final TaskCollaboratorRepository taskCollaboratorRepository;
 
-
     public TaskService(TaskRepository taskRepository,
-                       TaskStatusRepository taskStatusRepository,
-                       TaskPointRepository taskPointRepository,
-                       ProjectRepository projectRepository,
-                       TaskCollaboratorRepository taskCollabRepository
-    ) {
+            TaskStatusRepository taskStatusRepository,
+            TaskPointRepository taskPointRepository,
+            ProjectRepository projectRepository,
+            TaskCollaboratorRepository taskCollabRepository) {
         this.taskRepository = taskRepository;
         this.taskStatusRepository = taskStatusRepository;
         this.taskPointRepository = taskPointRepository;
@@ -37,19 +34,18 @@ public class TaskService {
         this.taskCollaboratorRepository = taskCollabRepository;
     }
 
-
     public List<Task> getTasksByProjectID(Integer projectID) {
         return taskRepository.findByProject_ProjectID(projectID);
     }
 
     public Task getTaskById(Integer id) {
         return taskRepository.findById(id)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
     }
 
     public Task createTask(Task task) {
 
-        if(!projectRepository.existsById(task.getProject().getProjectID())) {
+        if (!projectRepository.existsById(task.getProject().getProjectID())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found");
         }
 
@@ -64,14 +60,16 @@ public class TaskService {
     }
 
     public Task updateTaskStatus(int taskID, byte taskStatusID) {
-        Task task = taskRepository.findById(taskID).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
+        Task task = taskRepository.findById(taskID)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
 
         if (task.getTaskStatus().getStatusName().contains("Complete")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task already completed");
         }
 
         if (taskStatusID == 4 && !task.getTaskStatus().getStatusName().contains("Review")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task must be reviewed before it can be completed");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Task must be reviewed before it can be completed");
         }
 
         if (task.getTaskStatus().getStatusName().contains("Review") && taskStatusID == 1) {
@@ -82,10 +80,8 @@ public class TaskService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task must move from available to grabbed.");
         }
 
-        // If a task has been taken for a day, it cannot be move to available again
         TaskStatus taskStatus = taskStatusRepository.findById((int) taskStatusID)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task status not found"));
-
 
         task.setTaskStatus(taskStatus);
 
@@ -94,7 +90,7 @@ public class TaskService {
 
     public Task updateTask(Integer taskID, Task task) {
         Task updatedTask = taskRepository.findById(taskID)
-            .orElseThrow(() -> new RuntimeException("Task not found."));
+                .orElseThrow(() -> new RuntimeException("Task not found."));
 
         if (updatedTask.getTaskStatus().getStatusName().contains("Complete")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task is already completed.");
@@ -106,14 +102,14 @@ public class TaskService {
 
         updatedTask.setTaskName(task.getTaskName());
         updatedTask.setTaskDescription(task.getTaskDescription());
-        
+
         return taskRepository.save(updatedTask);
     }
 
     public void deleteTask(Integer id) {
         Task task = taskRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Task not found."));
-        
+                .orElseThrow(() -> new RuntimeException("Task not found."));
+
         taskRepository.delete(task);
     }
 

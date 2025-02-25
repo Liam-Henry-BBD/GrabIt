@@ -28,36 +28,31 @@ public class ProjectController {
         this.projectCollaboratorService = projectCollaboratorService;
     }
 
-    // Create or update a project
-  @PostMapping
+    @PostMapping
+    public ResponseEntity<Project> createProject(@RequestBody ProjectCreationDTO request) {
+        Project project = request.getProject();
+        ProjectCollaboratorModel projectCollaborator = request.getProjectCollaborator();
 
-  public ResponseEntity<Project> createProject(@RequestBody ProjectCreationDTO request) {
-      Project project = request.getProject();
-      ProjectCollaboratorModel projectCollaborator = request.getProjectCollaborator();
-  
-      Project savedProject = projectService.createProject(project);
-      projectCollaborator.setProject(savedProject);
-      projectCollaborator.setRoleID(1);
-      projectCollaborator.setJoinedAt(LocalDateTime.now());
-      projectCollaborator.setActive(true);
-      projectCollaboratorService.addProjectCollaborator(projectCollaborator);
-  
-      return new ResponseEntity<>(savedProject, HttpStatus.CREATED);
-  }
+        Project savedProject = projectService.createProject(project);
+        projectCollaborator.setProject(savedProject);
+        projectCollaborator.setRoleID(1);
+        projectCollaborator.setJoinedAt(LocalDateTime.now());
+        projectCollaborator.setActive(true);
+        projectCollaboratorService.addProjectCollaborator(projectCollaborator);
 
-    // Get all projects
+        return new ResponseEntity<>(savedProject, HttpStatus.CREATED);
+    }
+
     @GetMapping
     public ResponseEntity<List<Project>> getAllProjects() {
         return ResponseEntity.ok(projectService.getAllProjects());
     }
 
-    // Get a project by its ID
     @GetMapping("/{id}")
     public ResponseEntity<Project> getProjectById(@PathVariable Integer id) {
         return ResponseEntity.ok(projectService.getProjectById(id));
     }
 
-    // close a project by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> closeProject(@PathVariable Integer id) {
         projectService.closeProject(id);
@@ -79,11 +74,9 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.getProjectLeaderboardByProjectId(id));
     }
 
-    // update a project by its ID
     @PutMapping("/{id}")
     public ResponseEntity<Project> updateProject(@PathVariable Integer id, @RequestBody Project project) {
         Project updatedProject = projectService.updateProject(id, project);
         return ResponseEntity.ok(updatedProject);
     }
-
 }
