@@ -8,7 +8,7 @@ import com.grabit.API.repository.RoleRepository;
 import com.grabit.API.repository.TaskCollaboratorRepository;
 import com.grabit.API.repository.TaskRepository;
 import com.grabit.API.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -47,7 +47,7 @@ public class TaskCollaboratorService {
         Task task = taskRepository.findById(taskCollaborator.getTask().getTaskID())
                 .orElseThrow(() -> new RuntimeException("Task not found"));
 
-        // Need to check if user exists but I will need a user model and user repository for those... will revisit.
+      
         // Check if the task is complete
         if (task.getTaskStatus().getStatusName().contains("Complete")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot add collaborator: Task is already complete");
@@ -58,13 +58,6 @@ public class TaskCollaboratorService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot add collaborator: Task deadline has passed");
         }
 
-        // Check if user is already a collaborator for the task
-//        Optional<TaskCollaborator> existingCollaborator = taskCollaboratorRepository.findByUserIDAndTaskID(
-//                taskCollaborator.getUserID(), taskCollaborator.getTaskID());
-
-//        if (existingCollaborator.isPresent()) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is already a collaborator for this task");
-//        }
         try {
             TaskCollaborator newTaskCollaborator = new TaskCollaborator();
 //            newTaskCollaborator.getTask().setTaskID(task.getTaskID());
