@@ -1,1 +1,38 @@
 .vs/
+./.vs
+.vscode/
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+API/.apt_generated
+API/.classpath
+API/.factorypath
+API/.project
+API/.settings
+API/.springBeans
+API/.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+API/nbproject/private/
+API/nbbuild/
+API/dist/
+API/nbdist/
+API/.nb-gradle/
+API/build/
+API/!**/src/main/**/build/
+API/!**/src/test/**/build/
+API/### VS Code ###
+API/.vscode/
+
+API/target/
+/API/src/main/resources/application.properties
