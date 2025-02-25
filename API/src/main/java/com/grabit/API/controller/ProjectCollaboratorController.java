@@ -13,12 +13,12 @@ public class ProjectCollaboratorController {
     @Autowired
     private ProjectCollaboratorService projectCollaboratorService;
 
-    @GetMapping("/{id}")
+    @GetMapping("/{projectCollabID}")
     public ProjectCollaborator getProjectCollaboratorByID(@PathVariable Long id) {
         return projectCollaboratorService.getProjectCollaboratorByID(id);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{projectCollabID}")
     public void deactivateProjectCollaborator(@PathVariable Long id) {
         projectCollaboratorService.deactivateProjectCollaborator(id);
     }

@@ -11,8 +11,8 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-@Entity
 @NoArgsConstructor
+@Entity
 @AllArgsConstructor
 @Table(name = "TaskCollaborators", schema = "grabit")
 public class TaskCollaborator {
