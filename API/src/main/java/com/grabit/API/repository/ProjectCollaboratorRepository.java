@@ -1,7 +1,7 @@
 package com.grabit.API.repository;
 
 import com.grabit.API.model.Project;
-import com.grabit.API.model.ProjectCollaboratorModel;
+import com.grabit.API.model.ProjectCollaborator;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,13 +12,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProjectCollaboratorRepository extends JpaRepository<ProjectCollaboratorModel, Integer> {
+public interface ProjectCollaboratorRepository extends JpaRepository<ProjectCollaborator, Integer> {
 
-        List<ProjectCollaboratorModel> findByprojectCollaboratorID(Long ProjectCollaboratorID);
+        List<ProjectCollaborator> findByprojectCollaboratorID(Long ProjectCollaboratorID);
 
-        List<ProjectCollaboratorModel> findByIsActiveOrderByJoinedAtDesc(boolean isActive);
+        List<ProjectCollaborator> findByIsActiveOrderByJoinedAtDesc(boolean isActive);
 
-        List<ProjectCollaboratorModel> findByIsActive(boolean isActive);
+        List<ProjectCollaborator> findByIsActive(boolean isActive);
 
         long countByProject_ProjectID(int projectID);
 
@@ -32,9 +32,9 @@ public interface ProjectCollaboratorRepository extends JpaRepository<ProjectColl
                         + "JOIN pc.project p WHERE pc.isActive = true GROUP BY p.projectID")
         List<Object[]> countActiveCollaboratorsByProject();
 
-        List<ProjectCollaboratorModel> findByProject_ProjectID(int projectID);
+        List<ProjectCollaborator> findByProject_ProjectID(int projectID);
 
-        List<ProjectCollaboratorModel> findByProject_ProjectIDAndIsActive(int projectID, boolean isActive);
+        List<ProjectCollaborator> findByProject_ProjectIDAndIsActive(int projectID, boolean isActive);
 
         long countByProject_ProjectIDAndJoinedAtAfter(int projectID, LocalDateTime date);
 
@@ -43,7 +43,7 @@ public interface ProjectCollaboratorRepository extends JpaRepository<ProjectColl
         List<Object[]> countCollaboratorsByAllProjects();
 
         @Query("SELECT pc FROM ProjectCollaboratorModel pc WHERE pc.project.projectID = :projectID ORDER BY pc.joinedAt ASC")
-        ProjectCollaboratorModel findFirstCollaboratorForProject(int projectID);
+        ProjectCollaborator findFirstCollaboratorForProject(int projectID);
 
         @Query("SELECT p FROM Project p WHERE NOT EXISTS (SELECT 1 FROM ProjectCollaboratorModel pc WHERE pc.project.projectID = p.projectID)")
         List<Project> findProjectsWithNoCollaborators();
@@ -52,5 +52,5 @@ public interface ProjectCollaboratorRepository extends JpaRepository<ProjectColl
                         + "JOIN pc.project p WHERE p.projectID IN :projectIDs GROUP BY p.projectID")
         List<Object[]> countCollaboratorsByProjectIDs(@Param("projectIDs") List<Integer> projectIDs);
 
-        List<ProjectCollaboratorModel> findByProject_ProjectIDAndJoinedAtBefore(int projectID, LocalDateTime date);
+        List<ProjectCollaborator> findByProject_ProjectIDAndJoinedAtBefore(int projectID, LocalDateTime date);
 }

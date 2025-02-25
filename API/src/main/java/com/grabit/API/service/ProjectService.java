@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.grabit.API.dataTransferObject.ProjectLeaderboardDTO;
 import com.grabit.API.model.Project;
-import com.grabit.API.model.ProjectCollaboratorModel;
+import com.grabit.API.model.ProjectCollaborator;
 import com.grabit.API.model.Task;
 import com.grabit.API.repository.ProjectCollaboratorRepository;
 import com.grabit.API.repository.ProjectRepository;
@@ -74,7 +74,7 @@ public class ProjectService extends Task {
         return leaderboard;
     }
 
-    public List<ProjectCollaboratorModel> getProjectCollaboratorsByProjectId(Integer projectID) {
+    public List<ProjectCollaborator> getProjectCollaboratorsByProjectId(Integer projectID) {
         return projectCollaboratorRepository.findByProject_ProjectID(projectID);
     }
 

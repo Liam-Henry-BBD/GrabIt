@@ -1,7 +1,7 @@
 package com.grabit.API.dataTransferObject;
 
 import com.grabit.API.model.Project;
-import com.grabit.API.model.ProjectCollaboratorModel;
+import com.grabit.API.model.ProjectCollaborator;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,5 +12,5 @@ import lombok.Setter;
 @Setter
 public class ProjectCreationDTO {
     private Project project;
-    private ProjectCollaboratorModel projectCollaborator;
+    private ProjectCollaborator projectCollaborator;
 }

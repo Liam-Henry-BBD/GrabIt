@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "ProjectCollaborators", schema = "grabit")
-public class ProjectCollaboratorModel {
+public class ProjectCollaborator {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int projectCollaboratorID;

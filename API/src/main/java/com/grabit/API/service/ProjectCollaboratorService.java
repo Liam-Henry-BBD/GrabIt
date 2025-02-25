@@ -1,6 +1,6 @@
 package com.grabit.API.service;
 
-import com.grabit.API.model.ProjectCollaboratorModel;
+import com.grabit.API.model.ProjectCollaborator;
 import com.grabit.API.repository.ProjectCollaboratorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,16 +13,16 @@ public class ProjectCollaboratorService {
     @Autowired
     private ProjectCollaboratorRepository projectCollaboratorRepository;
 
-    public List<ProjectCollaboratorModel> getAllProjectCollaboratorsByProjectID(int projectId) {
+    public List<ProjectCollaborator> getAllProjectCollaboratorsByProjectID(int projectId) {
         return projectCollaboratorRepository.findByProject_ProjectID(projectId);
     }
 
-    public ProjectCollaboratorModel addProjectCollaborator(ProjectCollaboratorModel projectCollaborator) {
+    public ProjectCollaborator addProjectCollaborator(ProjectCollaborator projectCollaborator) {
         projectCollaboratorRepository.findByProject_ProjectID(projectCollaborator.getProject().getProjectID());
         return projectCollaboratorRepository.save(projectCollaborator);
     }
 
-    public ProjectCollaboratorModel getProjectCollaboratorByID(Long id) {
+    public ProjectCollaborator getProjectCollaboratorByID(Long id) {
         return projectCollaboratorRepository.findById(id.intValue()).orElse(null);
     }
 
@@ -30,7 +30,7 @@ public class ProjectCollaboratorService {
         projectCollaboratorRepository.deleteById(id.intValue());
     }
 
-    public List<ProjectCollaboratorModel> getAllActiveProjectCollaborators() {
+    public List<ProjectCollaborator> getAllActiveProjectCollaborators() {
         return projectCollaboratorRepository.findByIsActive(true);
     }
 }

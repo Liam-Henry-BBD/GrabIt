@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.grabit.API.dataTransferObject.ProjectCreationDTO;
 import com.grabit.API.model.Project;
-import com.grabit.API.model.ProjectCollaboratorModel;
+import com.grabit.API.model.ProjectCollaborator;
 import com.grabit.API.model.Task;
 import com.grabit.API.service.ProjectCollaboratorService;
 import com.grabit.API.service.ProjectService;
@@ -31,7 +31,7 @@ public class ProjectController {
     @PostMapping
     public ResponseEntity<Project> createProject(@RequestBody ProjectCreationDTO request) {
         Project project = request.getProject();
-        ProjectCollaboratorModel projectCollaborator = request.getProjectCollaborator();
+        ProjectCollaborator projectCollaborator = request.getProjectCollaborator();
 
         Project savedProject = projectService.createProject(project);
         projectCollaborator.setProject(savedProject);
@@ -65,7 +65,7 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}/collaborators")
-    public ResponseEntity<List<ProjectCollaboratorModel>> getProjectCollaborators(@PathVariable Integer id) {
+    public ResponseEntity<List<ProjectCollaborator>> getProjectCollaborators(@PathVariable Integer id) {
         return ResponseEntity.ok(projectService.getProjectCollaboratorsByProjectId(id));
     }
 
