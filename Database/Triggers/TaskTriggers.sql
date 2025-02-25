@@ -154,7 +154,7 @@ BEGIN
 END
 GO
 
--- 
+	-- CANNOT COLLABORATE MORE THAN ONCE ON A TASK
 CREATE TRIGGER trgBeforeInsertTaskCollaborators ON [grabit].[TaskCollaborators]
 INSTEAD OF INSERT
 AS
@@ -166,7 +166,7 @@ BEGIN
 		@UserID = UserID
 	FROM INSERTED;
 
-	-- CANNOT COLLABORATE RATE MORE THAN ONCE ON A TASK
+
 	IF (
 			SELECT COUNT([grabit].[TaskCollaborators].TaskID)
 			FROM [grabit].[TaskCollaborators]

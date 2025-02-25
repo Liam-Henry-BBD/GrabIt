@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProjectCollaboratorRepository extends JpaRepository<ProjectCollaborator, Integer> {
 
-        List<ProjectCollaborator> findByprojectCollaboratorID(Long ProjectCollaboratorID);
+        List<ProjectCollaborator> findByProjectCollaboratorID(Long ProjectCollaboratorID);
 
         List<ProjectCollaborator> findByIsActiveOrderByJoinedAtDesc(boolean isActive);
 
