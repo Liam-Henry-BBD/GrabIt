@@ -75,7 +75,7 @@ public class ProjectService extends Task {
     }
 
     public List<ProjectCollaborator> getProjectCollaboratorsByProjectId(Integer projectID) {
-        return projectCollaboratorRepository.findByProject_ProjectID(projectID);
+        return projectCollaboratorRepository.findByProjectID(projectID);
     }
 
     public Project updateProject(Integer id, Project project) {
