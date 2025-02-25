@@ -20,37 +20,33 @@ public interface ProjectCollaboratorRepository extends JpaRepository<ProjectColl
 
         List<ProjectCollaborator> findByIsActive(boolean isActive);
 
-        long countByProject_ProjectID(int projectID);
+        long ProjectID(int projectID);
 
-        long countByProject_ProjectIDAndIsActive(int projectID, boolean isActive);
+        long countByProjectIDAndIsActive(int projectID, boolean isActive);
 
-        @Query("SELECT p.projectID, COUNT(pc) FROM ProjectCollaboratorModel pc "
-                        + "JOIN pc.project p GROUP BY p.projectID")
+        @Query(value = "SELECT p.projectID, COUNT(pc.projectID) FROM  Projects p JOIN ProjectCollaborators pc on pc.projectID = p.projectID GROUP BY p.projectID", nativeQuery = true)
         List<Object[]> countCollaboratorsByProject();
 
-        @Query("SELECT p.projectID, COUNT(pc) FROM ProjectCollaboratorModel pc "
-                        + "JOIN pc.project p WHERE pc.isActive = true GROUP BY p.projectID")
+        @Query(value = "SELECT p.projectID, COUNT(pc.projectID) FROM  Projects p JOIN ProjectCollaborators pc on pc.projectID = p.projectID WHERE pc.isActive = true GROUP BY p.projectID",nativeQuery = true)
         List<Object[]> countActiveCollaboratorsByProject();
 
-        List<ProjectCollaborator> findByProject_ProjectID(int projectID);
+        List<ProjectCollaborator> findByProjectID(int projectID);
 
-        List<ProjectCollaborator> findByProject_ProjectIDAndIsActive(int projectID, boolean isActive);
+        List<ProjectCollaborator> findByProjectIDAndIsActive(int projectID, boolean isActive);
 
-        long countByProject_ProjectIDAndJoinedAtAfter(int projectID, LocalDateTime date);
+        long countByProjectIDAndJoinedAtAfter(int projectID, LocalDateTime date);
 
-        @Query("SELECT p.projectID, COUNT(pc) FROM ProjectCollaboratorModel pc "
-                        + "JOIN pc.project p GROUP BY p.projectID")
+        @Query(value = "SELECT p.projectID, COUNT(pc.projectID) FROM  Projects p JOIN ProjectCollaborators pc on pc.projectID = p.projectID GROUP BY p.projectID",nativeQuery = true)
         List<Object[]> countCollaboratorsByAllProjects();
 
-        @Query("SELECT pc FROM ProjectCollaboratorModel pc WHERE pc.project.projectID = :projectID ORDER BY pc.joinedAt ASC")
+        @Query(value = "SELECT * FROM ProjectCollaborators pc WHERE pc.projectID = :projectID ORDER BY pc.joinedAt ASC",nativeQuery = true)
         ProjectCollaborator findFirstCollaboratorForProject(int projectID);
 
-        @Query("SELECT p FROM Project p WHERE NOT EXISTS (SELECT 1 FROM ProjectCollaboratorModel pc WHERE pc.project.projectID = p.projectID)")
+        @Query(value = "SELECT * FROM Projects p WHERE NOT EXISTS (SELECT 1 FROM ProjectCollaborators pc WHERE pc.projectID = p.projectID)",nativeQuery = true)
         List<Project> findProjectsWithNoCollaborators();
 
-        @Query("SELECT p.projectID, COUNT(pc) FROM ProjectCollaboratorModel pc "
-                        + "JOIN pc.project p WHERE p.projectID IN :projectIDs GROUP BY p.projectID")
-        List<Object[]> countCollaboratorsByProjectIDs(@Param("projectIDs") List<Integer> projectIDs);
+        @Query(value = "SELECT p.projectID, COUNT(pc.projectID) FROM  Projects p JOIN ProjectCollaborators pc on pc.projectID = p.projectID WHERE p.projectID IN :projectIDs GROUP BY p.projectID",nativeQuery = true)
+        List<Object[]> countCollaboratorsByProjectIDs(@Param(value = "projectIDs") List<Integer> projectIDs);
 
-        List<ProjectCollaborator> findByProject_ProjectIDAndJoinedAtBefore(int projectID, LocalDateTime date);
+        List<ProjectCollaborator> findByProjectIDAndJoinedAtBefore(int projectID, LocalDateTime date);
 }
