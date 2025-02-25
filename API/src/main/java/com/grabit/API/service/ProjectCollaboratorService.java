@@ -14,11 +14,11 @@ public class ProjectCollaboratorService {
     private ProjectCollaboratorRepository projectCollaboratorRepository;
 
     public List<ProjectCollaborator> getAllProjectCollaboratorsByProjectID(int projectId) {
-        return projectCollaboratorRepository.findByProject_ProjectID(projectId);
+        return projectCollaboratorRepository.findByProjectID(projectId);
     }
 
     public ProjectCollaborator addProjectCollaborator(ProjectCollaborator projectCollaborator) {
-        projectCollaboratorRepository.findByProject_ProjectID(projectCollaborator.getProject().getProjectID());
+        projectCollaboratorRepository.findByProjectID(projectCollaborator.getProjectID());
         return projectCollaboratorRepository.save(projectCollaborator);
     }
 
