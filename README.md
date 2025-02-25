@@ -2,7 +2,7 @@
 
 A gamified task management system
 
-The GrabIt system is a project management tool designed for teams to manage tasks within projects. It allows team leads to create projects, set tasks, assign points, and track task completion with deadlines. Team members can grab tasks from the available list and work on them. Points are assigned based on the difficulty of the task, and rewards are given for completing tasks on time.
+The GrabIt system is a project management tool designed for teams to manage tasks within projects. It allows team leads to create projects, set tasks, assign points, and track task completion with deadlines. Team members can grab tasks from the available list and work on them. Points are assigned based on the difficulty of the task.
 
 ## Workflow Overview
 
@@ -31,7 +31,7 @@ The GrabIt system is a project management tool designed for teams to manage task
    - **Hard (Red)**: 15 points
 
 6. **Set Task Deadlines**  
-   The team lead adds deadlines to each task. If a task deadline is approaching, the system provides a reward for the team member who completes the task on time.
+   The team lead adds deadlines to each task.
 
 ## Task Tracking
 
@@ -50,10 +50,6 @@ The points for each task are assigned based on its difficulty, which is color-co
 - **Yellow (10 points)**: Medium complexity tasks
 - **Red (15 points)**: Hard tasks
 
-## Deadlines & Rewards
-
-Each task can have a deadline set by the team lead.
-
 ## Score Tracking
 
 The system provides tracking of scores for team members and the entire project:
@@ -68,7 +64,6 @@ The system provides tracking of scores for team members and the entire project:
 - **Project Setup**: Team leads can set up new projects, add tasks, and manage team members.
 - **Task Grab**: Team members can grab available tasks and track progress.
 - **Task Assignment**: Tasks can be assigned difficulty points (simple, medium, hard).
-- **Deadlines & Rewards**: The team lead can set deadlines, and members can earn rewards for completing tasks on time.
 - **Task Tracking**: Tasks are tracked through different stages: available, taken, and complete.
 - **Leaderboard**: Tracks accumulated points by team members and the team as a whole.
 
@@ -82,16 +77,14 @@ The system provides tracking of scores for team members and the entire project:
 3. **Team Members** are invited to join the project and can "grab" a task from the available list.
 4. **Team Lead** sets a deadline for each task, e.g., the "Develop API" task has a deadline of 5 days.
 5. As team members complete tasks, their points are tracked and updated in the **Leaderboard**.
-6. The system awards a reward to any member who completes their task before their **deadline**.
 
 ## Technologies
 
 This system could be implemented with the following technologies:
 
-- **Backend**: Java
-- **Frontend**: React, HTML, CSS and JavaScript
-- **Database**: SQL Server
-- **Authentication**: OAuth
+- **Backend**: Java (Spring boot)
+- **Database**: MS SQL Server
+- **Authentication**: GitHub OA
 
 ## Future Features
 
@@ -119,16 +112,15 @@ To set up the Task Grab system locally, follow these steps:
 - Ensure that you have Java Development Kit (JDK) installed.
 - Install Maven for project building and dependency management.
 - Set up a Spring Boot application.
-- Ensure you have a running instance of your database with the required schema and tables.
+- Ensure you have an instance of your schema and tables is running.
 
 2. **Configure the Application:**
 
-- Edit the application.properties or application.yml file to match your database configuration.
-- Example application.properties for a PostgreSQL database:
+- Setup environmental variables to match the database configuration (application.properties file).
 
 ```sh
 application.properties
-spring.datasource.url=jdbc:sqlserver://the_grabit_uri:grabit_port:grabit:database:name
+spring.datasource.url=jdbc:sqlserver://the_grabit_uri:grabit_port:grabit:database:grabit_database_name
 spring.datasource.username=grabit_username
 spring.datasource.password=grabit_password
 ```
@@ -176,7 +168,6 @@ mvn spring-boot:run
 {
     "projectName": "Updated Website Development",
     "projectDescription": "Updated project description with new features.",
-
 }
 ```
 
