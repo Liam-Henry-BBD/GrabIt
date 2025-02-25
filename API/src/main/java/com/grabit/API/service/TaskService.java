@@ -62,6 +62,8 @@ public class TaskService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task status not found");
         }
 
+        System.out.println(task.getTaskID());
+
         return taskRepository.save(task);
     }
 
@@ -119,10 +121,10 @@ public class TaskService {
         Task task = taskRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Task not found."));
 
-        taskCollaboratorRepository.findByTaskID(id).forEach(collab -> {
-            collab.setIsActive(false);
-            taskCollaboratorRepository.save(collab);
-        });
+//        taskCollaboratorRepository.findByTaskID(id).forEach(collab -> {
+//            collab.setIsActive(false);
+//            taskCollaboratorRepository.save(collab);
+//        });
 
     }
 
@@ -132,7 +134,7 @@ public class TaskService {
         if (!taskExists) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
         }
-        return taskCollaboratorRepository.findByTaskID(taskID);
+        return taskCollaboratorRepository.findByTask_TaskID(taskID);
     }
 
     public List<Task> filterTaskByTaskStatus(Integer taskStatus) {

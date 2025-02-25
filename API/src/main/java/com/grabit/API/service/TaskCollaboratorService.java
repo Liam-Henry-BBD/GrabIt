@@ -1,9 +1,13 @@
 package com.grabit.API.service;
 
+import com.grabit.API.model.Role;
 import com.grabit.API.model.Task;
 import com.grabit.API.model.TaskCollaborator;
+import com.grabit.API.model.User;
+import com.grabit.API.repository.RoleRepository;
 import com.grabit.API.repository.TaskCollaboratorRepository;
 import com.grabit.API.repository.TaskRepository;
+import com.grabit.API.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,16 +21,31 @@ import java.util.List;
 @Service
 public class TaskCollaboratorService {
 
-    @Autowired
-    private TaskCollaboratorRepository taskCollaboratorRepository;
+    private final TaskCollaboratorRepository taskCollaboratorRepository;
 
-    @Autowired
-    private TaskRepository taskRepository;
+    private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+
+    public TaskCollaboratorService(TaskCollaboratorRepository taskCollaboratorRepository,
+                                   TaskRepository taskRepository,
+                                   UserRepository userRepository,
+                                   RoleRepository roleRepository) {
+        this.taskCollaboratorRepository = taskCollaboratorRepository;
+        this.taskRepository = taskRepository;
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+    }
 
     public TaskCollaborator addTaskCollaborator(TaskCollaborator taskCollaborator) {
         // Check if the task exists
-        Task task = taskRepository.findById(taskCollaborator.getTaskID())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
+
+        User user = userRepository.findById(taskCollaborator.getUser().getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Role role = roleRepository.findById(Integer.valueOf(taskCollaborator.getRole().getRoleId()))
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+        Task task = taskRepository.findById(taskCollaborator.getTask().getTaskID())
+                .orElseThrow(() -> new RuntimeException("Task not found"));
 
         // Need to check if user exists but I will need a user model and user repository for those... will revisit.
         // Check if the task is complete
@@ -46,8 +65,20 @@ public class TaskCollaboratorService {
 //        if (existingCollaborator.isPresent()) {
 //            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is already a collaborator for this task");
 //        }
-
-        return taskCollaboratorRepository.save(taskCollaborator);
+        try {
+            TaskCollaborator newTaskCollaborator = new TaskCollaborator();
+//            newTaskCollaborator.getTask().setTaskID(task.getTaskID());
+//            newTaskCollaborator.setRoleID((byte) 1);
+//            newTaskCollaborator.setUserID(11);
+            newTaskCollaborator.setTask(task);
+            newTaskCollaborator.setUser(user);
+            newTaskCollaborator.setRole(role);
+            newTaskCollaborator.setJoinedAt(LocalDate.now());
+            return taskCollaboratorRepository.save(newTaskCollaborator);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public List<TaskCollaborator> getAllTaskCollaborators() {
@@ -83,6 +114,6 @@ public class TaskCollaboratorService {
     }
 
     public List<TaskCollaborator> getCollaboratorByTaskID(Integer taskID) {
-        return taskCollaboratorRepository.findByTaskID(taskID);
+        return taskCollaboratorRepository.findByTask_TaskID(taskID);
     }
 }
