@@ -48,33 +48,33 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.getAllProjects());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Project> getProjectById(@PathVariable Integer id) {
-        return ResponseEntity.ok(projectService.getProjectById(id));
+    @GetMapping("/{projectID}")
+    public ResponseEntity<Project> getProjectById(@PathVariable Integer projectID) {
+        return ResponseEntity.ok(projectService.getProjectById(projectID));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> closeProject(@PathVariable Integer id) {
-        projectService.closeProject(id);
+    @DeleteMapping("/{projectID}")
+    public ResponseEntity<Void> closeProject(@PathVariable Integer projectID) {
+        projectService.closeProject(projectID);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{id}/tasks")
-    public List<Task> getProjectTasks(@PathVariable Integer id) {
-        return projectService.getProjectTasksByProjectId(id);
+    @GetMapping("/{projectID}/tasks")
+    public List<Task> getProjectTasks(@PathVariable Integer projectID) {
+        return projectService.getProjectTasksByProjectId(projectID);
     }
 
-    @GetMapping("/{id}/collaborators")
-    public ResponseEntity<List<ProjectCollaborator>> getProjectCollaborators(@PathVariable Integer id) {
-        return ResponseEntity.ok(projectService.getProjectCollaboratorsByProjectId(id));
+    @GetMapping("/{projectID}/collaborators")
+    public ResponseEntity<List<ProjectCollaborator>> getProjectCollaborators(@PathVariable Integer projectID) {
+        return ResponseEntity.ok(projectService.getProjectCollaboratorsByProjectId(projectID));
     }
 
-    @GetMapping("/{id}/leaderboard")
-    public ResponseEntity<Object> getProjectLeaderboard(@PathVariable Integer id) {
-        return ResponseEntity.ok(projectService.getProjectLeaderboardByProjectId(id));
+    @GetMapping("/{projectID}/leaderboard")
+    public ResponseEntity<Object> getProjectLeaderboard(@PathVariable Integer projectID) {
+        return ResponseEntity.ok(projectService.getProjectLeaderboardByProjectId(projectID));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{projectID}")
     public ResponseEntity<Project> updateProject(@PathVariable Integer id, @RequestBody Project project) {
         Project updatedProject = projectService.updateProject(id, project);
         return ResponseEntity.ok(updatedProject);
