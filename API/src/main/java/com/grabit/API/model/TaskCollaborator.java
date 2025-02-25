@@ -1,41 +1,42 @@
 package com.grabit.API.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+
 
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "TaskCollaborators", schema = "grabit")
 public class TaskCollaborator {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "TaskCollaboratorID")
-    private Integer taskCollaboratorID;
+    @Column(name = "TaskCollaboratorID", nullable = false)
+    private Integer taskCollaboratorId;
 
-    @Column(name = "UserID", nullable = false)
-    private Integer userID;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "UserID", nullable = false)
+    private User user;  // Assuming the User entity exists with the appropriate mapping
 
-    @Column(name = "RoleID", nullable = false)
-    private Byte roleID;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "RoleID", nullable = false)
+    private Role role;  // Assuming the Role entity exists with the appropriate mapping
 
-    @Column(name = "TaskID", nullable = false)
-    private Integer taskID;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TaskID", nullable = false)
+    private Task task;  // Assuming the Task entity exists with the appropriate mapping
 
-    @Column(name = "JoinedAt")
-    private LocalDateTime joinedAt;
+    @Column(name = "JoinedAt", nullable = false)
+    private LocalDate joinedAt;
 
     @Column(name = "isActive", nullable = false)
     private Boolean isActive = true;
-
-    @PrePersist
-    void prePersist() {
-        if (joinedAt == null) {
-            joinedAt = LocalDateTime.now();
-        }
-    }
 }

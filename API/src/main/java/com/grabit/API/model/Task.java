@@ -23,7 +23,7 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TaskID", nullable = false)
-    private int taskID;
+    private Integer taskID;
 
     @ManyToOne
     @NotNull(message = "Project ID is required.")

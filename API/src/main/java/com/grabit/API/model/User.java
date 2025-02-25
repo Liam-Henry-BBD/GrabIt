@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @Entity
@@ -16,7 +18,13 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "UserID", nullable = false)
-    private Integer userID;
+    @Column(name = "UserID")
+    private Integer userId;
+
+    @Column(name = "GitHubID", nullable = false, unique = true, length = 100)
+    private String gitHubId;
+
+    @Column(name = "JoinedAt", nullable = false)
+    private LocalDate joinedAt;
 
 }
