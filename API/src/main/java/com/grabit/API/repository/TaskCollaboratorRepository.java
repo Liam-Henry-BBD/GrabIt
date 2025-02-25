@@ -9,8 +9,8 @@ import java.util.Optional;
 
 @Repository
 public interface TaskCollaboratorRepository extends JpaRepository<TaskCollaborator, Integer> {
-    List<TaskCollaborator> findByTaskID(Integer taskID);
+    List<TaskCollaborator> findByTask_TaskID(Integer taskID);
 
-    Optional<TaskCollaborator> findByUserIDAndTaskID(Integer userID, Integer taskID);
+//    Optional<TaskCollaborator> findByUserIDAndTaskID(Integer userID, Integer taskID);
 
 }

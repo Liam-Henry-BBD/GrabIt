@@ -2,8 +2,6 @@ package com.grabit.API.repository;
 
 import java.util.List;
 
-import com.grabit.API.model.TaskCollaborator;
-import com.grabit.API.model.TaskStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
