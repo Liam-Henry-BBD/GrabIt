@@ -133,7 +133,7 @@ spring.datasource.username=grabit_username
 spring.datasource.password=grabit_password
 ```
 
-4. **Build the Project:**
+3. **Build the Project:**
 
 - Open a terminal and navigate to the project's root directory.
 - Run the following command to build the project:
@@ -142,7 +142,7 @@ spring.datasource.password=grabit_password
 mvn clean install
 ```
 
-5. **Run the Application:**
+4. **Run the Application:**
 
 - Run the Spring Boot application using the following command:
 
@@ -150,9 +150,12 @@ mvn clean install
 mvn spring-boot:run
 ```
 
-6.**Using the Endpoints:**
+5. **Using the Endpoints:**
 
 - You can use tools like Postman or cURL to interact with the API endpoints. The base URL should be `http://localhost:8081`.
+
+6. **Login Authentication**
+// TODO: WILL FILL UP INFO HERE
 
 ## Endpoints for Project
 
