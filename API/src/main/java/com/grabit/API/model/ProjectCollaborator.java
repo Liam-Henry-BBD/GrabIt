@@ -1,18 +1,20 @@
 package com.grabit.API.model;
 
 import jakarta.persistence.*;
-
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Table(name = "ProjectCollaborators", schema = "grabit")
 public class ProjectCollaborator {
-
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
