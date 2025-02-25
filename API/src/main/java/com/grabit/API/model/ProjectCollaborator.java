@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 @Setter
 @Table(name = "ProjectCollaborators", schema = "grabit")
 public class ProjectCollaborator {
+
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int projectCollaboratorID;
@@ -19,9 +21,8 @@ public class ProjectCollaborator {
     @Column(name = "UserID", nullable = false)
     private Integer userID;
 
-    @ManyToOne
-    @JoinColumn(name = "ProjectID", nullable = false)
-    private Project project;
+    @Column(name = "ProjectID", nullable = false)
+    private Integer projectID;
 
     @Column(name = "RoleID", nullable = false)
     private Integer roleID;
@@ -31,4 +32,5 @@ public class ProjectCollaborator {
 
     @Column(name = "isActive", nullable = false)
     private boolean isActive;
+
 }
