@@ -1,6 +1,6 @@
 package com.grabit.API.controller;
 
-import com.grabit.API.model.ProjectCollaboratorModel;
+import com.grabit.API.model.ProjectCollaborator;
 import com.grabit.API.service.ProjectCollaboratorService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ public class ProjectCollaboratorController {
     private ProjectCollaboratorService projectCollaboratorService;
 
     @GetMapping("/{id}")
-    public ProjectCollaboratorModel getProjectCollaboratorByID(@PathVariable Long id) {
+    public ProjectCollaborator getProjectCollaboratorByID(@PathVariable Long id) {
         return projectCollaboratorService.getProjectCollaboratorByID(id);
     }
 
