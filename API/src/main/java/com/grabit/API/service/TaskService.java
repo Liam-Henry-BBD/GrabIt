@@ -1,7 +1,6 @@
 package com.grabit.API.service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import com.grabit.API.model.TaskCollaborator;
@@ -61,9 +60,6 @@ public class TaskService {
         if (!taskStatusRepository.existsById((int) task.getTaskStatus().getTaskStatusID())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task status not found");
         }
-
-        System.out.println(task.getTaskID());
-
         return taskRepository.save(task);
     }
 
@@ -86,15 +82,13 @@ public class TaskService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task must move from available to grabbed.");
         }
 
-        //TODO: If a task has been taken for a day, it cannot be move to available again
+        // If a task has been taken for a day, it cannot be move to available again
         TaskStatus taskStatus = taskStatusRepository.findById((int) taskStatusID)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task status not found"));
 
-        //It goes into review
-        if (taskStatusID == 3) {
-            task.setTaskReviewRequestedAt(LocalDateTime.now());
-        }
+
         task.setTaskStatus(taskStatus);
+
         return taskRepository.save(task);
     }
 
@@ -112,7 +106,6 @@ public class TaskService {
 
         updatedTask.setTaskName(task.getTaskName());
         updatedTask.setTaskDescription(task.getTaskDescription());
-        updatedTask.setTaskDeadline(task.getTaskDeadline());
         
         return taskRepository.save(updatedTask);
     }
@@ -120,17 +113,13 @@ public class TaskService {
     public void deleteTask(Integer id) {
         Task task = taskRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Task not found."));
-
-//        taskCollaboratorRepository.findByTaskID(id).forEach(collab -> {
-//            collab.setIsActive(false);
-//            taskCollaboratorRepository.save(collab);
-//        });
-
+        
+        taskRepository.delete(task);
     }
 
     public List<TaskCollaborator> getTaskCollaborators(Integer taskID) {
 
-        boolean taskExists = taskRepository.existsById(taskID);
+        Boolean taskExists = taskRepository.existsById(taskID);
         if (!taskExists) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
         }
