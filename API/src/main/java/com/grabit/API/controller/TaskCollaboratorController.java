@@ -1,6 +1,6 @@
 package com.grabit.API.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,17 +17,16 @@ public class TaskCollaboratorController {
 
     private final TaskCollaboratorService taskCollaboratorService;
 
-    @Autowired
     public TaskCollaboratorController(TaskCollaboratorService taskCollaboratorService) {
         this.taskCollaboratorService = taskCollaboratorService;
     }
 
-    // Creating a task collaborator
-    @PostMapping
-    public ResponseEntity<TaskCollaborator> addTaskCollaborator(@RequestBody TaskCollaborator taskCollaborator) {
-        TaskCollaborator savedCollaborator = taskCollaboratorService.addTaskCollaborator(taskCollaborator);
-        return new ResponseEntity<>(savedCollaborator, HttpStatus.CREATED);
-    }
+    //TODO: still working on creating a task collaborator
+//    @PostMapping
+//    public ResponseEntity<TaskCollaborator> addTaskCollaborator(@Valid @RequestBody TaskCollaborator taskCollaborator) {
+//        TaskCollaborator savedCollaborator = taskCollaboratorService.addTaskCollaborator(taskCollaborator);
+//        return new ResponseEntity<>(savedCollaborator, HttpStatus.CREATED);
+//    }
 
     // Getting all task collaborators
     @GetMapping
