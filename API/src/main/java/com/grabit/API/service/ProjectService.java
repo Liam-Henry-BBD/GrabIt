@@ -32,35 +32,29 @@ public class ProjectService extends Task {
         this.projectCollaboratorRepository = projectCollaboratorRepository;
     }
 
-    // Save a new project
     public Project createProject(Project project) {
         project.setCreatedAt(new Date());
         project.setUpdatedAt(new Date());
         return projectRepository.save(project);
     }
 
-    // Get all projects
     public List<Project> getAllProjects() {
         return projectRepository.findAll();
     }
 
-    // Get a project by its ID
     public Project getProjectById(Integer id) {
         return projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Project not found"));
     }
 
-    // Delete a project by ID
     public void closeProject(Integer id) {
         projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Project not found"));
         projectRepository.deleteById(id);
     }
 
-    // Get all tasks for a specific project ID
     public List<Task> getProjectTasksByProjectId(Integer projectID) {
         return taskRepository.findByProject_ProjectID(projectID);
     }
 
-    // Get the leaderboard for a specific project ID
     public Object getProjectLeaderboardByProjectId(Integer projectId) {
         List<Object[]> results = projectRepository.getProjectLeaderboard(projectId);
 
@@ -80,7 +74,6 @@ public class ProjectService extends Task {
         return leaderboard;
     }
 
-    // Get all collaborators for a specific project ID
     public List<ProjectCollaboratorModel> getProjectCollaboratorsByProjectId(Integer projectID) {
         return projectCollaboratorRepository.findByProject_ProjectID(projectID);
     }

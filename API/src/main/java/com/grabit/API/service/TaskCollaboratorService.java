@@ -8,7 +8,6 @@ import com.grabit.API.repository.RoleRepository;
 import com.grabit.API.repository.TaskCollaboratorRepository;
 import com.grabit.API.repository.TaskRepository;
 import com.grabit.API.repository.UserRepository;
-// import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -16,7 +15,6 @@ import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
 import java.util.List;
-// import java.util.Optional;
 
 @Service
 public class TaskCollaboratorService {
@@ -28,9 +26,9 @@ public class TaskCollaboratorService {
     private final RoleRepository roleRepository;
 
     public TaskCollaboratorService(TaskCollaboratorRepository taskCollaboratorRepository,
-                                   TaskRepository taskRepository,
-                                   UserRepository userRepository,
-                                   RoleRepository roleRepository) {
+            TaskRepository taskRepository,
+            UserRepository userRepository,
+            RoleRepository roleRepository) {
         this.taskCollaboratorRepository = taskCollaboratorRepository;
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
@@ -38,7 +36,6 @@ public class TaskCollaboratorService {
     }
 
     public TaskCollaborator addTaskCollaborator(TaskCollaborator taskCollaborator) {
-        // Check if the task exists
 
         User user = userRepository.findById(taskCollaborator.getUser().getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -47,28 +44,24 @@ public class TaskCollaboratorService {
         Task task = taskRepository.findById(taskCollaborator.getTask().getTaskID())
                 .orElseThrow(() -> new RuntimeException("Task not found"));
 
-      
-        // Check if the task is complete
         if (task.getTaskStatus().getStatusName().contains("Complete")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot add collaborator: Task is already complete");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Cannot add collaborator: Task is already complete");
         }
 
-        // Check if the deadline has passed
         if (task.getTaskDeadline() != null && task.getTaskDeadline().isBefore(LocalDate.now())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot add collaborator: Task deadline has passed");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Cannot add collaborator: Task deadline has passed");
         }
 
         try {
             TaskCollaborator newTaskCollaborator = new TaskCollaborator();
-//            newTaskCollaborator.getTask().setTaskID(task.getTaskID());
-//            newTaskCollaborator.setRoleID((byte) 1);
-//            newTaskCollaborator.setUserID(11);
             newTaskCollaborator.setTask(task);
             newTaskCollaborator.setUser(user);
             newTaskCollaborator.setRole(role);
             newTaskCollaborator.setJoinedAt(LocalDate.now());
             return taskCollaboratorRepository.save(newTaskCollaborator);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -79,9 +72,9 @@ public class TaskCollaboratorService {
     }
 
     public TaskCollaborator getTaskCollaboratorByID(Integer taskCollabID) {
-        return taskCollaboratorRepository.findById(taskCollabID).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "TaskCollaborator not found with ID: " + taskCollabID)
-        );
+        return taskCollaboratorRepository.findById(taskCollabID)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "TaskCollaborator not found with ID: " + taskCollabID));
     }
 
     public ResponseEntity<Object> deactivateTaskCollaboratorByID(Integer taskCollabID) {

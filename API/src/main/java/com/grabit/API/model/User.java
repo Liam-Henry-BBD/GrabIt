@@ -15,7 +15,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Table(name = "Users", schema = "grabit")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "UserID")
@@ -26,5 +25,4 @@ public class User {
 
     @Column(name = "JoinedAt", nullable = false)
     private LocalDate joinedAt;
-
 }

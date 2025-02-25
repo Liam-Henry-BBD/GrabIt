@@ -13,7 +13,6 @@ public class ProjectCollaboratorService {
     @Autowired
     private ProjectCollaboratorRepository projectCollaboratorRepository;
 
-    // getting all the project collaborators per specific project
     public List<ProjectCollaboratorModel> getAllProjectCollaboratorsByProjectID(int projectId) {
         return projectCollaboratorRepository.findByProject_ProjectID(projectId);
     }
@@ -31,7 +30,6 @@ public class ProjectCollaboratorService {
         projectCollaboratorRepository.deleteById(id.intValue());
     }
 
-    // get all the active project collaborators
     public List<ProjectCollaboratorModel> getAllActiveProjectCollaborators() {
         return projectCollaboratorRepository.findByIsActive(true);
     }
