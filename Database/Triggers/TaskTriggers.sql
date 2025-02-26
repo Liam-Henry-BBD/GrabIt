@@ -171,7 +171,7 @@ BEGIN
 			SELECT COUNT([grabit].[TaskCollaborators].TaskID)
 			FROM [grabit].[TaskCollaborators]
 			WHERE [grabit].[TaskCollaborators].TaskID = @TaskID
-				AND [grabit].[TaskCollaborators].UserID = [grabit].[TaskCollaborators].UserID
+				AND @UserID = [grabit].[TaskCollaborators].UserID
 			) > 1
 	BEGIN
 		RAISERROR (

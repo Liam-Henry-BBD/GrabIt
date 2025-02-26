@@ -1,3 +1,4 @@
+
 CREATE TABLE [grabit].Users (
 	UserID INT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
 	GitHubID VARCHAR(100) NOT NULL UNIQUE,
@@ -56,7 +57,9 @@ CREATE TABLE [grabit].ProjectCollaborators (
 	ProjectID INT NOT NULL,
 	RoleID TINYINT NOT NULL,
 	JoinedAt DATETIME NOT NULL,
-	isActive BIT NOT NULL DEFAULT 1 FOREIGN KEY (UserID) REFERENCES [grabit].Users(UserID),
+	isActive BIT NOT NULL DEFAULT 1,
+	UNIQUE(ProjectID, UserID),
+	FOREIGN KEY (UserID) REFERENCES [grabit].Users(UserID),
 	FOREIGN KEY (ProjectID) REFERENCES [grabit].Projects(ProjectID),
 	FOREIGN KEY (RoleID) REFERENCES [grabit].Roles(RoleID)
 	);
@@ -68,7 +71,9 @@ CREATE TABLE [grabit].TaskCollaborators (
 	RoleID TINYINT NOT NULL,
 	TaskID INT NOT NULL,
 	JoinedAt DATETIME NOT NULL,
-	isActive BIT NOT NULL DEFAULT 1 FOREIGN KEY (UserID) REFERENCES [grabit].Users(UserID),
+	isActive BIT NOT NULL DEFAULT 1,
+	UNIQUE(TaskID, UserID),
+	FOREIGN KEY (UserID) REFERENCES [grabit].Users(UserID),
 	FOREIGN KEY (RoleID) REFERENCES [grabit].Roles(RoleID),
 	FOREIGN KEY (TaskID) REFERENCES [grabit].Tasks(TaskID)
 	);
