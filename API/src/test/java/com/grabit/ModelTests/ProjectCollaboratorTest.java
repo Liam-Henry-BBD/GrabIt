@@ -1,7 +1,8 @@
 package com.grabit.ModelTests;
-import com.grabit.API.model.ProjectCollaborator;
-
 import org.junit.jupiter.api.Test;
+
+import com.grabit.app.model.ProjectCollaborator;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDateTime;

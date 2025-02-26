@@ -1,10 +1,12 @@
 package com.grabit.ModelTests;
 
-import com.grabit.API.model.TaskCollaborator;
-import com.grabit.API.model.User;
-import com.grabit.API.model.Role;
-import com.grabit.API.model.Task;
 import org.junit.jupiter.api.Test;
+
+import com.grabit.app.model.Role;
+import com.grabit.app.model.Task;
+import com.grabit.app.model.TaskCollaborator;
+import com.grabit.app.model.User;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;

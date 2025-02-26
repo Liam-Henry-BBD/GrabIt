@@ -1,7 +1,8 @@
-package com.grabit.API.dataTransferObjectTests;
+package com.grabit.app.dataTransferObjectTests;
 
-import com.grabit.API.dataTransferObject.ProjectLeaderboardDTO;
 import org.junit.jupiter.api.Test;
+
+import com.grabit.app.dataTransferObject.ProjectLeaderboardDTO;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

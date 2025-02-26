@@ -1,10 +1,11 @@
 package com.grabit.ModelTests;
-import com.grabit.API.model.Task;
-import com.grabit.API.model.Project;
-import com.grabit.API.model.TaskPoint;
-import com.grabit.API.model.TaskStatus;
-
 import org.junit.jupiter.api.Test;
+
+import com.grabit.app.model.Project;
+import com.grabit.app.model.Task;
+import com.grabit.app.model.TaskPoint;
+import com.grabit.app.model.TaskStatus;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Date;

@@ -1,9 +1,10 @@
-package com.grabit.API.dataTransferObjectTests;
+package com.grabit.app.dataTransferObjectTests;
 
-import com.grabit.API.dataTransferObject.ProjectCreationDTO;
-import com.grabit.API.model.Project;
-import com.grabit.API.model.ProjectCollaborator;
 import org.junit.jupiter.api.Test;
+
+import com.grabit.app.dataTransferObject.ProjectCreationDTO;
+import com.grabit.app.model.Project;
+import com.grabit.app.model.ProjectCollaborator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

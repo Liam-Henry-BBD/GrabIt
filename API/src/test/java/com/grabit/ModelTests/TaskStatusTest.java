@@ -1,9 +1,10 @@
 package com.grabit.ModelTests;
 
-import com.grabit.API.model.TaskStatus;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import com.grabit.app.model.TaskStatus;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class TaskStatusTest {

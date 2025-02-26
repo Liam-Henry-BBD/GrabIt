@@ -1,8 +1,10 @@
 package com.grabit.ModelTests;
 
 import org.junit.jupiter.api.Test;
+
+import com.grabit.app.model.Role;
+
 import static org.junit.jupiter.api.Assertions.*;
-import com.grabit.API.model.Role;
 
 public class RoleTest {
     @Test
