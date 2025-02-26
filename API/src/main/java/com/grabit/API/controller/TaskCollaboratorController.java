@@ -1,11 +1,11 @@
-package com.grabit.API.controller;
+package com.grabit.api.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.grabit.API.model.TaskCollaborator;
-import com.grabit.API.service.TaskCollaboratorService;
+import com.grabit.api.model.TaskCollaborator;
+import com.grabit.api.service.TaskCollaboratorService;
 
 import java.util.List;
 import java.util.Optional;

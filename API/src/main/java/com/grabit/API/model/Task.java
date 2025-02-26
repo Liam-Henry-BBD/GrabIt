@@ -1,4 +1,4 @@
-package com.grabit.API.model;
+package com.grabit.api.model;
 
 import java.sql.Date;
 import java.time.LocalDate;

@@ -1,16 +1,16 @@
-package com.grabit.API.controller;
+package com.grabit.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.grabit.API.dataTransferObject.ProjectCreationDTO;
-import com.grabit.API.model.Project;
-import com.grabit.API.model.ProjectCollaborator;
-import com.grabit.API.model.Task;
-import com.grabit.API.service.ProjectCollaboratorService;
-import com.grabit.API.service.ProjectService;
+import com.grabit.api.dto.ProjectCreationDTO;
+import com.grabit.api.model.Project;
+import com.grabit.api.model.ProjectCollaborator;
+import com.grabit.api.model.Task;
+import com.grabit.api.service.ProjectCollaboratorService;
+import com.grabit.api.service.ProjectService;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,10 +1,10 @@
-package com.grabit.API.controller;
-
-import com.grabit.API.model.ProjectCollaborator;
-import com.grabit.API.service.ProjectCollaboratorService;
+package com.grabit.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import com.grabit.api.model.ProjectCollaborator;
+import com.grabit.api.service.ProjectCollaboratorService;
 
 @RestController
 @RequestMapping("/api/project-collaborators")

@@ -1,6 +1,4 @@
-package com.grabit.API.repository;
-
-import com.grabit.API.model.Project;
+package com.grabit.api.repository;
 
 import java.util.List;
 
@@ -8,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import com.grabit.api.model.Project;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Integer> {

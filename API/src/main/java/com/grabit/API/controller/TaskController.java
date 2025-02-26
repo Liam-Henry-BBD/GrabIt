@@ -1,8 +1,4 @@
-package com.grabit.API.controller;
-
-import com.grabit.API.model.TaskCollaborator;
-import com.grabit.API.model.Task;
-import com.grabit.API.service.TaskService;
+package com.grabit.api.controller;
 
 import jakarta.validation.Valid;
 
@@ -15,6 +11,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.grabit.api.model.Task;
+import com.grabit.api.model.TaskCollaborator;
+import com.grabit.api.service.TaskService;
 
 import java.util.List;
 

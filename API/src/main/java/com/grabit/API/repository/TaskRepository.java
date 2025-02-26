@@ -1,11 +1,11 @@
-package com.grabit.API.repository;
+package com.grabit.api.repository;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.grabit.API.model.Task;
+import com.grabit.api.model.Task;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Integer> {

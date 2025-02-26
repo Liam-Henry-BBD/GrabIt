@@ -1,7 +1,8 @@
-package com.grabit.API.repository;
+package com.grabit.api.repository;
 
-import com.grabit.API.model.TaskStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.grabit.api.model.TaskStatus;
 
 public interface TaskStatusRepository extends JpaRepository<TaskStatus, Integer> {
 }

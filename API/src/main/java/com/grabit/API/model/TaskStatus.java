@@ -1,4 +1,4 @@
-package com.grabit.API.model;
+package com.grabit.api.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

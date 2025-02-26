@@ -5,13 +5,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.grabit.api.service.CustomOAuth2UserService;
 
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-
-import com.grabit.API.service.CustomOAuth2UserService;
-
 import org.springframework.context.annotation.Configuration;
 
 @Configuration

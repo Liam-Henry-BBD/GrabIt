@@ -1,16 +1,16 @@
-package com.grabit.API.service;
+package com.grabit.api.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.grabit.API.dataTransferObject.ProjectLeaderboardDTO;
-import com.grabit.API.model.Project;
-import com.grabit.API.model.ProjectCollaborator;
-import com.grabit.API.model.Task;
-import com.grabit.API.repository.ProjectCollaboratorRepository;
-import com.grabit.API.repository.ProjectRepository;
-import com.grabit.API.repository.TaskCollaboratorRepository;
-import com.grabit.API.repository.TaskRepository;
+import com.grabit.api.dto.ProjectLeaderboardDTO;
+import com.grabit.api.model.Project;
+import com.grabit.api.model.ProjectCollaborator;
+import com.grabit.api.model.Task;
+import com.grabit.api.repository.ProjectCollaboratorRepository;
+import com.grabit.api.repository.ProjectRepository;
+import com.grabit.api.repository.TaskCollaboratorRepository;
+import com.grabit.api.repository.TaskRepository;
 
 import java.util.Date;
 import java.util.List;

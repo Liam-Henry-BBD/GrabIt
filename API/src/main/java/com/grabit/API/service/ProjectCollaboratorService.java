@@ -1,9 +1,10 @@
-package com.grabit.API.service;
+package com.grabit.api.service;
 
-import com.grabit.API.model.ProjectCollaborator;
-import com.grabit.API.repository.ProjectCollaboratorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.grabit.api.model.ProjectCollaborator;
+import com.grabit.api.repository.ProjectCollaboratorRepository;
 
 import java.util.List;
 

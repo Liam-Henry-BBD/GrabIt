@@ -1,4 +1,4 @@
-package com.grabit.API.service;
+package com.grabit.api.service;
 
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;

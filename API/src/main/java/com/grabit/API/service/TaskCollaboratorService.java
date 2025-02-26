@@ -1,16 +1,18 @@
-package com.grabit.API.service;
+package com.grabit.api.service;
 
-import com.grabit.API.model.Role;
-import com.grabit.API.model.Task;
-import com.grabit.API.model.TaskCollaborator;
-import com.grabit.API.model.User;
-import com.grabit.API.repository.RoleRepository;
-import com.grabit.API.repository.TaskCollaboratorRepository;
-import com.grabit.API.repository.TaskRepository;
-import com.grabit.API.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import com.grabit.api.model.Role;
+import com.grabit.api.model.Task;
+import com.grabit.api.model.TaskCollaborator;
+import com.grabit.api.model.User;
+import com.grabit.api.repository.RoleRepository;
+import com.grabit.api.repository.TaskCollaboratorRepository;
+import com.grabit.api.repository.TaskRepository;
+import com.grabit.api.repository.UserRepository;
+
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;

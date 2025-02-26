@@ -1,16 +1,16 @@
-package com.grabit.API.service;
+package com.grabit.api.service;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import com.grabit.API.model.TaskCollaborator;
-import com.grabit.API.model.TaskStatus;
-import com.grabit.API.repository.*;
-import com.grabit.API.model.Task;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import com.grabit.api.model.Task;
+import com.grabit.api.model.TaskCollaborator;
+import com.grabit.api.model.TaskStatus;
+import com.grabit.api.repository.*;
 
 @Service
 public class TaskService {

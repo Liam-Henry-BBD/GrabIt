@@ -1,4 +1,4 @@
-package com.grabit.API.dataTransferObject;
+package com.grabit.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

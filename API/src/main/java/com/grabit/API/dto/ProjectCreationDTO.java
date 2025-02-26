@@ -1,7 +1,7 @@
-package com.grabit.API.dataTransferObject;
+package com.grabit.api.dto;
 
-import com.grabit.API.model.Project;
-import com.grabit.API.model.ProjectCollaborator;
+import com.grabit.api.model.Project;
+import com.grabit.api.model.ProjectCollaborator;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

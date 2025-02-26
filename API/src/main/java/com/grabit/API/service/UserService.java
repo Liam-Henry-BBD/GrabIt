@@ -1,12 +1,12 @@
-package com.grabit.API.service;
+package com.grabit.api.service;
 
 import java.time.LocalDate;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.grabit.API.model.User;
-import com.grabit.API.repository.UserRepository;
+import com.grabit.api.model.User;
+import com.grabit.api.repository.UserRepository;
 
 @Service
 public class UserService {
