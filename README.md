@@ -105,6 +105,102 @@ To set up the Task Grab system locally, follow these steps:
    SSH: git clone git@github.com:Liam-Henry-BBD/GrabIt.git
 ```
 
+## Dependencies
+
+This project utilizes several key dependencies to provide functionality and support various features. Below is a comprehensive list of the dependencies used in the GrabIt project, along with their purpose and documentation.
+
+**Spring Boot Dependencies**
+```sh
+spring-boot-starter-parent
+Group ID: org.springframework.boot
+Artifact ID: spring-boot-starter-parent
+Version: 3.4.2
+Purpose: Provides default configurations for Spring Boot applications, including dependency management and plugin configurations.
+```
+
+```sh
+spring-boot-starter-security
+Group ID: org.springframework.boot
+Artifact ID: spring-boot-starter-security
+Purpose: Provides security features for Spring Boot applications, including authentication and authorization.
+```
+
+```sh
+spring-boot-starter-oauth2-client
+Group ID: org.springframework.boot
+Artifact ID: spring-boot-starter-oauth2-client
+Purpose: Supports OAuth2 client features, allowing the application to authenticate users via OAuth2 providers like GitHub.
+```
+
+```sh
+spring-boot-starter-data-jpa
+Group ID: org.springframework.boot
+Artifact ID: spring-boot-starter-data-jpa
+Purpose: Provides support for JPA using Spring Data JPA, enabling interaction with relational databases.
+```
+
+```sh
+spring-boot-devtools
+Group ID: org.springframework.boot
+Artifact ID: spring-boot-devtools
+Scope: runtime
+Optional: true
+Purpose: Offers development tools for Spring Boot applications, including automatic restarts and live reload.
+```
+
+```sh
+spring-boot-starter-test
+Group ID: org.springframework.boot
+Artifact ID: spring-boot-starter-test
+Scope: test
+Purpose: Provides testing support for Spring Boot applications, including JUnit, Hamcrest, and Mockito.
+```
+
+```sh
+spring-boot-starter-validation
+Group ID: org.springframework.boot
+Artifact ID: spring-boot-starter-validation
+Purpose: Supports bean validation using Hibernate Validator.
+```
+
+```sh
+spring-boot-starter-web
+Group ID: org.springframework.boot
+Artifact ID: spring-boot-starter-web
+Purpose: Supports building web applications using Spring MVC, including RESTful web services.
+```
+
+**Database Dependencies**
+```sh
+mssql-jdbc
+Group ID: com.microsoft.sqlserver
+Artifact ID: mssql-jdbc
+Scope: runtime
+Purpose: Provides the JDBC driver for Microsoft SQL Server, enabling the application to connect to SQL Server databases.
+```
+
+**Utility Dependencies**
+```sh
+lombok
+Group ID: org.projectlombok
+Artifact ID: lombok
+Optional: true
+Scope: provided
+Purpose: Reduces boilerplate code in Java through annotations for getters, setters, and constructors.
+```
+
+**Build Plugins**
+```sh
+maven-compiler-plugin
+Group ID: org.apache.maven.plugins
+Artifact ID: maven-compiler-plugin
+Purpose: Configures the Maven compiler plugin to use Lombok for annotation processing.
+spring-boot-maven-plugin
+Group ID: org.springframework.boot
+Artifact ID: spring-boot-maven-plugin
+Purpose: Provides support for packaging and running Spring Boot applications as executable JARs or WARs.
+```
+
 ## Running the Project's API Endpoints
 
 1. **Prerequisites:**
