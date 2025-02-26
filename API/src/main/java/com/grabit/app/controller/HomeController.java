@@ -12,6 +12,6 @@ import java.util.Map;
 public class HomeController {
     @GetMapping("/me")
     public Map<String, Object> getUser(@AuthenticationPrincipal OAuth2User user) {
-        return user.getAttributes(); // Returns GitHub user details
+        return user.getAttributes(); 
     }
 };

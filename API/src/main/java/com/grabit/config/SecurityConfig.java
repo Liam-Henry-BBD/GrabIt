@@ -25,22 +25,21 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/public/**").permitAll()  // Public endpoints
-                .anyRequest().authenticated()  // Secure all other endpoints
+                .requestMatchers("/public/**").permitAll()  
+                .anyRequest().authenticated()  
             )
             .oauth2Login(oauth2 -> oauth2
                 .userInfoEndpoint(userInfo -> userInfo
-                    .userService(customOAuth2UserService2()) // Use custom service to handle user details
+                    .userService(customOAuth2UserService2()) 
                 )
             )
-            .csrf(AbstractHttpConfigurer::disable); // Disable CSRF (optional, for APIs)
+            .csrf(AbstractHttpConfigurer::disable); 
 
         return http.build();
     }
 
     @Bean
     public OAuth2UserService<OAuth2UserRequest, OAuth2User> customOAuth2UserService2() {
-        // private final UserService userService;
         return customOAuth2UserService;
     }
 }
