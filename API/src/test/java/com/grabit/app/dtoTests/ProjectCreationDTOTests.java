@@ -1,4 +1,4 @@
-package com.grabit.app.dtotests;
+package com.grabit.app.dtoTests;
 
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ProjectCreationDTOTests {
 
     @Test
-    public void testGettersAndSetters() {
+    public void testCreationGettersAndSetters() {
         Project project = new Project();
         ProjectCollaborator collaborator = new ProjectCollaborator();
         ProjectCreationDTO dto = new ProjectCreationDTO(project, collaborator);

@@ -1,4 +1,4 @@
-package com.grabit.app.servicetests;
+package com.grabit.app.serviceTests;
 
 import com.grabit.app.model.ProjectCollaborator;
 import com.grabit.app.service.ProjectCollaboratorService;

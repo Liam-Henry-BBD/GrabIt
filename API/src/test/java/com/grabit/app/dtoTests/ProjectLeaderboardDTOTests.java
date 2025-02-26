@@ -1,4 +1,4 @@
-package com.grabit.app.dtotests;
+package com.grabit.app.dtoTests;
 
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ProjectLeaderboardDTOTests {
 
     @Test
-    public void testGettersAndSetters () {
+    public void testLeaderboardGettersAndSetters () {
         ProjectLeaderboardDTO dto = new ProjectLeaderboardDTO(5, 23, "exampleUser23", 20);
 
         assertEquals(5, dto.getPosition());

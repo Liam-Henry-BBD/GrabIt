@@ -19,14 +19,14 @@ public class Project {
     private Integer projectID;
     @Getter
     @Setter
-    private String ProjectName;
+    private String projectName;
     @Getter
     @Setter
-    private String ProjectDescription;
+    private String projectDescription;
     @Getter
     @Setter
-    private Date CreatedAt;
+    private Date createdAt;
     @Getter
     @Setter
-    private Date UpdatedAt;
+    private Date updatedAt;
 }
