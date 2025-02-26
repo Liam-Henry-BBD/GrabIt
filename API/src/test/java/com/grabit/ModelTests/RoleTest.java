@@ -1,4 +1,4 @@
-package com.grabit.ModelTests;
+package com.grabit.modeltests;
 
 import org.junit.jupiter.api.Test;
 

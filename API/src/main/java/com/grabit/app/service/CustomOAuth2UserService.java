@@ -12,11 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
-    private final UserService userService;
+    // private final UserService userService;
 
-    public CustomOAuth2UserService(UserService userService) {
-        this.userService = userService;
-    }
+    // public CustomOAuth2UserService(UserService userService) {
+    //     this.userService = userService;
+    // }
 
     @Override
     @Transactional
@@ -24,9 +24,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
         // Extract user details from GitHub response
-        String githubId = oAuth2User.getAttribute("id").toString();
+        // String githubId = oAuth2User.getAttribute("id").toString();
 
-        userService.saveOrUpdateUser(githubId);
+        // userService.saveOrUpdateUser(githubId);
         
         return oAuth2User;
     }
