@@ -1,8 +1,8 @@
-package com.grabit.app.dataTransferObjectTests;
+package com.grabit.app.dtotests;
 
 import org.junit.jupiter.api.Test;
 
-import com.grabit.app.dataTransferObject.ProjectCreationDTO;
+import com.grabit.app.dto.ProjectCreationDTO;
 import com.grabit.app.model.Project;
 import com.grabit.app.model.ProjectCollaborator;
 
