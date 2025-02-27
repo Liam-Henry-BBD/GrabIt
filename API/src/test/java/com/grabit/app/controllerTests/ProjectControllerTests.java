@@ -1,4 +1,4 @@
-package com.grabit.app.controllertests;
+package com.grabit.app.controllerTests;
 
 import com.grabit.app.controller.ProjectController;
 import com.grabit.app.dto.ProjectCreationDTO;

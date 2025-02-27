@@ -1,4 +1,4 @@
-package com.grabit.app.controllertests;
+package com.grabit.app.controllerTests;
 
 public class TaskCollaboratorControllerTests {
 }
