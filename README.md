@@ -8,7 +8,7 @@ The GrabIt system is a project management tool designed for teams to manage task
 
 1. **Team Lead Logs In**  
    The team lead logs in to the system and sets up a new project.
-   
+
 2. **Set Up Project and Tasks**  
    The team lead creates tasks within the project, providing task names, descriptions, and setting deadlines. Each task can be assigned a point value based on its difficulty.
 
@@ -272,8 +272,6 @@ mvn spring-boot:run
 
 - You can use tools like Postman or cURL to interact with the API endpoints. The base URL should be `http://localhost:8081`.
 
-6. **Login Authentication**
-// TODO: WILL FILL UP INFO HERE
 
 ## Endpoints for Project
 
