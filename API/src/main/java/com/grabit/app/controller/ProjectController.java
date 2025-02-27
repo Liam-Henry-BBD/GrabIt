@@ -34,7 +34,12 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<Project> createProject(@RequestBody ProjectCreationDTO request) {
+    public ResponseEntity<Project> createProject(@RequestBody ProjectCreationDTO request,
+            @AuthenticationPrincipal OAuth2User user, HttpSession httpSession) {
+
+        if (httpSession.getAttribute("github_access_token") == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
 
         Project project = request.getProject();
         ProjectCollaborator projectCollaborator = request.getProjectCollaborator();
