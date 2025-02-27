@@ -21,6 +21,11 @@ public class UserService {
         User user = new User();
         user.setGitHubId(gitHubId);
         user.setJoinedAt(LocalDate.now());
+
+        User newUser = userRepository.findByGitHubId(user.getGitHubId());
+        if (newUser != null) {
+            return;
+        }
       
         userRepository.save(user);
     }

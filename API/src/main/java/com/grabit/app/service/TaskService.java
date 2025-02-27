@@ -35,7 +35,7 @@ public class TaskService {
     }
 
     public List<Task> getTasksByProjectID(Integer projectID) {
-        return taskRepository.findByProject_ProjectID(projectID);
+        return taskRepository.findByProjectID(projectID);
     }
 
     public Task getTaskById(Integer id) {
@@ -115,15 +115,15 @@ public class TaskService {
 
     public List<TaskCollaborator> getTaskCollaborators(Integer taskID) {
 
-        Boolean taskExists = taskRepository.existsById(taskID);
+        boolean taskExists = taskRepository.existsById(taskID);
         if (!taskExists) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
         }
-        return taskCollaboratorRepository.findByTask_TaskID(taskID);
+        return taskCollaboratorRepository.findByTaskID(taskID);
     }
 
     public List<Task> filterTaskByTaskStatus(Integer taskStatus) {
-        return taskRepository.findByTaskStatus_TaskStatusID(taskStatus);
+        return taskRepository.findByTaskStatusID(taskStatus);
     }
 
 }

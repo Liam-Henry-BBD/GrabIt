@@ -25,7 +25,7 @@ public class ProjectService extends Task {
 
     @Autowired
     public ProjectService(ProjectRepository projectRepository, TaskRepository taskRepository,
-            TaskCollaboratorRepository taskCollaboratorsRepository,
+            TaskCollaboratorRepository taskCollaboratorRepository,
             ProjectCollaboratorRepository projectCollaboratorRepository) {
         this.projectRepository = projectRepository;
         this.taskRepository = taskRepository;
@@ -52,10 +52,11 @@ public class ProjectService extends Task {
     }
 
     public List<Task> getProjectTasksByProjectId(Integer projectID) {
-        return taskRepository.findByProject_ProjectID(projectID);
+        return taskRepository.findByProjectID(projectID);
     }
 
     public Object getProjectLeaderboardByProjectId(Integer projectId) {
+//        TODO: CHOOSE ONE DATATYPE, BE CONSISTENT WITH projectId or projectID....
         List<Object[]> results = projectRepository.getProjectLeaderboard(projectId);
 
         if (results.isEmpty()) {

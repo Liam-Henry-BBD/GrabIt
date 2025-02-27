@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class RoleTest {
     @Test
-    public void testRoleContructorAndGetter(){
+    public void testRoleConstructorAndGetter(){
         Role role = new Role((byte) 1, "lead");
         assertEquals((byte) 1, role.getRoleId());
         assertEquals("lead", role.getRoleTitle());
