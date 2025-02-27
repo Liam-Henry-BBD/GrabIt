@@ -33,6 +33,5 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
             ORDER BY
                 TotalScore DESC;
                         """, nativeQuery = true)
-    List<Object[]> getProjectLeaderboard(@Param("projectID") Integer projectID);
-
+    String[][] getProjectLeaderboard(@Param("projectID") Integer projectID);
 }

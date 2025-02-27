@@ -12,6 +12,7 @@ import com.grabit.app.repository.ProjectRepository;
 import com.grabit.app.repository.TaskCollaboratorRepository;
 import com.grabit.app.repository.TaskRepository;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,15 +57,14 @@ public class ProjectService extends Task {
     }
 
     public Object getProjectLeaderboardByProjectId(Integer projectId) {
-//        TODO: CHOOSE ONE DATATYPE, BE CONSISTENT WITH projectId or projectID....
-        List<Object[]> results = projectRepository.getProjectLeaderboard(projectId);
+        String[][] results = projectRepository.getProjectLeaderboard(projectId);
 
-        if (results.isEmpty()) {
+        if (results.length == 0) {
             return "No tasks have been completed yet.";
         }
 
-        List<ProjectLeaderboardDTO> leaderboard = results.stream()
-                .map(row -> new ProjectLeaderboardDTO(null, (Integer) row[0], (String) row[1], (Integer) row[2]))
+        List<ProjectLeaderboardDTO> leaderboard = Arrays.stream(results)
+                .map(row -> new ProjectLeaderboardDTO(null, Integer.parseInt(row[0]), row[1], Integer.parseInt(row[2])))
                 .sorted((a, b) -> b.getTotalScore().compareTo(a.getTotalScore()))
                 .collect(Collectors.toList());
 

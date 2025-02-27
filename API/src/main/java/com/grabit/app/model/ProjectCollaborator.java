@@ -18,7 +18,7 @@ public class ProjectCollaborator {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int projectCollaboratorID;
+    private Integer projectCollaboratorID;
 
     @Column(name = "UserID", nullable = false)
     private Integer userID;
