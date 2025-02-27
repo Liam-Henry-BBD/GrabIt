@@ -8,8 +8,13 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/")
 public class HomeController {
+    @GetMapping
+    public String welcome() {
+        return "Welcome to Grabit API";
+    }
+    
     @GetMapping("/me")
     public Map<String, Object> getUser(@AuthenticationPrincipal OAuth2User user) {
         return user.getAttributes(); 
