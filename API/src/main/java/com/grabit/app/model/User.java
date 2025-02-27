@@ -18,10 +18,10 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "UserID")
-    private Integer userId;
+    private Integer userID;
 
     @Column(name = "GitHubID", nullable = false, unique = true, length = 100)
-    private String gitHubId;
+    private String gitHubID;
 
     @Column(name = "JoinedAt", nullable = false)
     private LocalDate joinedAt;

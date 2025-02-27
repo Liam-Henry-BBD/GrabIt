@@ -21,7 +21,7 @@ public class TaskCollaboratorTest {
         LocalDate joinedAt = LocalDate.now();
         TaskCollaborator taskCollaborator = new TaskCollaborator(1, user, role, task, joinedAt, true);
 
-        assertEquals(1, taskCollaborator.getTaskCollaboratorId());
+        assertEquals(1, taskCollaborator.getTaskCollaboratorID());
         assertEquals(user, taskCollaborator.getUser());
         assertEquals(role, taskCollaborator.getRole());
         assertEquals(task, taskCollaborator.getTask());
@@ -37,8 +37,8 @@ public class TaskCollaboratorTest {
         Task task = new Task();
         LocalDate joinedAt = LocalDate.now();
 
-        taskCollaborator.setTaskCollaboratorId(2);
-        assertEquals(2, taskCollaborator.getTaskCollaboratorId());
+        taskCollaborator.setTaskCollaboratorID(2);
+        assertEquals(2, taskCollaborator.getTaskCollaboratorID());
 
         taskCollaborator.setUser(user);
         assertEquals(user, taskCollaborator.getUser());

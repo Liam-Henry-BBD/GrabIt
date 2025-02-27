@@ -42,10 +42,10 @@ public class TaskCollaboratorService {
     @Transactional
     public void addTaskCollaborator(TaskCollaborator taskCollaborator) {
 
-        User user = userRepository.findById(taskCollaborator.getUser().getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        Role role = roleRepository.findById(Integer.valueOf(taskCollaborator.getRole().getRoleId()))
-                .orElseThrow(() -> new RuntimeException("Role not found"));
+        User user = userRepository.findById(taskCollaborator.getUser().getUserID())
+                .orElseThrow(() -> new RuntimeException("User not founD"));
+        Role role = roleRepository.findById(Integer.valueOf(taskCollaborator.getRole().getRoleID()))
+                .orElseThrow(() -> new RuntimeException("Role does not exist"));
         Task task = taskRepository.findById(taskCollaborator.getTask().getTaskID())
                 .orElseThrow(() -> new RuntimeException("Task not found"));
 
@@ -61,10 +61,9 @@ public class TaskCollaboratorService {
 
         taskCollaborator.setJoinedAt(LocalDate.now());
         taskCollaboratorRepository.insertCollaborator(taskCollaborator.getJoinedAt(),
-                taskCollaborator.getUser().getUserId(),
-                taskCollaborator.getRole().getRoleId(),
-                taskCollaborator.getTask().getTaskID()
-        );
+                user.getUserID(),
+                role.getRoleID(),
+                task.getTaskID());
     }
 
     public List<TaskCollaborator> getAllTaskCollaborators() {
@@ -94,8 +93,8 @@ public class TaskCollaboratorService {
             if (taskCollaborator.getIsActive()) {
                 throw new RuntimeException("Task Collaborator is already active");
             }
-//            taskCollaborator.setIsActive(true);
-            taskCollaboratorRepository.updateActiveStatus(taskCollaborator.getTaskCollaboratorId());
+
+            taskCollaboratorRepository.updateActiveStatus(taskCollaborator.getTaskCollaboratorID());
             return ResponseEntity.ok().build();
         }).orElseThrow(() -> new RuntimeException("TaskCollaborator not found"));
     }

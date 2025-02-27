@@ -9,11 +9,11 @@ import java.util.Date;
 
 public class ProjectTest {
     @Test
-    public void testProjectConstructorAndGetters(){
+    public void testProjectConstructorAndGetters() {
         Date createdAt = new Date();
         Date updatedAt = new Date();
         Project project = new Project(1, "ProjectName", "ProjectDescription", createdAt, updatedAt);
-        
+
         assertEquals(1, project.getProjectID());
         assertEquals("ProjectName", project.getProjectName());
         assertEquals("ProjectDescription", project.getProjectDescription());
@@ -22,7 +22,7 @@ public class ProjectTest {
     }
 
     @Test
-    public void testProjectSetters(){
+    public void testProjectSetters() {
         Project project = new Project();
         project.setProjectName("NewProjectName");
         project.setProjectDescription("NewProjectDescription");

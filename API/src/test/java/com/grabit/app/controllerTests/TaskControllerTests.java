@@ -33,18 +33,17 @@ public class TaskControllerTests {
 
     private Task task;
     private TaskCollaborator collaborator;
-    private List<TaskCollaborator> collaborators;
 
     @BeforeEach
     public void setUp() {
         task = new Task();
         collaborator = new TaskCollaborator();
-        collaborators = List.of(collaborator);
+        List.of(collaborator);
     }
 
     @Test
     public void testGetTaskById() {
-        ResponseEntity<Task> response = taskController.getTaskById(1);
+        ResponseEntity<Task> response = taskController.getTaskByID(1);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         verify(taskService, times(1)).getTaskById(1);

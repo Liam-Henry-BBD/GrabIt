@@ -6,8 +6,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-
 @Service
 
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
@@ -23,10 +21,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        String githubId = oAuth2User.getAttribute("login").toString();
+        String githubID = oAuth2User.getAttribute("login").toString();
 
-        userService.saveOrUpdateUser(githubId);
-        
+        userService.saveOrUpdateUser(githubID);
+
         return oAuth2User;
     }
 };

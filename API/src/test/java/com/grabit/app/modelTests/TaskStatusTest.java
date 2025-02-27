@@ -44,4 +44,3 @@ class TaskStatusTest {
         assertEquals("Pending", taskStatusAllArgs.getStatusName());
     }
 }
-

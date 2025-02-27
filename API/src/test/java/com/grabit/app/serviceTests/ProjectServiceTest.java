@@ -7,8 +7,10 @@ import com.grabit.app.model.Task;
 import com.grabit.app.repository.ProjectCollaboratorRepository;
 import com.grabit.app.repository.ProjectRepository;
 import com.grabit.app.repository.TaskRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -34,17 +36,15 @@ class ProjectServiceTest {
 
     @InjectMocks
     private ProjectService projectService;
-
     private Project project;
-    private ProjectCollaborator collaborator;
-    private Task task;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
         project = new Project(1, "Project 1", "Description", new Date(), new Date());
-        collaborator = new ProjectCollaborator();
-        task = new Task();
+        new ProjectCollaborator();
+        new Task();
     }
 
     @Test
@@ -76,7 +76,7 @@ class ProjectServiceTest {
     @Test
     void testGetProjectById() {
         when(projectRepository.findById(1)).thenReturn(Optional.of(project));
-        Project result = projectService.getProjectById(1);
+        Project result = projectService.getProjectByID(1);
         assertNotNull(result);
         assertEquals("Project 1", result.getProjectName());
 
@@ -86,7 +86,7 @@ class ProjectServiceTest {
     @Test
     void testGetProjectByIdNotFound() {
         when(projectRepository.findById(999)).thenReturn(Optional.empty());
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> projectService.getProjectById(999));
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> projectService.getProjectByID(999));
         assertEquals("Project not found", exception.getMessage());
 
         verify(projectRepository, times(1)).findById(999);

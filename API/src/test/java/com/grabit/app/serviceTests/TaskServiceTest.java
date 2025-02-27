@@ -1,6 +1,5 @@
 package com.grabit.app.serviceTests;
 
-import org.mockito.InjectMocks;
 import com.grabit.app.model.Task;
 import com.grabit.app.model.TaskCollaborator;
 import com.grabit.app.model.TaskStatus;
@@ -10,8 +9,11 @@ import com.grabit.app.repository.TaskPointRepository;
 import com.grabit.app.repository.TaskRepository;
 import com.grabit.app.repository.TaskStatusRepository;
 import com.grabit.app.service.TaskService;
+
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.InjectMocks;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.server.ResponseStatusException;
@@ -62,50 +64,50 @@ public class TaskServiceTest {
 
     @Test
     public void testGetTaskById() {
-        Integer taskId = 1;
+        Integer taskID = 1;
         Task task = new Task();
-        when(taskRepository.findById(taskId)).thenReturn(Optional.of(task));
+        when(taskRepository.findById(taskID)).thenReturn(Optional.of(task));
 
-        Task result = taskService.getTaskById(taskId);
+        Task result = taskService.getTaskById(taskID);
 
         assertEquals(task, result);
-        verify(taskRepository).findById(taskId);
+        verify(taskRepository).findById(taskID);
     }
 
     @Test
     public void testGetTaskById_NotFound() {
-        Integer taskId = 1;
-        when(taskRepository.findById(taskId)).thenReturn(Optional.empty());
+        Integer taskID = 1;
+        when(taskRepository.findById(taskID)).thenReturn(Optional.empty());
 
-        assertThrows(ResponseStatusException.class, () -> taskService.getTaskById(taskId));
-        verify(taskRepository).findById(taskId);
+        assertThrows(ResponseStatusException.class, () -> taskService.getTaskById(taskID));
+        verify(taskRepository).findById(taskID);
     }
 
     @Test
     public void testUpdateTaskStatus() {
-        int taskId = 1;
-        byte taskStatusId = 2;
+        int taskID = 1;
+        byte taskStatusID = 2;
         Task task = new Task();
         TaskStatus taskStatus = new TaskStatus();
-        taskStatus.setTaskStatusID(taskStatusId);
+        taskStatus.setTaskStatusID(taskStatusID);
         task.setTaskStatus(new TaskStatus());
         task.getTaskStatus().setStatusName("Available");
 
-        when(taskRepository.findById(taskId)).thenReturn(Optional.of(task));
-        when(taskStatusRepository.findById((int) taskStatusId)).thenReturn(Optional.of(taskStatus));
+        when(taskRepository.findById(taskID)).thenReturn(Optional.of(task));
+        when(taskStatusRepository.findById((int) taskStatusID)).thenReturn(Optional.of(taskStatus));
         when(taskRepository.save(task)).thenReturn(task);
 
-        Task result = taskService.updateTaskStatus(taskId, taskStatusId);
+        Task result = taskService.updateTaskStatus(taskID, taskStatusID);
 
         assertEquals(taskStatus, result.getTaskStatus());
-        verify(taskRepository).findById(taskId);
-        verify(taskStatusRepository).findById((int) taskStatusId);
+        verify(taskRepository).findById(taskID);
+        verify(taskStatusRepository).findById((int) taskStatusID);
         verify(taskRepository).save(task);
     }
 
     @Test
     public void testUpdateTask() {
-        int taskId = 1;
+        int taskID = 1;
         Task task = new Task();
         task.setTaskName("New Task");
         task.setTaskDescription("New Description");
@@ -114,55 +116,55 @@ public class TaskServiceTest {
         existingTask.setTaskStatus(new TaskStatus());
         existingTask.getTaskStatus().setStatusName("In Progress");
 
-        when(taskRepository.findById(taskId)).thenReturn(Optional.of(existingTask));
+        when(taskRepository.findById(taskID)).thenReturn(Optional.of(existingTask));
         when(taskRepository.save(existingTask)).thenReturn(existingTask);
 
-        Task result = taskService.updateTask(taskId, task);
+        Task result = taskService.updateTask(taskID, task);
 
         assertEquals("New Task", result.getTaskName());
         assertEquals("New Description", result.getTaskDescription());
-        verify(taskRepository).findById(taskId);
+        verify(taskRepository).findById(taskID);
         verify(taskRepository).save(existingTask);
     }
 
     @Test
     public void testDeleteTask() {
-        int taskId = 1;
+        int taskID = 1;
         Task task = new Task();
 
-        when(taskRepository.findById(taskId)).thenReturn(Optional.of(task));
+        when(taskRepository.findById(taskID)).thenReturn(Optional.of(task));
 
-        taskService.deleteTask(taskId);
+        taskService.deleteTask(taskID);
 
-        verify(taskRepository).findById(taskId);
+        verify(taskRepository).findById(taskID);
         verify(taskRepository).delete(task);
     }
 
     @Test
     public void testGetTaskCollaborators() {
-        int taskId = 1;
+        int taskID = 1;
         List<TaskCollaborator> collaborators = Arrays.asList(new TaskCollaborator(), new TaskCollaborator());
 
-        when(taskRepository.existsById(taskId)).thenReturn(true);
-        when(taskCollaboratorRepository.findByTaskID(taskId)).thenReturn(collaborators);
+        when(taskRepository.existsById(taskID)).thenReturn(true);
+        when(taskCollaboratorRepository.findByTaskID(taskID)).thenReturn(collaborators);
 
-        List<TaskCollaborator> result = taskService.getTaskCollaborators(taskId);
+        List<TaskCollaborator> result = taskService.getTaskCollaborators(taskID);
 
         assertEquals(collaborators, result);
-        verify(taskRepository).existsById(taskId);
-        verify(taskCollaboratorRepository).findByTaskID(taskId);
+        verify(taskRepository).existsById(taskID);
+        verify(taskCollaboratorRepository).findByTaskID(taskID);
     }
 
     @Test
     public void testFilterTaskByTaskStatus() {
-        int taskStatusId = 1;
+        int taskStatusID = 1;
         List<Task> tasks = Arrays.asList(new Task(), new Task());
 
-        when(taskRepository.findByTaskStatusID(taskStatusId)).thenReturn(tasks);
+        when(taskRepository.findByTaskStatusID(taskStatusID)).thenReturn(tasks);
 
-        List<Task> result = taskService.filterTaskByTaskStatus(taskStatusId);
+        List<Task> result = taskService.filterTaskByTaskStatus(taskStatusID);
 
         assertEquals(tasks, result);
-        verify(taskRepository).findByTaskStatusID(taskStatusId);
+        verify(taskRepository).findByTaskStatusID(taskStatusID);
     }
 }

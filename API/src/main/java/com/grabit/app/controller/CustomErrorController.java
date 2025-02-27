@@ -30,6 +30,6 @@ public class CustomErrorController implements ErrorController {
         return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(statusCode));
     }
 
-    public record ErrorResponse(int status, String message) {}
+    public record ErrorResponse(int status, String message) {
+    }
 }
-

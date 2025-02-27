@@ -26,16 +26,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/public/**").permitAll()  
-                .anyRequest().authenticated()
-            )
-            .oauth2Login(oauth2 -> oauth2
-                .userInfoEndpoint(userInfo -> userInfo
-                    .userService(customOAuth2UserService2()) 
-                )
-            )
-            .csrf(AbstractHttpConfigurer::disable); 
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/public/**").permitAll()
+                        .anyRequest().authenticated())
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(customOAuth2UserService2())))
+                .csrf(AbstractHttpConfigurer::disable);
 
         return http.build();
     }
@@ -45,5 +42,3 @@ public class SecurityConfig {
         return customOAuth2UserService;
     }
 }
-
-

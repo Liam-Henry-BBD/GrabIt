@@ -19,7 +19,7 @@ public class TaskCollaborator {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TaskCollaboratorID", nullable = false)
-    private Integer taskCollaboratorId;
+    private Integer taskCollaboratorID;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "UserID", nullable = false)
@@ -42,9 +42,9 @@ public class TaskCollaborator {
     @Override
     public String toString() {
         return "TaskCollaborator{" +
-                "taskCollaboratorId=" + taskCollaboratorId +
-                ", user=" + user.getUserId() +
-                ", role=" + role.getRoleId() +
+                "taskCollaboratorID=" + taskCollaboratorID +
+                ", user=" + user.getUserID() +
+                ", role=" + role.getRoleID() +
                 ", task=" + task.getTaskID() +
                 ", joinedAt=" + joinedAt +
                 ", isActive=" + isActive +

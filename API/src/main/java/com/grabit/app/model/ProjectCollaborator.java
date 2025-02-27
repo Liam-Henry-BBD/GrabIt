@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 @Table(name = "ProjectCollaborators", schema = "grabit")
 public class ProjectCollaborator {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer projectCollaboratorID;
@@ -34,5 +34,4 @@ public class ProjectCollaborator {
 
     @Column(name = "isActive", nullable = false)
     private boolean isActive;
-
 }

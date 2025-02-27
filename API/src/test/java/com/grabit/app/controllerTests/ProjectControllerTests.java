@@ -54,6 +54,7 @@ public class ProjectControllerTests {
     public void testCreateProject() {
         savedProject = new Project();
         savedProject = mock(Project.class);
+        
         when(savedProject.getProjectID()).thenReturn(1);
         when(projectService.createProject(project)).thenReturn(savedProject);
 
@@ -75,10 +76,10 @@ public class ProjectControllerTests {
 
     @Test
     public void testGetProjectById() {
-        ResponseEntity<Project> response = projectController.getProjectById(1);
+        ResponseEntity<Project> response = projectController.getProjectByID(1);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        verify(projectService, times(1)).getProjectById(1);
+        verify(projectService, times(1)).getProjectByID(1);
     }
 
     @Test
@@ -91,36 +92,36 @@ public class ProjectControllerTests {
 
     @Test
     public void testGetProjectTasks() {
-        when(projectService.getProjectTasksByProjectId(1)).thenReturn(tasks);
+        when(projectService.getProjectTasksByProjectID(1)).thenReturn(tasks);
 
         List<Task> response = projectController.getProjectTasks(1);
 
         assertThat(response).isEqualTo(tasks);
-        verify(projectService, times(1)).getProjectTasksByProjectId(1);
+        verify(projectService, times(1)).getProjectTasksByProjectID(1);
     }
 
     @Test
     public void testGetProjectCollaborators() {
         List<ProjectCollaborator> projectCollaborators = List.of(projectCollaborator);
-        when(projectService.getProjectCollaboratorsByProjectId(1)).thenReturn(projectCollaborators);
+        when(projectService.getProjectCollaboratorsByProjectID(1)).thenReturn(projectCollaborators);
 
         ResponseEntity<List<ProjectCollaborator>> response = projectController.getProjectCollaborators(1);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(projectCollaborators);
-        verify(projectService, times(1)).getProjectCollaboratorsByProjectId(1);
+        verify(projectService, times(1)).getProjectCollaboratorsByProjectID(1);
     }
 
     @Test
     public void testGetProjectLeaderboard() {
         Object leaderboard = new Object();
-        when(projectService.getProjectLeaderboardByProjectId(1)).thenReturn(leaderboard);
+        when(projectService.getProjectLeaderboardByProjectID(1)).thenReturn(leaderboard);
 
         ResponseEntity<Object> response = projectController.getProjectLeaderboard(1);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(leaderboard);
-        verify(projectService, times(1)).getProjectLeaderboardByProjectId(1);
+        verify(projectService, times(1)).getProjectLeaderboardByProjectID(1);
     }
 
     @Test

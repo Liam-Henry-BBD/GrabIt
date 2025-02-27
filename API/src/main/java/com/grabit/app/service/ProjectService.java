@@ -43,7 +43,7 @@ public class ProjectService extends Task {
         return projectRepository.findAll();
     }
 
-    public Project getProjectById(Integer id) {
+    public Project getProjectByID(Integer id) {
         return projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Project not found"));
     }
 
@@ -52,12 +52,12 @@ public class ProjectService extends Task {
         projectRepository.deleteById(id);
     }
 
-    public List<Task> getProjectTasksByProjectId(Integer projectID) {
+    public List<Task> getProjectTasksByProjectID(Integer projectID) {
         return taskRepository.findByProjectID(projectID);
     }
 
-    public Object getProjectLeaderboardByProjectId(Integer projectId) {
-        String[][] results = projectRepository.getProjectLeaderboard(projectId);
+    public Object getProjectLeaderboardByProjectID(Integer projectID) {
+        String[][] results = projectRepository.getProjectLeaderboard(projectID);
 
         if (results.length == 0) {
             return "No tasks have been completed yet.";
@@ -75,7 +75,7 @@ public class ProjectService extends Task {
         return leaderboard;
     }
 
-    public List<ProjectCollaborator> getProjectCollaboratorsByProjectId(Integer projectID) {
+    public List<ProjectCollaborator> getProjectCollaboratorsByProjectID(Integer projectID) {
         return projectCollaboratorRepository.findByProjectID(projectID);
     }
 

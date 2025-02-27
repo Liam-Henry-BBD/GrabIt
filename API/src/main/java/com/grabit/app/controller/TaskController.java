@@ -29,7 +29,7 @@ public class TaskController {
     }
 
     @GetMapping("/{taskID}")
-    public ResponseEntity<Task> getTaskById(@PathVariable Integer taskID) {
+    public ResponseEntity<Task> getTaskByID(@PathVariable Integer taskID) {
         return ResponseEntity.ok(taskService.getTaskById(taskID));
     }
 

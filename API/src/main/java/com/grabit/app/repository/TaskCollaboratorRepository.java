@@ -21,7 +21,6 @@ public interface TaskCollaboratorRepository extends JpaRepository<TaskCollaborat
     @Query(value = "UPDATE TaskCollaborators SET isActive = 1 WHERE TaskCollaboratorID = :taskCollabID", nativeQuery = true)
     void updateActiveStatus(Integer taskCollabID);
 
-
     @Modifying
     @Query(value = "INSERT INTO TaskCollaborators(JoinedAt, UserID, RoleID, TaskID) VALUES(:joinedAt, :userID, :roleID, :taskID)", nativeQuery = true)
     void insertCollaborator(LocalDate joinedAt, Integer userID, Byte roleID, Integer taskID);

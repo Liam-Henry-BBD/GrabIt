@@ -22,7 +22,7 @@ public class HomeController {
                         <li>Get all projects: <code>/api/projects</code></li>
                         <li>Get a project by id: <code>/api/projects/{projectID}</code></li>
                         <li>Get all collaborators of a project: <code>/api/projects/{projectID}/collaborators</code></li>
-                        <li>Get the leaderbord of a project: <code>/api/projects/{projectID}/leaderboard</code></li>
+                        <li>Get the leaderboard of a project: <code>/api/projects/{projectID}/leaderboard</code></li>
                         <li>Get all tasks of a project: <code>/api/projects/{projectID}/tasks</code></li>
                         <li>Get a task by id: <code>/api/tasks/{taskID}</code></li>
                         <li>Get all collaborators of a task: <code>/api/tasks/{taskID}/collaborators</code></li>

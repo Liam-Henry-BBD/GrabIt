@@ -28,14 +28,12 @@ public class TaskCollaboratorControllerTests {
 
     @InjectMocks
     private TaskCollaboratorController taskCollaboratorController;
-
     private TaskCollaborator taskCollaborator;
-    private List<TaskCollaborator> taskCollaborators;
 
     @BeforeEach
     public void setUp() {
         taskCollaborator = new TaskCollaborator();
-        taskCollaborators = List.of(taskCollaborator);
+        List.of(taskCollaborator);
     }
 
     @Test

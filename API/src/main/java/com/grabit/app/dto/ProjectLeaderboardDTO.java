@@ -7,7 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class ProjectLeaderboardDTO {
     private Integer position;
-    private Integer userId;
-    private String githubId;
+    private Integer userID;
+    private String githubID;
     private Integer totalScore;
 }

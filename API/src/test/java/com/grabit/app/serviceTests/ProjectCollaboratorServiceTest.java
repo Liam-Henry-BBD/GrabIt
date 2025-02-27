@@ -31,13 +31,12 @@ class ProjectCollaboratorServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         collaborator = new ProjectCollaborator(
-            1, 
-            101, 
-            202, 
-            303, 
-            LocalDateTime.of(2023, 1, 1, 10, 0),
-            true 
-        );
+                1,
+                101,
+                202,
+                303,
+                LocalDateTime.of(2023, 1, 1, 10, 0),
+                true);
     }
 
     @Test

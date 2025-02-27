@@ -12,8 +12,6 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-
-
 public class TaskTest {
 
     @Test
@@ -97,9 +95,6 @@ public class TaskTest {
 
         task.setTaskUpdatedAt(new Date(System.currentTimeMillis()));
         assertEquals(new Date(System.currentTimeMillis()), task.getTaskUpdatedAt());
-
-        task.setTaskReviewRequestedAt(LocalDateTime.now());
-//        assertEquals(LocalDateTime.now(), task.getTaskReviewRequestedAt());
 
         task.setTaskCompletedAt(new Date(System.currentTimeMillis()));
         assertEquals(new Date(System.currentTimeMillis()), task.getTaskCompletedAt());

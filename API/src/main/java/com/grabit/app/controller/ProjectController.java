@@ -49,8 +49,8 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectID}")
-    public ResponseEntity<Project> getProjectById(@PathVariable Integer projectID) {
-        return ResponseEntity.ok(projectService.getProjectById(projectID));
+    public ResponseEntity<Project> getProjectByID(@PathVariable Integer projectID) {
+        return ResponseEntity.ok(projectService.getProjectByID(projectID));
     }
 
     @DeleteMapping("/{projectID}")
@@ -61,17 +61,17 @@ public class ProjectController {
 
     @GetMapping("/{projectID}/tasks")
     public List<Task> getProjectTasks(@PathVariable Integer projectID) {
-        return projectService.getProjectTasksByProjectId(projectID);
+        return projectService.getProjectTasksByProjectID(projectID);
     }
 
     @GetMapping("/{projectID}/collaborators")
     public ResponseEntity<List<ProjectCollaborator>> getProjectCollaborators(@PathVariable Integer projectID) {
-        return ResponseEntity.ok(projectService.getProjectCollaboratorsByProjectId(projectID));
+        return ResponseEntity.ok(projectService.getProjectCollaboratorsByProjectID(projectID));
     }
 
     @GetMapping("/{projectID}/leaderboard")
     public ResponseEntity<Object> getProjectLeaderboard(@PathVariable Integer projectID) {
-        return ResponseEntity.ok(projectService.getProjectLeaderboardByProjectId(projectID));
+        return ResponseEntity.ok(projectService.getProjectLeaderboardByProjectID(projectID));
     }
 
     @PutMapping("/{projectID}")

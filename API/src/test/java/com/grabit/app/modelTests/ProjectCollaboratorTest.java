@@ -1,4 +1,5 @@
 package com.grabit.app.modelTests;
+
 import org.junit.jupiter.api.Test;
 
 import com.grabit.app.model.ProjectCollaborator;

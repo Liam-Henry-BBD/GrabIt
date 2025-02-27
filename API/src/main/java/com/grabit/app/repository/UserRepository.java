@@ -10,5 +10,5 @@ import com.grabit.app.model.User;
 public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query(value = "SELECT * FROM Users WHERE GitHubID = :githubID", nativeQuery = true)
-    User findByGitHubId(String githubID);
+    User findByGitHubID(String githubID);
 }

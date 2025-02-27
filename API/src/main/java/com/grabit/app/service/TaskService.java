@@ -16,7 +16,6 @@ import com.grabit.app.repository.*;
 public class TaskService {
 
     private final TaskRepository taskRepository;
-
     private final TaskStatusRepository taskStatusRepository;
     private final TaskPointRepository taskPointRepository;
     private final ProjectRepository projectRepository;
@@ -125,5 +124,4 @@ public class TaskService {
     public List<Task> filterTaskByTaskStatus(Integer taskStatus) {
         return taskRepository.findByTaskStatusID(taskStatus);
     }
-
 }

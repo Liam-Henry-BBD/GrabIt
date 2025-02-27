@@ -17,17 +17,16 @@ public class UserService {
     }
 
     @Transactional
-    public void saveOrUpdateUser(String gitHubId) {
+    public void saveOrUpdateUser(String gitHubID) {
         User user = new User();
-        user.setGitHubId(gitHubId);
+        user.setGitHubID(gitHubID);
         user.setJoinedAt(LocalDate.now());
 
-        User newUser = userRepository.findByGitHubId(user.getGitHubId());
+        User newUser = userRepository.findByGitHubID(user.getGitHubID());
         if (newUser != null) {
             return;
         }
-      
+
         userRepository.save(user);
     }
 }
-
