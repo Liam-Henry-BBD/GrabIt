@@ -8,6 +8,7 @@ The GrabIt system is a project management tool designed for teams to manage task
 
 1. **Team Lead Logs In**  
    The team lead logs in to the system and sets up a new project.
+
 2. **Set Up Project and Tasks**  
    The team lead creates tasks within the project, providing task names, descriptions, and setting deadlines. Each task can be assigned a point value based on its difficulty.
 
@@ -168,6 +169,13 @@ spring-boot-starter-web
 Group ID: org.springframework.boot
 Artifact ID: spring-boot-starter-web
 Purpose: Supports building web applications using Spring MVC, including RESTful web services.
+
+```sh
+java-dotenv
+Group ID: io.github.cdimascio
+Artifact ID: java-dotenv
+Version: 5.2.2
+Purpose: Loads environment variables from a `.env` file, allowing for secure and convenient management of application configurations, such as database credentials and API keys.
 ```
 
 **Database Dependencies**
@@ -195,11 +203,33 @@ maven-compiler-plugin
 Group ID: org.apache.maven.plugins
 Artifact ID: maven-compiler-plugin
 Purpose: Configures the Maven compiler plugin to use Lombok for annotation processing.
+```
+
+```sh
 spring-boot-maven-plugin
 Group ID: org.springframework.boot
 Artifact ID: spring-boot-maven-plugin
 Purpose: Provides support for packaging and running Spring Boot applications as executable JARs or WARs.
 ```
+
+## Creating an env file
+
+To configure the environment settings for the application, create a .env file in the "./API/src/main/resources" directory of the project with the following content:
+
+```sh
+DB_URI=<grabit_db_uri>
+DB_PORT=<grabit_db_port>
+DB_NAME=<grabit_db_name>
+DB_USER=<grabit_db_user>
+DB_PASSWORD=<grabit_db_password>
+GITHUB_CLIENT_ID=<grabit_client_id>
+GITHUB_CLIENT_SECRET=<grabit_client_secret>
+```
+
+**Reasons:**
+1. Automatically loads environment variables when the application starts, simplifying the configuration process.
+
+2. Encourages the separation of configuration from code, making it easier to modify settings without changing the source code.
 
 ## Running the Project's API Endpoints
 
@@ -242,8 +272,6 @@ mvn spring-boot:run
 
 - You can use tools like Postman or cURL to interact with the API endpoints. The base URL should be `http://localhost:8081`.
 
-6. **Login Authentication**
-// TODO: WILL FILL UP INFO HERE
 
 ## Endpoints for Project
 
