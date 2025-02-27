@@ -38,4 +38,16 @@ public class TaskCollaborator {
 
     @Column(name = "isActive", nullable = false)
     private Boolean isActive = true;
+
+    @Override
+    public String toString() {
+        return "TaskCollaborator{" +
+                "taskCollaboratorId=" + taskCollaboratorId +
+                ", user=" + user.getUserId() +
+                ", role=" + role.getRoleId() +
+                ", task=" + task.getTaskID() +
+                ", joinedAt=" + joinedAt +
+                ", isActive=" + isActive +
+                '}';
+    }
 }
