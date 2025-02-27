@@ -2,6 +2,7 @@ package com.grabit.app.service;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.grabit.app.model.Role;
@@ -38,7 +39,8 @@ public class TaskCollaboratorService {
         this.roleRepository = roleRepository;
     }
 
-    public TaskCollaborator addTaskCollaborator(TaskCollaborator taskCollaborator) {
+    @Transactional
+    public void addTaskCollaborator(TaskCollaborator taskCollaborator) {
 
         User user = userRepository.findById(taskCollaborator.getUser().getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -57,17 +59,12 @@ public class TaskCollaboratorService {
                     "Cannot add collaborator: Task deadline has passed");
         }
 
-        try {
-            TaskCollaborator newTaskCollaborator = new TaskCollaborator();
-            newTaskCollaborator.setTask(task);
-            newTaskCollaborator.setUser(user);
-            newTaskCollaborator.setRole(role);
-            newTaskCollaborator.setJoinedAt(LocalDate.now());
-            return taskCollaboratorRepository.save(newTaskCollaborator);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        taskCollaborator.setJoinedAt(LocalDate.now());
+        taskCollaboratorRepository.insertCollaborator(taskCollaborator.getJoinedAt(),
+                taskCollaborator.getUser().getUserId(),
+                taskCollaborator.getRole().getRoleId(),
+                taskCollaborator.getTask().getTaskID()
+        );
     }
 
     public List<TaskCollaborator> getAllTaskCollaborators() {
@@ -91,13 +88,14 @@ public class TaskCollaboratorService {
         }).orElseThrow(() -> new RuntimeException("TaskCollaborator not found"));
     }
 
+    @Transactional
     public ResponseEntity<Object> activateTaskCollaboratorByID(Integer taskCollabID) {
         return taskCollaboratorRepository.findById(taskCollabID).map(taskCollaborator -> {
             if (taskCollaborator.getIsActive()) {
                 throw new RuntimeException("Task Collaborator is already active");
             }
-            taskCollaborator.setIsActive(true);
-            taskCollaboratorRepository.save(taskCollaborator);
+//            taskCollaborator.setIsActive(true);
+            taskCollaboratorRepository.updateActiveStatus(taskCollaborator.getTaskCollaboratorId());
             return ResponseEntity.ok().build();
         }).orElseThrow(() -> new RuntimeException("TaskCollaborator not found"));
     }
