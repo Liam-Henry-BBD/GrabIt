@@ -52,6 +52,12 @@ public interface ProjectCollaboratorRepository extends JpaRepository<ProjectColl
         List<ProjectCollaborator> findByProjectIDAndJoinedAtBefore(int projectID, LocalDateTime date);
 
         @Modifying
-        @Query(value = "INSERT INTO ProjectCollaborators(JoinedAt, UserID, RoleID, TaskID) VALUES(:joinedAt, :userID, :roleID, :projectID)", nativeQuery = true)
-        void insertCollaborator(LocalDateTime joinedAt, Integer userID, Integer roleID, Integer ProjectID);
+        @Query(value = "INSERT INTO ProjectCollaborators(JoinedAt, UserID, RoleID, ProjectID) VALUES(:joinedAt, :userID, :roleID, :projectID)", nativeQuery = true)
+        void insertCollaborator(LocalDateTime joinedAt, Integer userID, Integer roleID, Integer projectID);
+
+        boolean existsByUserIDAndProjectIDAndRoleID(Long userID, Long projectID, Long roleID);
+
+        @Query("SELECT CASE WHEN COUNT(pc) > 0 THEN true ELSE false END FROM ProjectCollaborator pc WHERE pc.userID = :userID AND pc.projectID = :projectID AND pc.roleID = :roleID")
+        boolean existsByUserIdAndProjectIdAndRoleId(@Param("userID") int userID, @Param("projectID") int projectID, @Param("roleID") int roleID);
+            
 }
