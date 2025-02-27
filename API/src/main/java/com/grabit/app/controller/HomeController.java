@@ -3,13 +3,25 @@ package com.grabit.app.controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+
 import java.util.Map;
 
 @RestController
 @RequestMapping("/")
 public class HomeController {
+
+    private final jakarta.servlet.http.HttpSession httpSession;
+
+    // Inject HttpSession to access session data
+    public HomeController(HttpSession httpSession) {
+        this.httpSession = httpSession;
+    }
+
     @GetMapping
     public String welcome() {
         return """
@@ -17,8 +29,7 @@ public class HomeController {
                     <html>
                     <head>
                         <style>
-                            
-                            body {
+                             body {
                                 display: flex;
                                 justify-content: center;
                                 align-items: center;
@@ -27,7 +38,6 @@ public class HomeController {
                                 background-color: #f4f4f4;
                             }
 
-                            
                             .content-box {
                                 background-color: white;
                                 padding: 20px;
@@ -80,7 +90,6 @@ public class HomeController {
                         </div>
                     </body>
                     </html>
-
                 """;
     }
 
@@ -88,4 +97,15 @@ public class HomeController {
     public Map<String, Object> getUser(@AuthenticationPrincipal OAuth2User user) {
         return user.getAttributes();
     }
-};
+
+    @GetMapping("/token")
+    public String getGitHubToken() {
+        String githubToken = (String) httpSession.getAttribute("github_access_token");
+
+        if (githubToken == null) {
+            return "GitHub access token not found in session.";
+        }
+
+        return "GitHub Access Token: " + githubToken;
+    }
+}

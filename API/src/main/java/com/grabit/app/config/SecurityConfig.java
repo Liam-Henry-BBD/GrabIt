@@ -7,10 +7,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.grabit.app.service.CustomOAuth2UserService;
-
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.context.annotation.Configuration;
 
 @EnableWebSecurity
@@ -31,14 +27,8 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
-                                .userService(customOAuth2UserService2())))
+                                .userService(customOAuth2UserService)))
                 .csrf(AbstractHttpConfigurer::disable);
-
         return http.build();
-    }
-
-    @Bean
-    public OAuth2UserService<OAuth2UserRequest, OAuth2User> customOAuth2UserService2() {
-        return customOAuth2UserService;
     }
 }
