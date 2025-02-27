@@ -16,14 +16,16 @@ public class HomeController {
                 <html>
                 <body>
                     <h1>Welcome to Grabit API</h1>
-                    <h2>Available Endpoints:</h2>
+                    <h2>Available browser endpoints:</h2>
                     <ul>
                         <li>Get user info: <code>/me</code></li>
                         <li>Get all projects: <code>/api/projects</code></li>
-                        <li>Get project by id: <code>/api/projects/{id}</code></li>
-                        <li>Get all tasks of a project: <code>/api/projects/{id}/tasks</code></li>
-                        <li>Get all collaborators of a project: <code>/api/projects/{id}/collaborators</code></li>
-                        <li>Get task by id: <code>/api/tasks/{id}</code></li>
+                        <li>Get project by id: <code>/api/projects/{projectID}</code></li>
+                        <li>Get all collaborators of a project: <code>/api/projects/{projectID}/collaborators</code></li>
+                        <li>Get all tasks of a project: <code>/api/projects/{projectID}/tasks</code></li>
+                        <li>Get task by id: <code>/api/tasks/{taskID}</code></li>
+                        <li>Get all collaborators of a task: <code>/api/tasks/{taskID}/collaborators</code></li>
+                        <li>Get status of a task: <code>/api/tasks/{taskID}/statuses</code></li>
                     </ul>
                 </body>
                 </html>
