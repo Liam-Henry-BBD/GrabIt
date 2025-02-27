@@ -57,14 +57,13 @@ class ProjectCollaboratorServiceTest {
 
     @Test
     void testAddProjectCollaborator() {
-        when(projectCollaboratorRepository.save(collaborator)).thenReturn(collaborator);
-        ProjectCollaborator result = projectCollaboratorService.addProjectCollaborator(collaborator);
-
-        assertNotNull(result);
-        assertEquals(101, result.getUserID());
-        assertEquals(202, result.getProjectID());
-
-        verify(projectCollaboratorRepository, times(1)).save(collaborator);
+        projectCollaboratorService.addProjectCollaborator(collaborator);
+        verify(projectCollaboratorRepository, times(1)).insertCollaborator(
+            collaborator.getJoinedAt(), 
+            collaborator.getUserID(), 
+            collaborator.getRoleID(), 
+            collaborator.getProjectID()
+        );
     }
 
     @Test
