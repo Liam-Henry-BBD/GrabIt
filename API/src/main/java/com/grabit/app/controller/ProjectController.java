@@ -3,6 +3,8 @@ package com.grabit.app.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import com.grabit.app.dto.ProjectCreationDTO;
@@ -11,6 +13,8 @@ import com.grabit.app.model.ProjectCollaborator;
 import com.grabit.app.model.Task;
 import com.grabit.app.service.ProjectCollaboratorService;
 import com.grabit.app.service.ProjectService;
+
+import jakarta.servlet.http.HttpSession;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,6 +34,7 @@ public class ProjectController {
 
     @PostMapping
     public ResponseEntity<Project> createProject(@RequestBody ProjectCreationDTO request) {
+        
         Project project = request.getProject();
         ProjectCollaborator projectCollaborator = request.getProjectCollaborator();
 
@@ -49,8 +54,18 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectID}")
-    public ResponseEntity<Project> getProjectByID(@PathVariable Integer projectID) {
-        return ResponseEntity.ok(projectService.getProjectByID(projectID));
+    public ResponseEntity<Project> getProjectByID(@PathVariable Integer projectID,
+            @AuthenticationPrincipal OAuth2User user, HttpSession httpSession) {
+        String githubToken = (String) httpSession.getAttribute("github_access_token");
+
+        boolean isCollaborator = projectService.isCollaborator(githubToken, projectID);
+
+        if (!isCollaborator) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+
+        Project project = projectService.getProjectByID(projectID);
+        return ResponseEntity.ok(project);
     }
 
     @DeleteMapping("/{projectID}")

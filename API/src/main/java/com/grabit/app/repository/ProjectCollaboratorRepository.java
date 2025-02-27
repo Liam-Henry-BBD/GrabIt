@@ -58,6 +58,10 @@ public interface ProjectCollaboratorRepository extends JpaRepository<ProjectColl
         boolean existsByUserIDAndProjectIDAndRoleID(Long userID, Long projectID, Long roleID);
 
         @Query("SELECT CASE WHEN COUNT(pc) > 0 THEN true ELSE false END FROM ProjectCollaborator pc WHERE pc.userID = :userID AND pc.projectID = :projectID AND pc.roleID = :roleID")
-        boolean existsByUserIdAndProjectIdAndRoleId(@Param("userID") int userID, @Param("projectID") int projectID, @Param("roleID") int roleID);
-            
+        boolean existsByUserIdAndProjectIdAndRoleId(@Param("userID") int userID, @Param("projectID") int projectID,
+                        @Param("roleID") int roleID);
+
+        @Query("SELECT CASE WHEN COUNT(pc) > 0 THEN true ELSE false END FROM ProjectCollaborator pc WHERE pc.userID = :userID AND pc.projectID = :projectID ")
+        boolean existsByUserIDAndProjectID(@Param("userID") int userID, @Param("projectID") int projectID);
+
 }
