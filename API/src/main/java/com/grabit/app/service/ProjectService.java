@@ -52,7 +52,7 @@ public class ProjectService extends Task {
     }
 
     public List<Task> getProjectTasksByProjectId(Integer projectID) {
-        return taskRepository.findByProject_ProjectID(projectID);
+        return taskRepository.findByProjectID(projectID);
     }
 
     public Object getProjectLeaderboardByProjectId(Integer projectId) {

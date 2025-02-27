@@ -103,6 +103,6 @@ public class TaskCollaboratorService {
     }
 
     public List<TaskCollaborator> getCollaboratorByTaskID(Integer taskID) {
-        return taskCollaboratorRepository.findByTask_TaskID(taskID);
+        return taskCollaboratorRepository.findByTaskID(taskID);
     }
 }
