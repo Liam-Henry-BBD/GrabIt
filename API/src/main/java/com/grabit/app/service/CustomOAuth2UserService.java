@@ -16,6 +16,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         this.userService = userService;
     }
 
+    @SuppressWarnings("null")
     @Override
     @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) {
