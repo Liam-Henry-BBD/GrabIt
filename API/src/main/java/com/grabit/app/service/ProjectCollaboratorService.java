@@ -18,9 +18,9 @@ public class ProjectCollaboratorService {
         return projectCollaboratorRepository.findByProjectID(projectId);
     }
 
-    public ProjectCollaborator addProjectCollaborator(ProjectCollaborator projectCollaborator) {
+    public void addProjectCollaborator(ProjectCollaborator projectCollaborator) {
         projectCollaboratorRepository.findByProjectID(projectCollaborator.getProjectID());
-        return projectCollaboratorRepository.save(projectCollaborator);
+        projectCollaboratorRepository.insertCollaborator(projectCollaborator.getJoinedAt(), projectCollaborator.getUserID(), projectCollaborator.getRoleID(), projectCollaborator.getProjectID());
     }
 
     public ProjectCollaborator getProjectCollaboratorByID(Long id) {
