@@ -12,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
 
@@ -30,18 +29,20 @@ public class ProjectCollaboratorControllerTests {
     @BeforeEach
     public void setUp() {
         projectCollaborator = new ProjectCollaborator();
+        projectCollaborator.setProjectID(1);
     }
 
     @Test
     public void testGetProjectCollaboratorByID() {
-        projectCollaboratorService.getProjectCollaboratorByID(3L);
-        ProjectCollaborator response = projectCollaboratorController.getProjectCollaboratorByID(1L);
+        projectCollaboratorController.getProjectCollaboratorByID(1L);
+
         verify(projectCollaboratorService, times(1)).getProjectCollaboratorByID(1L);
     }
 
     @Test
     public void testDeactivateProjectCollaborator() {
-        projectCollaboratorService.deactivateProjectCollaborator(1L);
         projectCollaboratorController.deactivateProjectCollaborator(1L);
+
+        verify(projectCollaboratorService, times(1)).deactivateProjectCollaborator(1L);
     }
 }

@@ -19,7 +19,8 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 public class TaskControllerTests {
@@ -43,49 +44,49 @@ public class TaskControllerTests {
 
     @Test
     public void testGetTaskById() {
-        taskService.getTaskById(1);
         ResponseEntity<Task> response = taskController.getTaskById(1);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(taskService, times(1)).getTaskById(1);
     }
 
     @Test
     public void testDeleteTask() {
-        taskService.deleteTask(1);
         ResponseEntity<Void> response = taskController.deleteTask(1);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        verify(taskService, times(1)).deleteTask(1);
     }
 
     @Test
     public void testCreateTask() {
-        taskService.createTask(task);
         ResponseEntity<Task> response = taskController.createTask(task);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(taskService, times(1)).createTask(task);
     }
 
     @Test
     public void testUpdateTask() {
-        taskService.updateTask(1, task);
         ResponseEntity<Task> response = taskController.updateTask(1, task);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
 
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
+        verify(taskService, times(1)).updateTask(1, task);
     }
 
     @Test
     public void testGetCollaboratorByTaskID() {
-        taskService.getTaskCollaborators(1);
         ResponseEntity<List<TaskCollaborator>> response = taskController.getCollaboratorByTaskID(1);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(taskService, times(1)).getTaskCollaborators(1);
     }
 
     @Test
     public void testUpdateTaskStatus() {
-        taskService.updateTaskStatus(1, (byte) 1);
         ResponseEntity<Task> response = taskController.updateTaskStatus(1, (byte) 1);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
 
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
+        verify(taskService, times(1)).updateTaskStatus(1, (byte) 1);
     }
 }

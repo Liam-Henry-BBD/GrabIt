@@ -40,39 +40,41 @@ public class TaskCollaboratorControllerTests {
 
     @Test
     public void testGetAllTaskCollaborators() {
-        taskCollaboratorService.getAllTaskCollaborators();
-        List<TaskCollaborator> response = taskCollaboratorController.getAllTaskCollaborators();
+        taskCollaboratorController.getAllTaskCollaborators();
+
+        verify(taskCollaboratorService).getAllTaskCollaborators();
     }
 
     @Test
     public void testGetTaskCollaboratorByID() {
-        taskCollaboratorService.getTaskCollaboratorByID(1);
-        ResponseEntity<TaskCollaborator> response = taskCollaboratorController.getTaskCollaboratorByID(1);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
+        ResponseEntity<TaskCollaborator> response = taskCollaboratorController.getTaskCollaboratorByID(55);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        verify(taskCollaboratorService).getTaskCollaboratorByID(55);
     }
 
     @Test
     public void testDeactivateTaskCollaboratorByID() {
-        taskCollaboratorService.deactivateTaskCollaboratorByID(1);
         ResponseEntity<Void> response = taskCollaboratorController.deactivateTaskCollaboratorByID(1);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
 
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
+        verify(taskCollaboratorService).deactivateTaskCollaboratorByID(1);
     }
 
     @Test
     public void testActivateTaskCollaboratorByID() {
-        taskCollaboratorService.activateTaskCollaboratorByID(1);
         ResponseEntity<Void> response = taskCollaboratorController.activateTaskCollaboratorByID(1);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(taskCollaboratorService).activateTaskCollaboratorByID(1);
     }
 
     @Test
     public void testGetCollaboratorByTaskID() {
-        taskCollaboratorService.getCollaboratorByTaskID(100);
         ResponseEntity<List<TaskCollaborator>> response = taskCollaboratorController.getCollaboratorByTaskID(1);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(taskCollaboratorService).getCollaboratorByTaskID(1);
     }
 }
