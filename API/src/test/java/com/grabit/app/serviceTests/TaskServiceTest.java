@@ -52,12 +52,12 @@ public class TaskServiceTest {
     public void testGetTasksByProjectID() {
         Integer projectID = 1;
         List<Task> tasks = Arrays.asList(new Task(), new Task());
-        when(taskRepository.findByProject_ProjectID(projectID)).thenReturn(tasks);
+        when(taskRepository.findByProjectID(projectID)).thenReturn(tasks);
 
         List<Task> result = taskService.getTasksByProjectID(projectID);
 
         assertEquals(tasks, result);
-        verify(taskRepository).findByProject_ProjectID(projectID);
+        verify(taskRepository).findByProjectID(projectID);
     }
 
     @Test
@@ -144,13 +144,13 @@ public class TaskServiceTest {
         List<TaskCollaborator> collaborators = Arrays.asList(new TaskCollaborator(), new TaskCollaborator());
 
         when(taskRepository.existsById(taskId)).thenReturn(true);
-        when(taskCollaboratorRepository.findByTask_TaskID(taskId)).thenReturn(collaborators);
+        when(taskCollaboratorRepository.findByTaskID(taskId)).thenReturn(collaborators);
 
         List<TaskCollaborator> result = taskService.getTaskCollaborators(taskId);
 
         assertEquals(collaborators, result);
         verify(taskRepository).existsById(taskId);
-        verify(taskCollaboratorRepository).findByTask_TaskID(taskId);
+        verify(taskCollaboratorRepository).findByTaskID(taskId);
     }
 
     @Test
@@ -158,11 +158,11 @@ public class TaskServiceTest {
         int taskStatusId = 1;
         List<Task> tasks = Arrays.asList(new Task(), new Task());
 
-        when(taskRepository.findByTaskStatus_TaskStatusID(taskStatusId)).thenReturn(tasks);
+        when(taskRepository.findByTaskStatusID(taskStatusId)).thenReturn(tasks);
 
         List<Task> result = taskService.filterTaskByTaskStatus(taskStatusId);
 
         assertEquals(tasks, result);
-        verify(taskRepository).findByTaskStatus_TaskStatusID(taskStatusId);
+        verify(taskRepository).findByTaskStatusID(taskStatusId);
     }
 }

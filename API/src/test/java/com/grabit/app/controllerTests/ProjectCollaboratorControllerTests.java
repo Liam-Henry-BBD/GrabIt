@@ -36,7 +36,6 @@ public class ProjectCollaboratorControllerTests {
     public void testGetProjectCollaboratorByID() {
         projectCollaboratorService.getProjectCollaboratorByID(3L);
         ProjectCollaborator response = projectCollaboratorController.getProjectCollaboratorByID(1L);
-//        assertThat(response).isEqualTo(projectCollaborator);
         verify(projectCollaboratorService, times(1)).getProjectCollaboratorByID(1L);
     }
 
@@ -44,6 +43,5 @@ public class ProjectCollaboratorControllerTests {
     public void testDeactivateProjectCollaborator() {
         projectCollaboratorService.deactivateProjectCollaborator(1L);
         projectCollaboratorController.deactivateProjectCollaborator(1L);
-//        verify(projectCollaboratorService, times(1)).deactivateProjectCollaborator(1L);
     }
 }

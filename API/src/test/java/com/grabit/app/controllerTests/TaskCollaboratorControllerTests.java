@@ -42,8 +42,6 @@ public class TaskCollaboratorControllerTests {
     public void testGetAllTaskCollaborators() {
         taskCollaboratorService.getAllTaskCollaborators();
         List<TaskCollaborator> response = taskCollaboratorController.getAllTaskCollaborators();
-//        assertThat(response).isEqualTo(taskCollaborators);
-//        verify(taskCollaboratorService).getAllTaskCollaborators();
     }
 
     @Test
@@ -51,7 +49,7 @@ public class TaskCollaboratorControllerTests {
         taskCollaboratorService.getTaskCollaboratorByID(1);
         ResponseEntity<TaskCollaborator> response = taskCollaboratorController.getTaskCollaboratorByID(1);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-//        verify(taskCollaboratorService).getTaskCollaboratorByID(1);
+
     }
 
     @Test
@@ -59,7 +57,7 @@ public class TaskCollaboratorControllerTests {
         taskCollaboratorService.deactivateTaskCollaboratorByID(1);
         ResponseEntity<Void> response = taskCollaboratorController.deactivateTaskCollaboratorByID(1);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
-//        verify(taskCollaboratorService).deactivateTaskCollaboratorByID(1);
+
     }
 
     @Test
@@ -67,7 +65,7 @@ public class TaskCollaboratorControllerTests {
         taskCollaboratorService.activateTaskCollaboratorByID(1);
         ResponseEntity<Void> response = taskCollaboratorController.activateTaskCollaboratorByID(1);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-//        verify(taskCollaboratorService).activateTaskCollaboratorByID(1);
+
     }
 
     @Test
@@ -75,6 +73,6 @@ public class TaskCollaboratorControllerTests {
         taskCollaboratorService.getCollaboratorByTaskID(100);
         ResponseEntity<List<TaskCollaborator>> response = taskCollaboratorController.getCollaboratorByTaskID(1);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-//        verify(taskCollaboratorService).getCollaboratorByTaskID(1);
+
     }
 }
