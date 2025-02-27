@@ -7,6 +7,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
+import com.grabit.app.dto.ProjectAndRoleDTO;
 import com.grabit.app.dto.ProjectCreationDTO;
 import com.grabit.app.model.Project;
 import com.grabit.app.model.ProjectCollaborator;
@@ -49,15 +50,22 @@ public class ProjectController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Project>> getAllProjects() {
-        return ResponseEntity.ok(projectService.getAllProjects());
+    public ResponseEntity<List<ProjectAndRoleDTO>> getAllProjects(@AuthenticationPrincipal OAuth2User user,
+            HttpSession httpSession) {
+        List<ProjectAndRoleDTO> allUserProjects = projectService.getAllProjects(user, httpSession);
+        System.out.println(allUserProjects);
+        if (allUserProjects.size() == 0) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        }
+
+        return ResponseEntity.ok(allUserProjects);
     }
 
     @GetMapping("/{projectID}")
     public ResponseEntity<Project> getProjectByID(@PathVariable Integer projectID,
             @AuthenticationPrincipal OAuth2User user, HttpSession httpSession) {
 
-        if (!isCollaborator(projectID, httpSession)) {
+        if (!projectService.isCollaborator(projectID, httpSession)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
 
@@ -84,7 +92,7 @@ public class ProjectController {
     public ResponseEntity<List<Task>> getProjectTasks(@PathVariable Integer projectID,
             @AuthenticationPrincipal OAuth2User user, HttpSession httpSession) {
 
-        if (!isCollaborator(projectID, httpSession)) {
+        if (!projectService.isCollaborator(projectID, httpSession)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
         return ResponseEntity.ok(projectService.getProjectTasksByProjectID(projectID));
@@ -94,7 +102,7 @@ public class ProjectController {
     public ResponseEntity<List<ProjectCollaborator>> getProjectCollaborators(@PathVariable Integer projectID,
             @AuthenticationPrincipal OAuth2User user, HttpSession httpSession) {
 
-        if (!isCollaborator(projectID, httpSession)) {
+        if (!projectService.isCollaborator(projectID, httpSession)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
         return ResponseEntity.ok(projectService.getProjectCollaboratorsByProjectID(projectID));
@@ -104,7 +112,7 @@ public class ProjectController {
     public ResponseEntity<Object> getProjectLeaderboard(@PathVariable Integer projectID,
             @AuthenticationPrincipal OAuth2User user, HttpSession httpSession) {
 
-        if (!isCollaborator(projectID, httpSession)) {
+        if (!projectService.isCollaborator(projectID, httpSession)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
         return ResponseEntity.ok(projectService.getProjectLeaderboardByProjectID(projectID));
@@ -116,9 +124,4 @@ public class ProjectController {
         return ResponseEntity.ok(updatedProject);
     }
 
-    public boolean isCollaborator(Integer projectID, HttpSession httpSession) {
-        String githubToken = (String) httpSession.getAttribute("github_access_token");
-
-        return projectService.isProjectCollaborator(githubToken, projectID);
-    }
 }

@@ -1,6 +1,7 @@
 package com.grabit.app.controllerTests;
 
 import com.grabit.app.controller.ProjectController;
+import com.grabit.app.dto.ProjectAndRoleDTO;
 import com.grabit.app.dto.ProjectCreationDTO;
 import com.grabit.app.model.Project;
 import com.grabit.app.model.ProjectCollaborator;
@@ -71,14 +72,13 @@ public class ProjectControllerTests {
 
     @Test
     public void testGetAllProjects() {
-        ResponseEntity<List<Project>> response = projectController.getAllProjects();
+        OAuth2User mockUser = mock(OAuth2User.class);
+        HttpSession mockSession = mock(HttpSession.class);
+        ResponseEntity<List<ProjectAndRoleDTO>> response = projectController.getAllProjects(mockUser, mockSession);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        verify(projectService, times(1)).getAllProjects();
+        verify(projectService, times(1)).getAllProjects(mockUser, mockSession);
     }
-
-    // the getProjectById method takes in more parameters now, this spec needs to be
-    // adjusted.
 
     @Test
     public void testGetProjectById() {
@@ -119,7 +119,8 @@ public class ProjectControllerTests {
 
         OAuth2User mockUser = mock(OAuth2User.class);
         HttpSession mockSession = mock(HttpSession.class);
-        ResponseEntity<List<ProjectCollaborator>> response = projectController.getProjectCollaborators(1, mockUser, mockSession);
+        ResponseEntity<List<ProjectCollaborator>> response = projectController.getProjectCollaborators(1, mockUser,
+                mockSession);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(projectCollaborators);

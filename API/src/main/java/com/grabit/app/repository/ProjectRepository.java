@@ -1,10 +1,13 @@
 package com.grabit.app.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.grabit.app.dto.ProjectAndRoleDTO;
 import com.grabit.app.model.Project;
 
 @Repository
@@ -32,4 +35,23 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
                 TotalScore DESC;
                         """, nativeQuery = true)
     String[][] getProjectLeaderboard(@Param("projectID") Integer projectID);
+
+    @Query(value = """
+            SELECT
+                p.ProjectID,
+                p.ProjectName,
+                p.ProjectDescription,
+                p.CreatedAt,
+                p.UpdatedAt,
+                pc.UserID AS CollaboratorUserID,
+                pc.RoleID AS CollaboratorRole
+            FROM
+                [grabit].Projects p
+            LEFT JOIN
+                [grabit].ProjectCollaborators pc ON p.ProjectID = pc.ProjectID
+            WHERE
+                pc.UserID = :userID;
+            """, nativeQuery = true)
+    List<ProjectAndRoleDTO> getProjectsByUserID(@Param("userID") Integer userID);
+
 }

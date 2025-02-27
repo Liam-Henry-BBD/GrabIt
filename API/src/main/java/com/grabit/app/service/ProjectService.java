@@ -5,9 +5,13 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.grabit.app.dto.ProjectAndRoleDTO;
 import com.grabit.app.dto.ProjectLeaderboardDTO;
 import com.grabit.app.model.Project;
 import com.grabit.app.model.ProjectCollaborator;
@@ -18,6 +22,8 @@ import com.grabit.app.repository.ProjectRepository;
 import com.grabit.app.repository.TaskCollaboratorRepository;
 import com.grabit.app.repository.TaskRepository;
 import com.grabit.app.repository.UserRepository;
+
+import jakarta.servlet.http.HttpSession;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -70,8 +76,12 @@ public class ProjectService extends Task {
         return projectCollaboratorRepository.existsByUserIDAndProjectID(projectID, user.getUserID());
     }
 
-    public List<Project> getAllProjects() {
-        return projectRepository.findAll();
+    public List<ProjectAndRoleDTO> getAllProjects(@AuthenticationPrincipal OAuth2User user, HttpSession httpSession) {
+        String githubToken = (String) httpSession.getAttribute("github_access_token");
+        String githubLogin = getGitHubUserLogin(githubToken);
+        User currentUser = userRepository.findByGitHubID(githubLogin);
+
+        return projectRepository.getProjectsByUserID(currentUser.getUserID());
     }
 
     public Project getProjectByID(Integer id) {
@@ -124,14 +134,21 @@ public class ProjectService extends Task {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
         HttpEntity<String> entity = new HttpEntity<>(headers);
-        ResponseEntity<Map> response = restTemplate.exchange(
+        ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
                 "https://api.github.com/user",
                 HttpMethod.GET,
                 entity,
-                Map.class);
+                new ParameterizedTypeReference<Map<String, Object>>() {
+                });
 
-        Map<String, Object> userAttributes = response.getBody();
+        Map<String, Object> userAttributes = (Map<String, Object>) response.getBody();
         return (String) userAttributes.get("login");
 
+    }
+
+    public boolean isCollaborator(Integer projectID, HttpSession httpSession) {
+        String githubToken = (String) httpSession.getAttribute("github_access_token");
+
+        return isProjectCollaborator(githubToken, projectID);
     }
 }

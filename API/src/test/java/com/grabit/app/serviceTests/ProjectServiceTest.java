@@ -1,6 +1,10 @@
 package com.grabit.app.serviceTests;
 
 import com.grabit.app.service.ProjectService;
+
+import jakarta.servlet.http.HttpSession;
+
+import com.grabit.app.dto.ProjectAndRoleDTO;
 import com.grabit.app.model.Project;
 import com.grabit.app.model.ProjectCollaborator;
 import com.grabit.app.model.Task;
@@ -14,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -64,7 +69,9 @@ class ProjectServiceTest {
     void testGetAllProjects() {
         List<Project> projects = Arrays.asList(project);
         when(projectRepository.findAll()).thenReturn(projects);
-        List<Project> result = projectService.getAllProjects();
+        OAuth2User mockUser = mock(OAuth2User.class);
+        HttpSession mockSession = mock(HttpSession.class);
+        List<ProjectAndRoleDTO> result = projectService.getAllProjects(mockUser, mockSession);
 
         assertNotNull(result);
         assertEquals(1, result.size());
