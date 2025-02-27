@@ -22,8 +22,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-//import static org.mockito.Mockito.verify;
-//import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ProjectControllerTests {
@@ -38,71 +37,98 @@ public class ProjectControllerTests {
     private ProjectController projectController;
 
     private Project project;
+    private Project savedProject;
     private ProjectCollaborator projectCollaborator;
     private ProjectCreationDTO request;
-    private Task task;
-    private List<Project> projects;
-    private List<ProjectCollaborator> projectCollaborators;
     private List<Task> tasks;
-    private Object leaderboard;
 
     @BeforeEach
     public void setUp() {
         project = new Project();
         projectCollaborator = new ProjectCollaborator();
-        task = new Task();
         request = new ProjectCreationDTO(project, projectCollaborator);
-        tasks = List.of(task);
-        projects = List.of(project);
-        projectCollaborators = List.of(projectCollaborator);
+        tasks = List.of(new Task());
+    }
+
+    @Test
+    public void testCreateProject() {
+        savedProject = new Project();
+        savedProject = mock(Project.class);
+        when(savedProject.getProjectID()).thenReturn(1);
+        when(projectService.createProject(project)).thenReturn(savedProject);
+
+        ResponseEntity<Project> response = projectController.createProject(request);
+
+        verify(projectService, times(1)).createProject(project);
+        verify(projectCollaboratorService, times(1)).addProjectCollaborator(projectCollaborator);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
     @Test
     public void testGetAllProjects() {
-        projectService.getAllProjects();
         ResponseEntity<List<Project>> response = projectController.getAllProjects();
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(projectService, times(1)).getAllProjects();
     }
 
     @Test
     public void testGetProjectById() {
-        projectService.getProjectById(1);
         ResponseEntity<Project> response = projectController.getProjectById(1);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(projectService, times(1)).getProjectById(1);
     }
 
     @Test
     public void testCloseProject() {
-        projectService.closeProject(1);
         ResponseEntity<Void> response = projectController.closeProject(1);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        verify(projectService, times(1)).closeProject(1);
     }
 
+    @Test
+    public void testGetProjectTasks() {
+        when(projectService.getProjectTasksByProjectId(1)).thenReturn(tasks);
+
+        List<Task> response = projectController.getProjectTasks(1);
+
+        assertThat(response).isEqualTo(tasks);
+        verify(projectService, times(1)).getProjectTasksByProjectId(1);
+    }
 
     @Test
     public void testGetProjectCollaborators() {
-        projectService.getProjectCollaboratorsByProjectId(1);
-        ResponseEntity<List<ProjectCollaborator>> response = projectController.getProjectCollaborators(1);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        List<ProjectCollaborator> projectCollaborators = List.of(projectCollaborator);
+        when(projectService.getProjectCollaboratorsByProjectId(1)).thenReturn(projectCollaborators);
 
+        ResponseEntity<List<ProjectCollaborator>> response = projectController.getProjectCollaborators(1);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(projectCollaborators);
+        verify(projectService, times(1)).getProjectCollaboratorsByProjectId(1);
     }
 
     @Test
     public void testGetProjectLeaderboard() {
-        projectService.getProjectLeaderboardByProjectId(1);
-        ResponseEntity<Object> response = projectController.getProjectLeaderboard(1);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Object leaderboard = new Object();
+        when(projectService.getProjectLeaderboardByProjectId(1)).thenReturn(leaderboard);
 
+        ResponseEntity<Object> response = projectController.getProjectLeaderboard(1);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(leaderboard);
+        verify(projectService, times(1)).getProjectLeaderboardByProjectId(1);
     }
 
     @Test
     public void testUpdateProject() {
-        projectService.updateProject(1, project);
         ResponseEntity<Project> response = projectController.updateProject(1, project);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(savedProject);
+        verify(projectService, times(1)).updateProject(1, project);
     }
 }
