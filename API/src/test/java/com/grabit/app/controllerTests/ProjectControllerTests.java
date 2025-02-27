@@ -8,6 +8,8 @@ import com.grabit.app.model.Task;
 import com.grabit.app.service.ProjectCollaboratorService;
 import com.grabit.app.service.ProjectService;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.List;
 
@@ -74,19 +77,24 @@ public class ProjectControllerTests {
         verify(projectService, times(1)).getAllProjects();
     }
 
-    // the getProjectById method takes in more parameters now, this spec needs to be adjusted.
+    // the getProjectById method takes in more parameters now, this spec needs to be
+    // adjusted.
 
-    // @Test
-    // public void testGetProjectById() {
-    // ResponseEntity<Project> response = projectController.getProjectByID(1);
+    @Test
+    public void testGetProjectById() {
+        OAuth2User mockUser = mock(OAuth2User.class);
+        HttpSession mockSession = mock(HttpSession.class);
+        ResponseEntity<Project> response = projectController.getProjectByID(1, mockUser, mockSession);
 
-    // assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    // verify(projectService, times(1)).getProjectByID(1);
-    // }
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(projectService, times(1)).getProjectByID(1);
+    }
 
     @Test
     public void testCloseProject() {
-        ResponseEntity<Void> response = projectController.closeProject(1);
+        OAuth2User mockUser = mock(OAuth2User.class);
+        HttpSession mockSession = mock(HttpSession.class);
+        ResponseEntity<Void> response = projectController.closeProject(1, mockUser, mockSession);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
         verify(projectService, times(1)).closeProject(1);
@@ -96,7 +104,9 @@ public class ProjectControllerTests {
     public void testGetProjectTasks() {
         when(projectService.getProjectTasksByProjectID(1)).thenReturn(tasks);
 
-        List<Task> response = projectController.getProjectTasks(1);
+        OAuth2User mockUser = mock(OAuth2User.class);
+        HttpSession mockSession = mock(HttpSession.class);
+        ResponseEntity<List<Task>> response = projectController.getProjectTasks(1, mockUser, mockSession);
 
         assertThat(response).isEqualTo(tasks);
         verify(projectService, times(1)).getProjectTasksByProjectID(1);
@@ -107,7 +117,9 @@ public class ProjectControllerTests {
         List<ProjectCollaborator> projectCollaborators = List.of(projectCollaborator);
         when(projectService.getProjectCollaboratorsByProjectID(1)).thenReturn(projectCollaborators);
 
-        ResponseEntity<List<ProjectCollaborator>> response = projectController.getProjectCollaborators(1);
+        OAuth2User mockUser = mock(OAuth2User.class);
+        HttpSession mockSession = mock(HttpSession.class);
+        ResponseEntity<List<ProjectCollaborator>> response = projectController.getProjectCollaborators(1, mockUser, mockSession);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(projectCollaborators);
@@ -119,7 +131,9 @@ public class ProjectControllerTests {
         Object leaderboard = new Object();
         when(projectService.getProjectLeaderboardByProjectID(1)).thenReturn(leaderboard);
 
-        ResponseEntity<Object> response = projectController.getProjectLeaderboard(1);
+        OAuth2User mockUser = mock(OAuth2User.class);
+        HttpSession mockSession = mock(HttpSession.class);
+        ResponseEntity<Object> response = projectController.getProjectLeaderboard(1, mockUser, mockSession);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(leaderboard);

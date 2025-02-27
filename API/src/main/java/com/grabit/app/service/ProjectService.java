@@ -50,7 +50,7 @@ public class ProjectService extends Task {
         return projectRepository.save(project);
     }
 
-    public boolean isCollaborator(String githubToken, Integer projectID) {
+    public boolean isProjectCollaborator(String githubToken, Integer projectID) {
         User user = userRepository.findByGitHubID(getGitHubUserLogin(githubToken));
 
         if (user == null) {
@@ -58,6 +58,16 @@ public class ProjectService extends Task {
         }
 
         return projectCollaboratorRepository.existsByUserIDAndProjectID(user.getUserID(), projectID);
+    }
+
+    public boolean isProjectLead(String githubToken, Integer projectID) {
+        User user = userRepository.findByGitHubID(getGitHubUserLogin(githubToken));
+
+        if (user == null) {
+            return false;
+        }
+
+        return projectCollaboratorRepository.existsByUserIDAndProjectID(projectID, user.getUserID());
     }
 
     public List<Project> getAllProjects() {

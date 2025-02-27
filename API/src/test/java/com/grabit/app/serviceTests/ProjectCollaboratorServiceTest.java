@@ -10,7 +10,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import jakarta.transaction.Transactional;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -102,19 +101,19 @@ public class ProjectCollaboratorServiceTest {
 
     @Test
     public void testExists() {
-        when(projectCollaboratorRepository.existsByUserIdAndProjectIdAndRoleId(anyInt(), anyInt(), anyInt())).thenReturn(true);
+        when(projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(anyInt(), anyInt(), anyInt())).thenReturn(true);
         boolean exists = projectCollaboratorService.exists(1L, 1L, 1L);
 
         assertTrue(exists);
-        verify(projectCollaboratorRepository, times(1)).existsByUserIdAndProjectIdAndRoleId(anyInt(), anyInt(), anyInt());
+        verify(projectCollaboratorRepository, times(1)).existsByUserIDAndProjectIDAndRoleID(anyInt(), anyInt(), anyInt());
     }
 
     @Test
     public void testExists_False() {
-        when(projectCollaboratorRepository.existsByUserIdAndProjectIdAndRoleId(anyInt(), anyInt(), anyInt())).thenReturn(false);
+        when(projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(anyInt(), anyInt(), anyInt())).thenReturn(false);
         boolean exists = projectCollaboratorService.exists(1L, 1L, 1L);
 
         assertFalse(exists);
-        verify(projectCollaboratorRepository, times(1)).existsByUserIdAndProjectIdAndRoleId(anyInt(), anyInt(), anyInt());
+        verify(projectCollaboratorRepository, times(1)).existsByUserIDAndProjectIDAndRoleID(anyInt(), anyInt(), anyInt());
     }
 }

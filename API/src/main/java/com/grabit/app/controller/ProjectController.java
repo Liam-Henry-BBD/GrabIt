@@ -34,7 +34,7 @@ public class ProjectController {
 
     @PostMapping
     public ResponseEntity<Project> createProject(@RequestBody ProjectCreationDTO request) {
-        
+
         Project project = request.getProject();
         ProjectCollaborator projectCollaborator = request.getProjectCollaborator();
 
@@ -56,11 +56,8 @@ public class ProjectController {
     @GetMapping("/{projectID}")
     public ResponseEntity<Project> getProjectByID(@PathVariable Integer projectID,
             @AuthenticationPrincipal OAuth2User user, HttpSession httpSession) {
-        String githubToken = (String) httpSession.getAttribute("github_access_token");
 
-        boolean isCollaborator = projectService.isCollaborator(githubToken, projectID);
-
-        if (!isCollaborator) {
+        if (!isCollaborator(projectID, httpSession)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
 
@@ -69,23 +66,47 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{projectID}")
-    public ResponseEntity<Void> closeProject(@PathVariable Integer projectID) {
+    public ResponseEntity<Void> closeProject(@PathVariable Integer projectID,
+            @AuthenticationPrincipal OAuth2User user, HttpSession httpSession) {
+        String githubToken = (String) httpSession.getAttribute("github_access_token");
+
+        boolean isCollaborator = projectService.isProjectLead(githubToken, projectID);
+
+        if (!isCollaborator) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+
         projectService.closeProject(projectID);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{projectID}/tasks")
-    public List<Task> getProjectTasks(@PathVariable Integer projectID) {
-        return projectService.getProjectTasksByProjectID(projectID);
+    public ResponseEntity<List<Task>> getProjectTasks(@PathVariable Integer projectID,
+            @AuthenticationPrincipal OAuth2User user, HttpSession httpSession) {
+
+        if (!isCollaborator(projectID, httpSession)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+        return ResponseEntity.ok(projectService.getProjectTasksByProjectID(projectID));
     }
 
     @GetMapping("/{projectID}/collaborators")
-    public ResponseEntity<List<ProjectCollaborator>> getProjectCollaborators(@PathVariable Integer projectID) {
+    public ResponseEntity<List<ProjectCollaborator>> getProjectCollaborators(@PathVariable Integer projectID,
+            @AuthenticationPrincipal OAuth2User user, HttpSession httpSession) {
+
+        if (!isCollaborator(projectID, httpSession)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
         return ResponseEntity.ok(projectService.getProjectCollaboratorsByProjectID(projectID));
     }
 
     @GetMapping("/{projectID}/leaderboard")
-    public ResponseEntity<Object> getProjectLeaderboard(@PathVariable Integer projectID) {
+    public ResponseEntity<Object> getProjectLeaderboard(@PathVariable Integer projectID,
+            @AuthenticationPrincipal OAuth2User user, HttpSession httpSession) {
+
+        if (!isCollaborator(projectID, httpSession)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
         return ResponseEntity.ok(projectService.getProjectLeaderboardByProjectID(projectID));
     }
 
@@ -93,5 +114,11 @@ public class ProjectController {
     public ResponseEntity<Project> updateProject(@PathVariable Integer id, @RequestBody Project project) {
         Project updatedProject = projectService.updateProject(id, project);
         return ResponseEntity.ok(updatedProject);
+    }
+
+    public boolean isCollaborator(Integer projectID, HttpSession httpSession) {
+        String githubToken = (String) httpSession.getAttribute("github_access_token");
+
+        return projectService.isProjectCollaborator(githubToken, projectID);
     }
 }

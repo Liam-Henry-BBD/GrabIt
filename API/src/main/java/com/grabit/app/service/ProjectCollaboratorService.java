@@ -39,7 +39,7 @@ public class ProjectCollaboratorService {
     }
 
     public boolean exists(Long userID, Long projectID, Long roleID) {
-        return projectCollaboratorRepository.existsByUserIdAndProjectIdAndRoleId(userID.intValue(), projectID.intValue(), roleID.intValue());
+        return projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(userID.intValue(), projectID.intValue(), roleID.intValue());
     }
     
 }
