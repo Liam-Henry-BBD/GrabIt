@@ -25,6 +25,12 @@ public class TaskCollaboratorController {
         return taskCollaboratorService.getAllTaskCollaborators();
     }
 
+    @PostMapping
+    public ResponseEntity<Void> createTaskCollaborator(@RequestBody TaskCollaborator taskCollaborator) {
+        taskCollaboratorService.addTaskCollaborator(taskCollaborator);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
     @GetMapping("/{taskCollabID}")
     public ResponseEntity<TaskCollaborator> getTaskCollaboratorByID(@PathVariable Integer taskCollabID) {
         Optional<TaskCollaborator> taskCollaborator = Optional
