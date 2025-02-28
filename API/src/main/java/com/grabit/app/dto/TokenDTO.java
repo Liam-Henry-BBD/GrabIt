@@ -1,4 +1,4 @@
-package com.grabit.app.model;
+package com.grabit.app.dto;
 
 
 import lombok.AllArgsConstructor;
@@ -8,6 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Token {
+public class TokenDTO {
     private String token;
 }
