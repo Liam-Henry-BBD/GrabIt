@@ -1,15 +1,9 @@
 package com.grabit.app.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import com.grabit.app.dto.ProjectAndRoleDTO;
 import com.grabit.app.dto.ProjectLeaderboardDTO;
@@ -28,7 +22,6 @@ import jakarta.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,16 +31,18 @@ public class ProjectService extends Task {
     private final TaskRepository taskRepository;
     private final ProjectCollaboratorRepository projectCollaboratorRepository;
     private final UserRepository userRepository;
+    private final GitHubService gitHubService;
 
     @Autowired
     public ProjectService(ProjectRepository projectRepository, TaskRepository taskRepository,
             TaskCollaboratorRepository taskCollaboratorRepository,
             ProjectCollaboratorRepository projectCollaboratorRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository, GitHubService gitHubService) {
         this.projectRepository = projectRepository;
         this.taskRepository = taskRepository;
         this.projectCollaboratorRepository = projectCollaboratorRepository;
         this.userRepository = userRepository;
+        this.gitHubService = gitHubService;
     }
 
     public Project createProject(Project project) {
@@ -57,7 +52,7 @@ public class ProjectService extends Task {
     }
 
     public boolean isProjectCollaborator(String githubToken, Integer projectID) {
-        User user = userRepository.findByGitHubID(getGitHubUserLogin(githubToken));
+        User user = userRepository.findByGitHubID(gitHubService.getGitHubUserLogin(githubToken));
 
         if (user == null) {
             return false;
@@ -67,7 +62,7 @@ public class ProjectService extends Task {
     }
 
     public boolean isProjectLead(String githubToken, Integer projectID) {
-        User user = userRepository.findByGitHubID(getGitHubUserLogin(githubToken));
+        User user = userRepository.findByGitHubID(gitHubService.getGitHubUserLogin(githubToken));
 
         if (user == null) {
             return false;
@@ -78,7 +73,7 @@ public class ProjectService extends Task {
 
     public List<ProjectAndRoleDTO> getAllProjects(@AuthenticationPrincipal OAuth2User user, HttpSession httpSession) {
         String githubToken = (String) httpSession.getAttribute("github_access_token");
-        String githubLogin = getGitHubUserLogin(githubToken);
+        String githubLogin = gitHubService.getGitHubUserLogin(githubToken);
         User currentUser = userRepository.findByGitHubID(githubLogin);
 
         return projectRepository.getProjectsByUserID(currentUser.getUserID());
@@ -127,23 +122,6 @@ public class ProjectService extends Task {
         existingProject.setProjectDescription(project.getProjectDescription());
         existingProject.setUpdatedAt(new Date());
         return projectRepository.save(existingProject);
-    }
-
-    public String getGitHubUserLogin(String token) {
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-        ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
-                "https://api.github.com/user",
-                HttpMethod.GET,
-                entity,
-                new ParameterizedTypeReference<Map<String, Object>>() {
-                });
-
-        Map<String, Object> userAttributes = (Map<String, Object>) response.getBody();
-        return (String) userAttributes.get("login");
-
     }
 
     public boolean isCollaborator(Integer projectID, HttpSession httpSession) {
