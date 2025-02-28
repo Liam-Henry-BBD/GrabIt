@@ -1,13 +1,15 @@
 package com.grabit.app.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.grabit.app.service.CustomOAuth2UserService;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
 
 @EnableWebSecurity
 @Configuration
@@ -24,7 +26,9 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/public/**").permitAll()
+                        .requestMatchers("/login").permitAll()
                         .anyRequest().authenticated())
+                .addFilterBefore(new AuthFilter(), BasicAuthenticationFilter.class)
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService)))
