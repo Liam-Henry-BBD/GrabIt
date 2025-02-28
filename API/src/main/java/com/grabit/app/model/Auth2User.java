@@ -1,5 +1,11 @@
 package com.grabit.app.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -8,23 +14,26 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+
+@Setter
+@Getter
 public class Auth2User implements OAuth2User{
-    private OAuth2User oAuth2User;
-    private OAuth2UserRequest userRequest;
 
+    private String id;
+    private String login;
 
+    public Auth2User(String responseBody) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
 
-    public OAuth2User getOAuth2User() {
-        return oAuth2User;
-    }
-
-    public OAuth2UserRequest getUserRequest() {
-        return userRequest;
+        JsonNode node = mapper.readTree(responseBody);
+        this.login = node.get("login").asText();
     }
 
     @Override
     public Map<String, Object> getAttributes() {
-        return Map.of();
+        return Map.of(
+                "login", login
+        );
     }
 
     @Override
@@ -34,6 +43,6 @@ public class Auth2User implements OAuth2User{
 
     @Override
     public String getName() {
-        return "";
+        return login;
     }
 }
