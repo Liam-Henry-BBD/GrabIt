@@ -124,8 +124,17 @@ public class ProjectController {
     }
 
     @PutMapping("/{projectID}")
-    public ResponseEntity<Project> updateProject(@PathVariable Integer id, @RequestBody Project project) {
-        Project updatedProject = projectService.updateProject(id, project);
+    public ResponseEntity<Project> updateProject(@PathVariable Integer projectID, @RequestBody Project project,
+            @AuthenticationPrincipal OAuth2User user, HttpSession httpSession) {
+        String githubToken = (String) httpSession.getAttribute("github_access_token");
+
+        boolean isCollaborator = projectService.isProjectLead(githubToken, projectID);
+
+        if (!isCollaborator) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+
+        Project updatedProject = projectService.updateProject(projectID, project);
         return ResponseEntity.ok(updatedProject);
     }
 
