@@ -26,8 +26,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,6 +46,8 @@ public class ProjectControllerTests {
     private ProjectCollaborator projectCollaborator;
     private ProjectCreationDTO request;
     private List<Task> tasks;
+    private List<ProjectCollaborator> projectCollaborators;
+    private Object leaderboard;
 
     @BeforeEach
     public void setUp() {
@@ -54,25 +55,25 @@ public class ProjectControllerTests {
         projectCollaborator = new ProjectCollaborator();
         request = new ProjectCreationDTO(project, projectCollaborator);
         tasks = List.of(new Task());
+        projectCollaborators = List.of(projectCollaborator);
+        leaderboard = new Object();
+        savedProject = mock(Project.class);
     }
 
     @Test
     public void testCreateProject() {
-        savedProject = new Project();
-        savedProject = mock(Project.class);
-
-        when(savedProject.getProjectID()).thenReturn(1);
         when(projectService.createProject(project)).thenReturn(savedProject);
+
         OAuth2User mockUser = mock(OAuth2User.class);
         HttpSession mockSession = mock(HttpSession.class);
-        when(mockSession.getAttribute(anyString())).thenReturn(true);
+        when(mockSession.getAttribute("github_access_token")).thenReturn("mocked_github_token");
 
         ResponseEntity<Project> response = projectController.createProject(request, mockUser, mockSession);
 
         verify(projectService, times(1)).createProject(project);
         verify(projectCollaboratorService, times(1)).addProjectCollaborator(projectCollaborator);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(response.getBody()).isEqualTo(savedProject);
     }
 
     @Test
@@ -89,74 +90,94 @@ public class ProjectControllerTests {
     public void testGetProjectById() {
         OAuth2User mockUser = mock(OAuth2User.class);
         HttpSession mockSession = mock(HttpSession.class);
-        when(projectService.isProjectCollaborator(anyString(), eq(1))).thenReturn(true);
+        when(projectService.isCollaborator(1, mockSession)).thenReturn(true);
+
+        when(projectService.getProjectByID(1)).thenReturn(project);
 
         ResponseEntity<Project> response = projectController.getProjectByID(1, mockUser, mockSession);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        verify(projectService, times(1)).isCollaborator(1, mockSession);
+        verify(projectService, times(1)).getProjectByID(1);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(project);
     }
 
     @Test
     public void testCloseProject() {
         OAuth2User mockUser = mock(OAuth2User.class);
         HttpSession mockSession = mock(HttpSession.class);
-        when(projectService.isProjectLead(anyString(), eq(1))).thenReturn(true);
 
-        ResponseEntity<Void> response = projectController.closeProject(1, mockUser, mockSession);
+        when(mockSession.getAttribute("github_access_token")).thenReturn("mocked_github_token");
+        when(projectService.isProjectLead("mocked_github_token", 5)).thenReturn(true);
 
+        ResponseEntity<Void> response = projectController.closeProject(5, mockUser, mockSession);
+
+        verify(projectService, times(1)).isProjectLead("mocked_github_token", 5);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
     @Test
     public void testGetProjectTasks() {
-        when(projectService.getProjectTasksByProjectID(1)).thenReturn(tasks);
-        when(projectService.isProjectCollaborator(anyString(), eq(1))).thenReturn(true);
-
         OAuth2User mockUser = mock(OAuth2User.class);
         HttpSession mockSession = mock(HttpSession.class);
 
+        when(projectService.isCollaborator(1, mockSession)).thenReturn(true);
+        when(projectService.getProjectTasksByProjectID(1)).thenReturn(tasks);
+
         ResponseEntity<List<Task>> response = projectController.getProjectTasks(1, mockUser, mockSession);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        verify(projectService, times(1)).isCollaborator(1, mockSession);
+        verify(projectService, times(1)).getProjectTasksByProjectID(1);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(tasks);
     }
 
     @Test
     public void testGetProjectCollaborators() {
-        List<ProjectCollaborator> projectCollaborators = List.of(projectCollaborator);
-        when(projectService.getProjectCollaboratorsByProjectID(1)).thenReturn(projectCollaborators);
-        when(projectService.isProjectCollaborator(anyString(), eq(1))).thenReturn(true);
-
         OAuth2User mockUser = mock(OAuth2User.class);
         HttpSession mockSession = mock(HttpSession.class);
+
+        when(projectService.isCollaborator(1, mockSession)).thenReturn(true);
+        when(projectService.getProjectCollaboratorsByProjectID(1)).thenReturn(projectCollaborators);
+
         ResponseEntity<List<ProjectCollaborator>> response = projectController.getProjectCollaborators(1, mockUser,
                 mockSession);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
-        assertThat(response.getBody()).isEqualTo(null);
+        verify(projectService, times(1)).isCollaborator(1, mockSession);
+        verify(projectService, times(1)).getProjectCollaboratorsByProjectID(1);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(projectCollaborators);
     }
 
     @Test
     public void testGetProjectLeaderboard() {
-        Object leaderboard = new Object();
-        when(projectService.getProjectLeaderboardByProjectID(1)).thenReturn(leaderboard);
-        when(projectService.isProjectCollaborator(anyString(), eq(1))).thenReturn(true);
-
         OAuth2User mockUser = mock(OAuth2User.class);
         HttpSession mockSession = mock(HttpSession.class);
+
+        when(projectService.isCollaborator(1, mockSession)).thenReturn(true);
+        when(projectService.getProjectLeaderboardByProjectID(1)).thenReturn(leaderboard);
+
         ResponseEntity<Object> response = projectController.getProjectLeaderboard(1, mockUser, mockSession);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
-        assertThat(response.getBody()).isEqualTo(null);
+        verify(projectService, times(1)).isCollaborator(1, mockSession);
+        verify(projectService, times(1)).getProjectLeaderboardByProjectID(1);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(leaderboard);
     }
 
     @Test
     public void testUpdateProject() {
-        when(projectService.isProjectLead(anyString(), eq(1))).thenReturn(true);
-
         OAuth2User mockUser = mock(OAuth2User.class);
         HttpSession mockSession = mock(HttpSession.class);
+
+        when(mockSession.getAttribute("github_access_token")).thenReturn("mocked_github_token");
+        when(projectService.isProjectLead("mocked_github_token", 1)).thenReturn(true);
+        when(projectService.updateProject(1, project)).thenReturn(savedProject);
+
         ResponseEntity<Project> response = projectController.updateProject(1, project, mockUser, mockSession);
 
+        verify(projectService, times(1)).isProjectLead("mocked_github_token", 1);
+        verify(projectService, times(1)).updateProject(1, project);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(savedProject);
     }

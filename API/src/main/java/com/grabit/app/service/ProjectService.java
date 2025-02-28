@@ -35,9 +35,9 @@ public class ProjectService extends Task {
 
     @Autowired
     public ProjectService(ProjectRepository projectRepository, TaskRepository taskRepository,
-            TaskCollaboratorRepository taskCollaboratorRepository,
-            ProjectCollaboratorRepository projectCollaboratorRepository,
-            UserRepository userRepository, GitHubService gitHubService) {
+                          TaskCollaboratorRepository taskCollaboratorRepository,
+                          ProjectCollaboratorRepository projectCollaboratorRepository,
+                          UserRepository userRepository, GitHubService gitHubService) {
         this.projectRepository = projectRepository;
         this.taskRepository = taskRepository;
         this.projectCollaboratorRepository = projectCollaboratorRepository;
@@ -68,7 +68,7 @@ public class ProjectService extends Task {
             return false;
         }
 
-        return projectCollaboratorRepository.existsByUserIDAndProjectID(projectID, user.getUserID());
+        return projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(projectID, user.getUserID(), 1);
     }
 
     public List<ProjectAndRoleDTO> getAllProjects(@AuthenticationPrincipal OAuth2User user, HttpSession httpSession) {
