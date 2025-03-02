@@ -30,19 +30,6 @@
 	<description>
 		A rest application for a gamified task management project
 	</description>
-	<url />
-	<licenses>
-		<license />
-	</licenses>
-	<developers>
-		<developer />
-	</developers>
-	<scm>
-		<connection />
-		<developerConnection />
-		<tag />
-		<url />
-	</scm>
 	<properties>
 		<java.version>
 			23
@@ -105,12 +92,6 @@
 			<artifactId>
 				lombok
 			</artifactId>
-			<optional>
-				true
-			</optional>
-			<scope>
-				provided
-			</scope>
 		</dependency>
 		<dependency>
 			<groupId>
@@ -124,9 +105,15 @@
 			</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<scope>test</scope>
+			<groupId>
+				org.mockito
+			</groupId>
+			<artifactId>
+				mockito-core
+			</artifactId>
+			<scope>
+				test
+			</scope>
 		</dependency>
 		<dependency>
 			<groupId>
@@ -145,9 +132,15 @@
 			</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>io.github.cdimascio</groupId>
-			<artifactId>java-dotenv</artifactId>
-			<version>5.2.2</version>
+			<groupId>
+				io.github.cdimascio
+			</groupId>
+			<artifactId>
+				java-dotenv
+			</artifactId>
+			<version>
+				5.2.2
+			</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -193,9 +186,15 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.0.0-M5</version>
+				<groupId>
+					org.apache.maven.plugins
+				</groupId>
+				<artifactId>
+					maven-surefire-plugin
+				</artifactId>
+				<version>
+					3.0.0-M5
+				</version>
 			</plugin>
 		</plugins>
 	</build>
