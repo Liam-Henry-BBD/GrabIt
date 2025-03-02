@@ -10,7 +10,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import com.grabit.app.service.CustomOAuth2UserService;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig {
@@ -25,7 +24,6 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/public/**").permitAll()
                         .requestMatchers("/login").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(new AuthFilter(), BasicAuthenticationFilter.class)
