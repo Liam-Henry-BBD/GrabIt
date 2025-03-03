@@ -2,6 +2,7 @@ package com.grabit.app.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -31,6 +32,12 @@ public class ExceptionResolver {
     public ResponseEntity<Error> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
         Error error = new Error("Validation failed.", HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<Error> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
+        Error error = new Error("Method not supported.", HttpStatus.METHOD_NOT_ALLOWED.value());
+        return new ResponseEntity<>(error, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
 }
