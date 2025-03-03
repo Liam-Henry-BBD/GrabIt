@@ -26,11 +26,13 @@ public interface TaskCollaboratorRepository extends JpaRepository<TaskCollaborat
     void createCollaborator(LocalDate joinedAt, Integer userID, Byte roleID, Integer taskID);
 
 
-    @Query(value = "SELECT CASE WHEN COUNT(r) > 0 THEN TRUE ELSE FALSE END FROM TaskCollaborator r WHERE r.task.taskID = :taskID AND r.user.userID = :userID")
+    @Query(value = "SELECT CASE WHEN COUNT(tc) > 0 THEN TRUE ELSE FALSE END FROM TaskCollaborator tc WHERE tc.task.taskID = :taskID AND tc.user.userID = :userID")
     boolean existsByTaskIDAndUserID(Integer taskID, Integer userID);
 
     @Modifying
     @Query(value = "UPDATE TaskCollaborator tc SET tc.isActive = false  WHERE tc.task.taskID = :taskID")
     void deactivateCollaborators(Integer taskID);
 
+    @Query(value = "SELECT CASE WHEN COUNT(tc) > 0 THEN TRUE ELSE FALSE END FROM TaskCollaborator tc WHERE tc.task.taskID = :taskID AND tc.user.userID = :userID AND tc.role.roleID = :roleID")
+    boolean existsByIdAndUserIDAndRoleID(Integer taskID, Integer userID, Byte roleID);
 }
