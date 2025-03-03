@@ -56,7 +56,7 @@ public class ProjectService extends Task {
             return false;
         }
 
-        return projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(projectID, user.getUserID(),
+        return projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(), projectID,
                 Roles.PROJECT_LEAD.getRole());
     }
 
