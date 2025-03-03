@@ -78,12 +78,16 @@ public class TaskService {
             throw new BadRequest("Task is already completed.");
         }
 
-        if (taskStatusID == 4 && !task.getTaskStatus().getStatusName().contains("Review")) {
+        if (taskStatusID == Status.COMPLETE.getStatus() && !task.getTaskStatus().getStatusName().contains("Review")) {
             throw new BadRequest("Task must be reviewed before it can be completed.");
         }
 
         if (task.getTaskStatus().getStatusName().contains("Review") && taskStatusID == 1) {
             throw new BadRequest("Cannot move task from review to available.");
+        }
+
+        if (task.getTaskStatus().getTaskStatusID() == Status.GRABBED.getStatus() && taskStatusID == Status.AVAILABLE.getStatus()) {
+            throw new BadRequest("Cannot move task from grabbed to available.");
         }
 
         if (task.getTaskStatus().getStatusName().contains("Available") && taskStatusID != 2) {
@@ -154,8 +158,8 @@ public class TaskService {
     public Task grabTask(Integer taskID, int projectID, User user) {
 
         Task task = taskRepository.findById(taskID).orElseThrow(() -> new NotFound("Task not found."));
-        if (task.getTaskStatus().getTaskStatusID() == Status.GRABBED.getStatus()) {
-            throw new BadRequest("Task is already grabbed.");
+        if (task.getTaskStatus().getTaskStatusID() != Status.AVAILABLE.getStatus()) {
+            throw new BadRequest("Task is not available to be grabbed.");
         }
 
         boolean allowed = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(),
@@ -163,7 +167,7 @@ public class TaskService {
                 Roles.PROJECT_MEMBER.getRole());
 
         if (!allowed) {
-            throw new BadRequest("User is not a member of this project.");
+            throw new BadRequest("You cannot grab this task. User is not a collaborator.");
         }
 
         boolean alreadyCollaborator = taskCollaboratorRepository.existsByTaskIDAndUserID(taskID, user.getUserID());
