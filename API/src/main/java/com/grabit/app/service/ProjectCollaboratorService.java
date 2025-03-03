@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.grabit.app.model.ProjectCollaborator;
+import com.grabit.app.model.User;
 import com.grabit.app.repository.ProjectCollaboratorRepository;
 
 import jakarta.transaction.Transactional;
@@ -16,21 +17,22 @@ public class ProjectCollaboratorService {
     @Autowired
     private ProjectCollaboratorRepository projectCollaboratorRepository;
 
-    public List<ProjectCollaborator> getAllProjectCollaboratorsByProjectID(int projectID) {
+    public List<ProjectCollaborator> getAllProjectCollaboratorsByProjectID(Integer projectID) {
         return projectCollaboratorRepository.findByProjectID(projectID);
     }
 
     @Transactional
-    public void addProjectCollaborator(ProjectCollaborator projectCollaborator) {
+    public void addProjectCollaborator(ProjectCollaborator projectCollaborator, User user) {
         projectCollaboratorRepository.findByProjectID(projectCollaborator.getProjectID());
-        projectCollaboratorRepository.insertCollaborator(projectCollaborator.getJoinedAt(), projectCollaborator.getUserID(), projectCollaborator.getRoleID(), projectCollaborator.getProjectID());
+        projectCollaboratorRepository.insertCollaborator(projectCollaborator.getJoinedAt(),
+                user.getUserID(), projectCollaborator.getRoleID(), projectCollaborator.getProjectID());
     }
 
-    public ProjectCollaborator getProjectCollaboratorByID(Long id) {
+    public ProjectCollaborator getProjectCollaboratorByID(Integer id) {
         return projectCollaboratorRepository.findById(id.intValue()).orElse(null);
     }
 
-    public void deactivateProjectCollaborator(Long id) {
+    public void deactivateProjectCollaborator(Integer id) {
         projectCollaboratorRepository.deleteById(id.intValue());
     }
 
@@ -38,8 +40,9 @@ public class ProjectCollaboratorService {
         return projectCollaboratorRepository.findByIsActive(true);
     }
 
-    public boolean exists(Long userID, Long projectID, Long roleID) {
-        return projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(userID.intValue(), projectID.intValue(), roleID.intValue());
+    public boolean exists(Integer userID, Integer projectID, Byte roleID) {
+        return projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(userID,
+                projectID, roleID);
     }
-    
+
 }

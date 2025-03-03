@@ -8,10 +8,8 @@ import com.grabit.app.enums.Status;
 import com.grabit.app.exceptions.BadRequest;
 import com.grabit.app.exceptions.NotFound;
 import com.grabit.app.model.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.grabit.app.repository.*;
 
@@ -25,10 +23,10 @@ public class TaskService {
     private final ProjectCollaboratorRepository projectCollaboratorRepository;
 
     public TaskService(TaskRepository taskRepository,
-                       TaskStatusRepository taskStatusRepository,
-                       TaskPointRepository taskPointRepository,
-                       TaskCollaboratorRepository taskCollabRepository,
-                       ProjectCollaboratorRepository projectCollaboratorRepository) {
+            TaskStatusRepository taskStatusRepository,
+            TaskPointRepository taskPointRepository,
+            TaskCollaboratorRepository taskCollabRepository,
+            ProjectCollaboratorRepository projectCollaboratorRepository) {
         this.taskRepository = taskRepository;
         this.taskStatusRepository = taskStatusRepository;
         this.taskPointRepository = taskPointRepository;
@@ -40,16 +38,17 @@ public class TaskService {
 
         boolean allowed = taskRepository.existsTaskByUserIDAndTaskID(taskID, user.getUserID());
         if (!allowed) {
-           throw new BadRequest("Cannot access task.");
+            throw new BadRequest("Cannot access task.");
         }
 
         return taskRepository.findById(taskID)
                 .orElseThrow(() -> new NotFound("Task not found"));
     }
 
-    public Task createTask(Task task,User user) {
+    public Task createTask(Task task, User user) {
 
-        boolean allowed = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(), task.getProject().getProjectID(), 1);
+        boolean allowed = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(),
+                task.getProject().getProjectID(), Roles.PROJECT_LEAD.getRole());
 
         if (!allowed) {
             throw new BadRequest("User is not a lead of this project.");
@@ -66,7 +65,6 @@ public class TaskService {
     }
 
     public Task updateTaskStatus(int taskID, byte taskStatusID, User user) {
-
 
         boolean allowed = taskCollaboratorRepository.existsByTaskIDAndUserID(taskID, user.getUserID());
         if (!allowed) {
@@ -102,7 +100,8 @@ public class TaskService {
 
     public Task updateTask(Integer taskID, Task task, User user) {
 
-        boolean allowed = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(), task.getProject().getProjectID(), 1);
+        boolean allowed = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(),
+                task.getProject().getProjectID(), Roles.PROJECT_LEAD.getRole());
         if (!allowed) {
             throw new BadRequest("Cannot update task. Not a project lead.");
         }
@@ -130,7 +129,7 @@ public class TaskService {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new NotFound("Task not found."));
 
-        //Verifies if a user is lead
+        // Verifies if a user is lead
         boolean allowed = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(),
                 task.getProject().getProjectID(),
                 Roles.PROJECT_LEAD.getRole());
@@ -144,7 +143,7 @@ public class TaskService {
 
     public List<TaskCollaborator> getTaskCollaborators(Integer taskID, User user) {
 
-        //If you are working on the task, you can see how else is working on it
+        // If you are working on the task, you can see how else is working on it
         boolean allowed = taskRepository.existsTaskByUserIDAndTaskID(taskID, user.getUserID());
         if (!allowed) {
             throw new BadRequest("Cannot task collaborators.");
@@ -173,10 +172,12 @@ public class TaskService {
             throw new BadRequest("User is already a collaborator.");
         }
 
-        //Save collaborator
-        taskCollaboratorRepository.createCollaborator(LocalDate.now(), user.getUserID(), Roles.TASK_GRABBER.getRole(), task.getTaskID());
-        //Move status to grabber
-        TaskStatus newStatus = taskStatusRepository.findById((int) Status.GRABBED.getStatus()).orElseThrow(() -> new NotFound("Task status not found."));
+        // Save collaborator
+        taskCollaboratorRepository.createCollaborator(LocalDate.now(), user.getUserID(), Roles.TASK_GRABBER.getRole(),
+                task.getTaskID());
+        // Move status to grabber
+        TaskStatus newStatus = taskStatusRepository.findById((int) Status.GRABBED.getStatus())
+                .orElseThrow(() -> new NotFound("Task status not found."));
         task.setTaskStatus(newStatus);
         return taskRepository.save(task);
     }

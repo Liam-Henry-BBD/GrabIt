@@ -11,7 +11,6 @@ import net.minidev.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -21,13 +20,13 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-
 @NoArgsConstructor
 @Component
 @WebFilter("/*")
 public class AuthFilter implements Filter {
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+            throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
 
@@ -45,19 +44,17 @@ public class AuthFilter implements Filter {
         try {
 
             token = token.replace("Bearer ", "").trim();
-            String responseBody  = getUserDetails(token);
+            String responseBody = getUserDetails(token);
             if (responseBody != null) {
                 attachPrincipalToSecurityContext(responseBody);
                 filterChain.doFilter(servletRequest, servletResponse);
-            }
-            else {
+            } else {
                 sendHttpResponse(httpResponse, "UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
             }
         } catch (URISyntaxException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
-
 
     public String getUserDetails(String token) throws URISyntaxException, IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
@@ -77,12 +74,12 @@ public class AuthFilter implements Filter {
         OAuth2AuthenticationToken authenticationToken = new OAuth2AuthenticationToken(
                 new Auth2User(userObject),
                 null,
-                "github"
-        );
+                "github");
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
 
-    public void sendHttpResponse(HttpServletResponse httpResponse, String message, HttpStatus status) throws IOException {
+    public void sendHttpResponse(HttpServletResponse httpResponse, String message, HttpStatus status)
+            throws IOException {
         httpResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
         httpResponse.setContentType("application/json");
         JSONObject obj = new JSONObject();

@@ -4,22 +4,17 @@ import com.grabit.app.enums.Roles;
 import com.grabit.app.exceptions.BadRequest;
 import com.grabit.app.exceptions.NotFound;
 import com.grabit.app.repository.*;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.grabit.app.model.Role;
 import com.grabit.app.model.Task;
 import com.grabit.app.model.TaskCollaborator;
 import com.grabit.app.model.User;
 
-import org.springframework.http.HttpStatus;
-
 import java.time.LocalDate;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TaskCollaboratorService {
@@ -48,8 +43,8 @@ public class TaskCollaboratorService {
         Task task = taskRepository.findById(taskCollaborator.getTask().getTaskID())
                 .orElseThrow(() -> new NotFound("Task not found."));
 
-        //Before you get added as a task collaborator, you must be a project collaborator first.
-        boolean allowed = projectCollaboratorRepository.existsByUserIDAndProjectID(user.getUserID(),task.getProject().getProjectID());
+        boolean allowed = projectCollaboratorRepository.existsByUserIDAndProjectID(user.getUserID(),
+                task.getProject().getProjectID());
         if (!allowed) {
             throw new BadRequest("Cannot add collaborator: User is not a member of this project.");
         }
@@ -62,11 +57,11 @@ public class TaskCollaboratorService {
             throw new BadRequest("Cannot add collaborator: Task deadline has passed.");
         }
 
-        taskCollaboratorRepository.createCollaborator(LocalDate.now(), user.getUserID(), role.getRoleID(), task.getTaskID());
+        taskCollaboratorRepository.createCollaborator(LocalDate.now(), user.getUserID(), role.getRoleID(),
+                task.getTaskID());
     }
 
     public List<TaskCollaborator> getAllTaskCollaborators() {
-        //Can all
         return taskCollaboratorRepository.findAll();
     }
 
@@ -77,13 +72,15 @@ public class TaskCollaboratorService {
 
     public TaskCollaborator deactivateTaskCollaboratorByID(Integer taskCollabID, User user) {
 
-        boolean allowed = taskCollaboratorRepository.existsByIdAndUserIDAndRoleID(taskCollabID, user.getUserID(), Roles.TASK_GRABBER.getRole());
+        boolean allowed = taskCollaboratorRepository.existsByIdAndUserIDAndRoleID(taskCollabID, user.getUserID(),
+                Roles.TASK_GRABBER.getRole());
 
         if (!allowed) {
             throw new BadRequest("Cannot deactivate this collaborator.");
         }
 
-        TaskCollaborator taskCollaborator = taskCollaboratorRepository.findById(taskCollabID).orElseThrow(() -> new NotFound("TaskCollaborator not found"));
+        TaskCollaborator taskCollaborator = taskCollaboratorRepository.findById(taskCollabID)
+                .orElseThrow(() -> new NotFound("TaskCollaborator not found"));
 
         if (!taskCollaborator.getIsActive()) {
             throw new BadRequest("Task Collaborator is already not active");
@@ -96,14 +93,15 @@ public class TaskCollaboratorService {
     @Transactional
     public TaskCollaborator activateTaskCollaboratorByID(Integer taskCollabID, User user) {
 
-        boolean allowed = taskCollaboratorRepository.existsByIdAndUserIDAndRoleID(taskCollabID, user.getUserID(), Roles.TASK_GRABBER.getRole());
+        boolean allowed = taskCollaboratorRepository.existsByIdAndUserIDAndRoleID(taskCollabID, user.getUserID(),
+                Roles.TASK_GRABBER.getRole());
 
-        //If you are not grabber, you cannot reinstate collaborators
         if (!allowed) {
             throw new BadRequest("Cannot activate this collaborator.");
         }
 
-        TaskCollaborator taskCollaborator = taskCollaboratorRepository.findById(taskCollabID).orElseThrow(() -> new NotFound("TaskCollaborator not found"));
+        TaskCollaborator taskCollaborator = taskCollaboratorRepository.findById(taskCollabID)
+                .orElseThrow(() -> new NotFound("TaskCollaborator not found"));
 
         if (!taskCollaborator.getIsActive()) {
             throw new BadRequest("Task Collaborator is already active");
