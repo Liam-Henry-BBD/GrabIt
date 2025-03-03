@@ -1,7 +1,9 @@
 package com.grabit.app.controller;
 
+import com.grabit.app.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import com.grabit.app.model.TaskCollaborator;
@@ -15,9 +17,11 @@ import java.util.Optional;
 public class TaskCollaboratorController {
 
     private final TaskCollaboratorService taskCollaboratorService;
-
-    public TaskCollaboratorController(TaskCollaboratorService taskCollaboratorService) {
+    private final UserService userService;
+    public TaskCollaboratorController(TaskCollaboratorService taskCollaboratorService,
+                                      UserService userService) {
         this.taskCollaboratorService = taskCollaboratorService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -26,7 +30,7 @@ public class TaskCollaboratorController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createTaskCollaborator(@RequestBody TaskCollaborator taskCollaborator) {
+    public ResponseEntity<Void> createTaskCollaborator(@RequestBody TaskCollaborator taskCollaborator, Authentication authentication) {
         taskCollaboratorService.addTaskCollaborator(taskCollaborator);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

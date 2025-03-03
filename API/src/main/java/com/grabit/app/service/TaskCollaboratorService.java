@@ -54,13 +54,14 @@ public class TaskCollaboratorService {
                     "Cannot add collaborator: Task is already complete");
         }
 
+
         if (task.getTaskDeadline() != null && task.getTaskDeadline().isBefore(LocalDate.now())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Cannot add collaborator: Task deadline has passed");
         }
 
         taskCollaborator.setJoinedAt(LocalDate.now());
-        taskCollaboratorRepository.insertCollaborator(taskCollaborator.getJoinedAt(),
+        taskCollaboratorRepository.createCollaborator(taskCollaborator.getJoinedAt(),
                 user.getUserID(),
                 role.getRoleID(),
                 task.getTaskID());

@@ -3,6 +3,9 @@ package com.grabit.app.service;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.grabit.app.exceptions.BadRequest;
+import com.grabit.app.exceptions.NotFound;
+import com.grabit.app.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -18,110 +21,131 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final TaskStatusRepository taskStatusRepository;
     private final TaskPointRepository taskPointRepository;
-    private final ProjectRepository projectRepository;
     private final TaskCollaboratorRepository taskCollaboratorRepository;
+    private final ProjectCollaboratorRepository projectCollaboratorRepository;
 
     public TaskService(TaskRepository taskRepository,
-            TaskStatusRepository taskStatusRepository,
-            TaskPointRepository taskPointRepository,
-            ProjectRepository projectRepository,
-            TaskCollaboratorRepository taskCollabRepository) {
+                       TaskStatusRepository taskStatusRepository,
+                       TaskPointRepository taskPointRepository,
+                       TaskCollaboratorRepository taskCollabRepository,
+                       ProjectCollaboratorRepository projectCollaboratorRepository) {
         this.taskRepository = taskRepository;
         this.taskStatusRepository = taskStatusRepository;
         this.taskPointRepository = taskPointRepository;
-        this.projectRepository = projectRepository;
         this.taskCollaboratorRepository = taskCollabRepository;
+        this.projectCollaboratorRepository = projectCollaboratorRepository;
     }
 
-    public List<Task> getTasksByProjectID(Integer projectID) {
-        return taskRepository.findByProjectID(projectID);
+    public Task getTaskById(Integer taskID, User user) {
+
+        boolean allowed = taskRepository.existsTaskByUserIDAndTaskID(taskID, user.getUserID());
+        if (!allowed) {
+           throw new BadRequest("Cannot access task.");
+        }
+
+        return taskRepository.findById(taskID)
+                .orElseThrow(() -> new NotFound("Task not found"));
     }
 
-    public Task getTaskById(Integer id) {
-        return taskRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
-    }
+    public Task createTask(Task task,User user) {
 
-    public Task createTask(Task task) {
+        boolean allowed = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(), task.getProject().getProjectID(), 1);
 
-        if (!projectRepository.existsById(task.getProject().getProjectID())) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found");
+        if (!allowed) {
+            throw new BadRequest("Cannot create task. Not a project lead.");
         }
 
         if (!taskPointRepository.existsById((int) task.getTaskPoint().getTaskPointID())) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task point not found");
+            throw new NotFound("Task point not found.");
         }
 
         if (!taskStatusRepository.existsById((int) task.getTaskStatus().getTaskStatusID())) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task status not found");
+            throw new NotFound("Task status not found.");
         }
         return taskRepository.save(task);
     }
 
-    public Task updateTaskStatus(int taskID, byte taskStatusID) {
+    public Task updateTaskStatus(int taskID, byte taskStatusID, User user) {
+
+
+        boolean allowed = taskCollaboratorRepository.existsByTaskIDAndUserID(taskID, user.getUserID());
+        if (!allowed) {
+            throw new BadRequest("Cannot change task status.");
+        }
+
         Task task = taskRepository.findById(taskID)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
+                .orElseThrow(() -> new NotFound("Task not found"));
 
         if (task.getTaskStatus().getStatusName().contains("Complete")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task already completed");
+            throw new BadRequest("Task already completed");
         }
 
         if (taskStatusID == 4 && !task.getTaskStatus().getStatusName().contains("Review")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Task must be reviewed before it can be completed");
+            throw new BadRequest("Task must be reviewed before it can be completed");
         }
 
         if (task.getTaskStatus().getStatusName().contains("Review") && taskStatusID == 1) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot move task from review to available.");
+            throw new BadRequest("Cannot move task from review to available.");
         }
 
         if (task.getTaskStatus().getStatusName().contains("Available") && taskStatusID != 2) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task must move from available to grabbed.");
+            throw new BadRequest("Task must move from available to grabbed.");
         }
 
         TaskStatus taskStatus = taskStatusRepository.findById((int) taskStatusID)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task status not found"));
+                .orElseThrow(() -> new NotFound("Task status not found"));
 
         task.setTaskStatus(taskStatus);
 
         return taskRepository.save(task);
     }
 
-    public Task updateTask(Integer taskID, Task task) {
+    public Task updateTask(Integer taskID, Task task, User user) {
+
+        boolean allowed = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(), task.getProject().getProjectID(), 1);
+        if (!allowed) {
+            throw new BadRequest("Cannot update task. Not a project lead.");
+        }
+
         Task updatedTask = taskRepository.findById(taskID)
-                .orElseThrow(() -> new RuntimeException("Task not found."));
+                .orElseThrow(() -> new BadRequest("Task not found."));
 
         if (updatedTask.getTaskStatus().getStatusName().contains("Complete")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task is already completed.");
+            throw new BadRequest("Task is already completed.");
         }
 
         if (task.getTaskDeadline() != null && task.getTaskDeadline().isBefore(LocalDate.now())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task deadline cannot be in the past.");
+            throw new BadRequest("Task deadline cannot be in the past.");
         }
 
         updatedTask.setTaskName(task.getTaskName());
         updatedTask.setTaskDescription(task.getTaskDescription());
-
+        updatedTask.setTaskDeadline(task.getTaskDeadline());
+        updatedTask.setTaskStatus(task.getTaskStatus());
         return taskRepository.save(updatedTask);
     }
 
-    public void deleteTask(Integer id) {
+    public void deleteTask(Integer id, User user) {
+
         Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found."));
+                .orElseThrow(() -> new NotFound("Task not found"));
 
-        taskRepository.delete(task);
-    }
-
-    public List<TaskCollaborator> getTaskCollaborators(Integer taskID) {
-
-        boolean taskExists = taskRepository.existsById(taskID);
-        if (!taskExists) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
+        //Verifies if a user is lead
+        boolean allowed = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(), task.getProject().getProjectID(), 1);
+        if (!allowed) {
+            throw new BadRequest("Cannot delete task. Not a project lead.");
         }
-        return taskCollaboratorRepository.findByTaskID(taskID);
+
+        taskCollaboratorRepository.deactivateCollaborators(id);
     }
 
-    public List<Task> filterTaskByTaskStatus(Integer taskStatus) {
-        return taskRepository.findByTaskStatusID(taskStatus);
+    public List<TaskCollaborator> getTaskCollaborators(Integer taskID, User user) {
+
+        boolean allowed = taskRepository.existsTaskByUserIDAndTaskID(taskID, user.getUserID());
+        if (!allowed) {
+            throw new BadRequest("Cannot task collaborators.");
+        }
+
+        return taskCollaboratorRepository.findByTaskID(taskID);
     }
 }

@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import com.grabit.app.model.Auth2User;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +33,11 @@ public class UserService extends DefaultOAuth2UserService {
         }
 
         userRepository.save(user);
+    }
+
+    public User getAuthenticatedUser(Authentication authentication) {
+        String currentUserGitHubID = ((Auth2User) authentication.getPrincipal()).getName();
+        return userRepository.findByGitHubID(currentUserGitHubID);
     }
 
     @Override

@@ -28,9 +28,9 @@ import java.net.http.HttpResponse;
 public class AuthFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        System.out.println("Filter");
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
+
         if (!httpRequest.getRequestURI().startsWith("/api")) {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
@@ -47,7 +47,7 @@ public class AuthFilter implements Filter {
             token = token.replace("Bearer ", "").trim();
             String responseBody  = getUserDetails(token);
             if (responseBody != null) {
-                attachPrincipalToSecurityContext(responseBody, httpRequest);
+                attachPrincipalToSecurityContext(responseBody);
                 filterChain.doFilter(servletRequest, servletResponse);
             }
             else {
@@ -73,13 +73,12 @@ public class AuthFilter implements Filter {
         return send.body();
     }
 
-    public void attachPrincipalToSecurityContext(String userObject, HttpServletRequest request) throws JsonProcessingException {
+    public void attachPrincipalToSecurityContext(String userObject) throws JsonProcessingException {
         OAuth2AuthenticationToken authenticationToken = new OAuth2AuthenticationToken(
                 new Auth2User(userObject),
                 null,
                 "github"
         );
-        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
 
@@ -87,7 +86,7 @@ public class AuthFilter implements Filter {
         httpResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
         httpResponse.setContentType("application/json");
         JSONObject obj = new JSONObject();
-        obj.put("status", status);
+        obj.put("status", status.value());
         obj.put("message", message);
         httpResponse.getWriter().write(String.valueOf(obj));
     }
