@@ -24,14 +24,9 @@ public class TaskCollaboratorController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public List<TaskCollaborator> getAllTaskCollaborators() {
-        return taskCollaboratorService.getAllTaskCollaborators();
-    }
-
     @PostMapping
     public ResponseEntity<Void> createTaskCollaborator(@RequestBody TaskCollaborator taskCollaborator, Authentication authentication) {
-        taskCollaboratorService.addTaskCollaborator(taskCollaborator);
+        taskCollaboratorService.addTaskCollaborator(taskCollaborator, userService.getAuthenticatedUser(authentication));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -43,15 +38,15 @@ public class TaskCollaboratorController {
     }
 
     @DeleteMapping("/{taskCollabID}")
-    public ResponseEntity<Void> deactivateTaskCollaboratorByID(@PathVariable Integer taskCollabID) {
-        taskCollaboratorService.deactivateTaskCollaboratorByID(taskCollabID);
-        return ResponseEntity.accepted().build();
+    public ResponseEntity<TaskCollaborator> deactivateTaskCollaboratorByID(@PathVariable Integer taskCollabID, Authentication authentication) {
+        TaskCollaborator collaborator = taskCollaboratorService.deactivateTaskCollaboratorByID(taskCollabID, userService.getAuthenticatedUser(authentication));
+        return ResponseEntity.accepted().body(collaborator);
     }
 
     @PutMapping("/{taskCollabID}/activate")
-    public ResponseEntity<Void> activateTaskCollaboratorByID(@PathVariable Integer taskCollabID) {
-        taskCollaboratorService.activateTaskCollaboratorByID(taskCollabID);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<TaskCollaborator> activateTaskCollaboratorByID(@PathVariable Integer taskCollabID, Authentication authentication) {
+        TaskCollaborator updatedCollaborator = taskCollaboratorService.activateTaskCollaboratorByID(taskCollabID, userService.getAuthenticatedUser(authentication));
+        return ResponseEntity.accepted().body(updatedCollaborator);
     }
 
     @GetMapping("/task/{taskID}")

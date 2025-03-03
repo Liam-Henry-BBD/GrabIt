@@ -1,6 +1,5 @@
 package com.grabit.app.controller;
 
-import com.grabit.app.model.Auth2User;
 import com.grabit.app.service.UserService;
 import jakarta.validation.Valid;
 
@@ -63,10 +62,10 @@ public class TaskController {
         return ResponseEntity.accepted().body(taskService.updateTaskStatus(taskID, taskStatusID, userService.getAuthenticatedUser(authentication)));
     }
 
-
-    public void testing(Authentication authentication) {
-        String currentUserGitHubID = ((Auth2User) authentication.getPrincipal()).getName();
-        System.out.println(currentUserGitHubID);
+    @PostMapping("/{taskID}/project/{projectID}")
+    public ResponseEntity<Task> grabTask(@PathVariable Integer taskID, @PathVariable Integer projectID, Authentication authentication) {
+        Task grabbedTask = taskService.grabTask(taskID, projectID, userService.getAuthenticatedUser(authentication));
+        return ResponseEntity.accepted().body(grabbedTask);
     }
 
 }
