@@ -287,10 +287,16 @@ mvn spring-boot:run
 
 **POST Sample Request**
 
-```
+```sh
+{"project":
 {
-    "projectName": "Updated Website Development",
-    "projectDescription": "Updated project description with new features.",
+    "projectName": "New Cartracker APP",
+    "projectDescription": "Newly designed Cartracker app."
+},
+"projectCollaborator":
+{
+    "userID":113
+}
 }
 ```
 
