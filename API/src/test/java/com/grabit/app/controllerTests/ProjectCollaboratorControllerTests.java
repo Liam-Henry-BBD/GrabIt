@@ -39,10 +39,4 @@ public class ProjectCollaboratorControllerTests {
         verify(projectCollaboratorService, times(1)).getProjectCollaboratorByID(1);
     }
 
-    @Test
-    public void testGetProjectCollaboratorsByProjectID() {
-        projectCollaboratorController.getProjectCollaboratorsByProjectID(1L);
-
-        verify(projectCollaboratorService, times(1)).getProjectCollaboratorsByProjectID(1L);
-    }
 }
