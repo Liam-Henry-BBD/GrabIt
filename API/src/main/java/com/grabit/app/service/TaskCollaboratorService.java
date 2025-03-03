@@ -15,6 +15,7 @@ import com.grabit.app.model.User;
 import java.time.LocalDate;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskCollaboratorService {
@@ -62,13 +63,19 @@ public class TaskCollaboratorService {
                 task.getTaskID());
     }
 
-    public List<TaskCollaborator> getAllTaskCollaborators() {
-        return taskCollaboratorRepository.findAll();
-    }
+    public TaskCollaborator getTaskCollaboratorByID(Integer taskCollabID, User user) {
 
-    public TaskCollaborator getTaskCollaboratorByID(Integer taskCollabID) {
-        return taskCollaboratorRepository.findById(taskCollabID)
-                .orElseThrow(() -> new NotFound("TaskCollaborator not found with ID: " + taskCollabID));
+        Optional<TaskCollaborator> taskCollaborator = taskCollaboratorRepository.findById(taskCollabID);
+
+        if (taskCollaborator.isEmpty()) {
+            throw new NotFound("TaskCollaborator not found.");
+        }
+
+        if (!taskCollaborator.get().getUser().getUserID().equals(user.getUserID())) {
+            throw new BadRequest("User does not belong to this task.");
+        }
+
+        return taskCollaborator.get();
     }
 
     public TaskCollaborator deactivateTaskCollaboratorByID(Integer taskCollabID, User user) {
@@ -112,7 +119,4 @@ public class TaskCollaboratorService {
         return taskCollaborator;
     }
 
-    public List<TaskCollaborator> getCollaboratorByTaskID(Integer taskID) {
-        return taskCollaboratorRepository.findByTaskID(taskID);
-    }
 }

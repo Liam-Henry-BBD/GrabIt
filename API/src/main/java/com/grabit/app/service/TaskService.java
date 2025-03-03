@@ -78,19 +78,18 @@ public class TaskService {
             throw new BadRequest("Task is already completed.");
         }
 
-        if (taskStatusID == Status.COMPLETE.getStatus() && !task.getTaskStatus().getStatusName().contains("Review")) {
+        if (taskStatusID == Status.AVAILABLE.getStatus()
+                && task.getTaskStatus().getTaskStatusID() !=  Status.AVAILABLE.getStatus()) {
+            throw new BadRequest("Task status cannot move to available.");
+        }
+
+        if (taskStatusID == Status.COMPLETE.getStatus()
+                && !task.getTaskStatus().getStatusName().contains("Review")) {
             throw new BadRequest("Task must be reviewed before it can be completed.");
         }
 
-        if (task.getTaskStatus().getStatusName().contains("Review") && taskStatusID == 1) {
-            throw new BadRequest("Cannot move task from review to available.");
-        }
-
-        if (task.getTaskStatus().getTaskStatusID() == Status.GRABBED.getStatus() && taskStatusID == Status.AVAILABLE.getStatus()) {
-            throw new BadRequest("Cannot move task from grabbed to available.");
-        }
-
-        if (task.getTaskStatus().getStatusName().contains("Available") && taskStatusID != 2) {
+        if (task.getTaskStatus().getTaskStatusID() == Status.AVAILABLE.getStatus()
+                && taskStatusID != Status.GRABBED.getStatus()) {
             throw new BadRequest("Task must move from available to grabbed.");
         }
 
@@ -147,6 +146,7 @@ public class TaskService {
 
     public List<TaskCollaborator> getTaskCollaborators(Integer taskID, User user) {
 
+        //TODO: Everyone on the project should be able to see the task collaborators?
         boolean allowed = taskRepository.existsTaskByUserIDAndTaskID(taskID, user.getUserID());
         if (!allowed) {
             throw new BadRequest("Cannot access list because you are not a collaborator in this task.");
@@ -161,6 +161,10 @@ public class TaskService {
         Task task = taskRepository.findById(taskID).orElseThrow(() -> new NotFound("Task not found."));
         if (task.getTaskStatus().getTaskStatusID() != Status.AVAILABLE.getStatus()) {
             throw new BadRequest("Task is not available to be grabbed.");
+        }
+
+        if (task.getProject().getProjectID() != projectID) {
+            throw new BadRequest("Task is not available in this project.");
         }
 
         boolean allowed = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(),

@@ -1,5 +1,6 @@
 package com.grabit.app.service;
 
+import com.grabit.app.exceptions.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,11 +66,12 @@ public class ProjectService extends Task {
     }
 
     public Project getProjectByID(Integer projectID) {
-        return projectRepository.findById(projectID).orElseThrow(() -> new RuntimeException("Project not found"));
+        return projectRepository.findById(projectID).orElseThrow(() -> new NotFound("Project not found"));
     }
 
     public void closeProject(Integer projectID) {
-        projectRepository.findById(projectID).orElseThrow(() -> new RuntimeException("Project not found"));
+        projectRepository.findById(projectID).orElseThrow(() -> new NotFound("Project not found"));
+        //TODO: Soft deletion, deacticate the project instead?
         projectRepository.deleteById(projectID);
     }
 
@@ -102,7 +104,7 @@ public class ProjectService extends Task {
 
     public Project updateProject(Integer projectID, Project project) {
         Project existingProject = projectRepository.findById(projectID)
-                .orElseThrow(() -> new RuntimeException("Project not found"));
+                .orElseThrow(() -> new NotFound("Project not found"));
         existingProject.setProjectName(project.getProjectName());
         existingProject.setProjectDescription(project.getProjectDescription());
         existingProject.setUpdatedAt(new Date());

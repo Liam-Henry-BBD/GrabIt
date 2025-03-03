@@ -1,6 +1,10 @@
 package com.grabit.app.service;
 
+import com.grabit.app.exceptions.BadRequest;
+import com.grabit.app.exceptions.Conflict;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.grabit.app.model.ProjectCollaborator;
@@ -14,8 +18,12 @@ import java.util.List;
 @Service
 public class ProjectCollaboratorService {
 
-    @Autowired
-    private ProjectCollaboratorRepository projectCollaboratorRepository;
+
+    private final ProjectCollaboratorRepository projectCollaboratorRepository;
+
+    public ProjectCollaboratorService(ProjectCollaboratorRepository projectCollaboratorRepository) {
+        this.projectCollaboratorRepository = projectCollaboratorRepository;
+    }
 
     public List<ProjectCollaborator> getAllProjectCollaboratorsByProjectID(Integer projectID) {
         return projectCollaboratorRepository.findByProjectID(projectID);
@@ -23,10 +31,18 @@ public class ProjectCollaboratorService {
 
     @Transactional
     public void addProjectCollaborator(ProjectCollaborator projectCollaborator, User user) {
+        boolean isDuplicate = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(
+                projectCollaborator.getUserID(),
+                projectCollaborator.getProjectID(),
+                projectCollaborator.getRoleID());
+        if (isDuplicate) {
+            throw new Conflict("User already a collaborator.");
+        }
+
         boolean userExists = projectCollaboratorRepository.existsByUserIDAndProjectID(user.getUserID(), projectCollaborator.getProjectID());
     
         if (userExists) {
-            throw new IllegalArgumentException("User is already a collaborator for this project.");
+            throw new BadRequest("User is already a collaborator for this project.");
         }
     
         projectCollaboratorRepository.insertCollaborator(projectCollaborator.getJoinedAt(),
