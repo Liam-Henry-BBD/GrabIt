@@ -40,7 +40,6 @@ public class HomeController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    //TODO: We need Swagger for documentation
     @GetMapping("/docs")
     public String welcome() {
         return """

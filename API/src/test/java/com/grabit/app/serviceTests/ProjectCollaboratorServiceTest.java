@@ -1,28 +1,26 @@
 package com.grabit.app.serviceTests;
 
 import com.grabit.app.model.ProjectCollaborator;
-import com.grabit.app.repository.ProjectCollaboratorRepository;
 import com.grabit.app.service.ProjectCollaboratorService;
+import org.junit.jupiter.api.extension.ExtendWith;
+import com.grabit.app.model.User;
+import com.grabit.app.repository.ProjectCollaboratorRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-
-import java.util.Arrays;
-import java.util.Optional;
 import java.time.LocalDateTime;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ProjectCollaboratorServiceTest {
+class ProjectCollaboratorServiceTest {
 
     @Mock
     private ProjectCollaboratorRepository projectCollaboratorRepository;
@@ -30,90 +28,71 @@ public class ProjectCollaboratorServiceTest {
     @InjectMocks
     private ProjectCollaboratorService projectCollaboratorService;
 
-    private ProjectCollaborator projectCollaborator;
+    private ProjectCollaborator collaborator;
+    private User user;
 
     @BeforeEach
-    public void setUp() {
-        projectCollaborator = new ProjectCollaborator();
-        projectCollaborator.setProjectID(1);
-        projectCollaborator.setUserID(1);
-        projectCollaborator.setRoleID(1);
-        projectCollaborator.setJoinedAt(LocalDateTime.parse("2025-02-27T00:00:00"));
+    void setUp() {
+        collaborator = new ProjectCollaborator(1, 100, 200, (byte) 1, LocalDateTime.now(), true);
+        user = new User();
+        user.setUserID(100);
     }
 
     @Test
-    public void testGetAllProjectCollaboratorsByProjectID() {
-        when(projectCollaboratorRepository.findByProjectID(1)).thenReturn(Arrays.asList(projectCollaborator));
-        var collaborators = projectCollaboratorService.getAllProjectCollaboratorsByProjectID(1);
+    void testGetAllProjectCollaboratorsByProjectID() {
+        List<ProjectCollaborator> collaborators = Arrays.asList(collaborator);
+        when(projectCollaboratorRepository.findByProjectID(200)).thenReturn(collaborators);
 
-        assertNotNull(collaborators);
-        assertEquals(1, collaborators.size());
-        verify(projectCollaboratorRepository, times(1)).findByProjectID(1);
-    }
-
-    @Test
-    public void testAddProjectCollaborator() {
-        when(projectCollaboratorRepository.findByProjectID(anyInt())).thenReturn(Arrays.asList(projectCollaborator));
-        doNothing().when(projectCollaboratorRepository).insertCollaborator(any(), any(), any(), anyInt());
-
-        projectCollaboratorService.addProjectCollaborator(projectCollaborator);
-        verify(projectCollaboratorRepository, times(1)).insertCollaborator(any(), any(), any(), anyInt());
-    }
-
-    @Test
-    public void testGetProjectCollaboratorByID() {
-        when(projectCollaboratorRepository.findById(anyInt())).thenReturn(Optional.of(projectCollaborator));
-        ProjectCollaborator result = projectCollaboratorService.getProjectCollaboratorByID(1L);
+        List<ProjectCollaborator> result = projectCollaboratorService.getAllProjectCollaboratorsByProjectID(200);
 
         assertNotNull(result);
-        assertEquals(1, result.getProjectID());
-        verify(projectCollaboratorRepository, times(1)).findById(anyInt());
+        assertEquals(1, result.size());
+        assertEquals(collaborator, result.get(0));
     }
 
     @Test
-    public void testGetProjectCollaboratorByID_NotFound() {
-        when(projectCollaboratorRepository.findById(anyInt())).thenReturn(Optional.empty());
+    void testAddProjectCollaborator() {
+        doNothing().when(projectCollaboratorRepository).insertCollaborator(any(), anyInt(), any(), anyInt());
+        projectCollaboratorService.addProjectCollaborator(collaborator, user);
 
-        ProjectCollaborator result = projectCollaboratorService.getProjectCollaboratorByID(1L);
-
-        assertNull(result);
-        verify(projectCollaboratorRepository, times(1)).findById(anyInt());
+        verify(projectCollaboratorRepository, times(1)).insertCollaborator(any(), eq(100), eq((byte) 1), eq(200));
     }
 
     @Test
-    public void testDeactivateProjectCollaborator() {
-        doNothing().when(projectCollaboratorRepository).deleteById(anyInt());
+    void testGetProjectCollaboratorByID() {
+        when(projectCollaboratorRepository.findById(1)).thenReturn(Optional.of(collaborator));
+        ProjectCollaborator result = projectCollaboratorService.getProjectCollaboratorByID(1);
 
-        projectCollaboratorService.deactivateProjectCollaborator(1L);
-
-        verify(projectCollaboratorRepository, times(1)).deleteById(anyInt());
+        assertNotNull(result);
+        assertEquals(collaborator, result);
     }
 
     @Test
-    public void testGetAllActiveProjectCollaborators() {
-        when(projectCollaboratorRepository.findByIsActive(true)).thenReturn(Arrays.asList(projectCollaborator));
-        var collaborators = projectCollaboratorService.getAllActiveProjectCollaborators();
+    void testDeactivateProjectCollaborator() {
+        doNothing().when(projectCollaboratorRepository).deleteById(1);
+        projectCollaboratorService.deactivateProjectCollaborator(1);
 
-        assertNotNull(collaborators);
-        assertEquals(1, collaborators.size());
-        verify(projectCollaboratorRepository, times(1)).findByIsActive(true);
+        verify(projectCollaboratorRepository, times(1)).deleteById(1);
     }
 
     @Test
-    public void testExists() {
-        when(projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(anyInt(), anyInt(), anyInt())).thenReturn(true);
-        boolean exists = projectCollaboratorService.exists(1L, 1L, 1L);
+    void testGetAllActiveProjectCollaborators() {
+        List<ProjectCollaborator> activeCollaborators = Arrays.asList(collaborator);
+        when(projectCollaboratorRepository.findByIsActive(true)).thenReturn(activeCollaborators);
+        List<ProjectCollaborator> result = projectCollaboratorService.getAllActiveProjectCollaborators();
 
-        assertTrue(exists);
-        verify(projectCollaboratorRepository, times(1)).existsByUserIDAndProjectIDAndRoleID(anyInt(), anyInt(), anyInt());
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertTrue(result.get(0).isActive());
     }
 
     @Test
-    public void testExists_False() {
-        when(projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(anyInt(), anyInt(), anyInt())).thenReturn(false);
-        boolean exists = projectCollaboratorService.exists(1L, 1L, 1L);
+    void testExists() {
+        when(projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(100, 200, (byte) 1))
+                .thenReturn(true);
 
-        assertFalse(exists);
-        verify(projectCollaboratorRepository, times(1)).existsByUserIDAndProjectIDAndRoleID(anyInt(), anyInt(), anyInt());
+        boolean result = projectCollaboratorService.exists(100, 200, (byte) 1);
+
+        assertTrue(result);
     }
 }
