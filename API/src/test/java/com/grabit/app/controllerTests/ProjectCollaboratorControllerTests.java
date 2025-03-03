@@ -40,9 +40,9 @@ public class ProjectCollaboratorControllerTests {
     }
 
     @Test
-    public void testDeactivateProjectCollaborator() {
-        projectCollaboratorController.deactivateProjectCollaborator(1);
+    public void testGetProjectCollaboratorsByProjectID() {
+        projectCollaboratorController.getProjectCollaboratorsByProjectID(1L);
 
-        verify(projectCollaboratorService, times(1)).deactivateProjectCollaborator(1);
+        verify(projectCollaboratorService, times(1)).getProjectCollaboratorsByProjectID(1L);
     }
 }

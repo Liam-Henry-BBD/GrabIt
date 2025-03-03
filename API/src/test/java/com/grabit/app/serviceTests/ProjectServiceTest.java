@@ -53,7 +53,7 @@ class ProjectServiceTest {
     void testCreateProject() {
         when(projectRepository.save(project)).thenReturn(project);
 
-        Project createdProject = projectService.createProject(project);
+        Project createdProject = projectService.createProject(project, null);
 
         assertNotNull(createdProject);
         assertEquals("Project 1", createdProject.getProjectName());
