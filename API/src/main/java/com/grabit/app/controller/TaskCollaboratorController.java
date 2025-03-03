@@ -10,7 +10,6 @@ import com.grabit.app.model.TaskCollaborator;
 import com.grabit.app.service.TaskCollaboratorService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/task-collaborators")
@@ -30,12 +29,10 @@ public class TaskCollaboratorController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    //TODO: Cannot see collaborators if you are not a collab
     @GetMapping("/{taskCollabID}")
-    public ResponseEntity<TaskCollaborator> getTaskCollaboratorByID(@PathVariable Integer taskCollabID) {
-        Optional<TaskCollaborator> taskCollaborator = Optional
-                .ofNullable(taskCollaboratorService.getTaskCollaboratorByID(taskCollabID));
-        return taskCollaborator.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<TaskCollaborator> getTaskCollaboratorByID(@PathVariable Integer taskCollabID, Authentication authentication) {
+        TaskCollaborator taskCollaborator = taskCollaboratorService.getTaskCollaboratorByID(taskCollabID, userService.getAuthenticatedUser(authentication));
+        return ResponseEntity.ok().body(taskCollaborator);
     }
 
     @DeleteMapping("/{taskCollabID}")
@@ -50,9 +47,4 @@ public class TaskCollaboratorController {
         return ResponseEntity.accepted().body(updatedCollaborator);
     }
 
-    @GetMapping("/task/{taskID}")
-    public ResponseEntity<List<TaskCollaborator>> getCollaboratorByTaskID(@PathVariable Integer taskID) {
-        List<TaskCollaborator> collaborators = taskCollaboratorService.getCollaboratorByTaskID(taskID);
-        return new ResponseEntity<>(collaborators, HttpStatus.OK);
-    }
 }

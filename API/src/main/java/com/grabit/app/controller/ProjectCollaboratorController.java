@@ -14,34 +14,33 @@ import com.grabit.app.service.UserService;
 @RequestMapping("/api/project-collaborators")
 public class ProjectCollaboratorController {
 
-    @Autowired
-    private ProjectCollaboratorService projectCollaboratorService;
+    private final ProjectCollaboratorService projectCollaboratorService;
+    private final UserService userService;
 
-    @Autowired
-    private UserService userService;
+    public ProjectCollaboratorController(ProjectCollaboratorService projectCollaboratorService, UserService userService) {
+        this.projectCollaboratorService = projectCollaboratorService;
+        this.userService = userService;
+    }
 
     @GetMapping("/{projectCollabID}")
-    public ProjectCollaborator getProjectCollaboratorByID(@PathVariable Integer projectCollabID) {
-        return projectCollaboratorService.getProjectCollaboratorByID(projectCollabID);
+    public ResponseEntity<ProjectCollaborator> getProjectCollaboratorByID(@PathVariable Integer projectCollabID) {
+        ProjectCollaborator collaborator = projectCollaboratorService.getProjectCollaboratorByID(projectCollabID);
+        return ResponseEntity.ok(collaborator);
     }
 
     @DeleteMapping("/{projectCollabID}")
-    public void deactivateProjectCollaborator(@PathVariable Integer projectCollabID) {
+    public ResponseEntity<Void> deactivateProjectCollaborator(@PathVariable Integer projectCollabID, Authentication authentication) {
         projectCollaboratorService.deactivateProjectCollaborator(projectCollabID);
+
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping
     public ResponseEntity<Void> createProjectCollaborator(@RequestBody ProjectCollaborator projectCollaborator,
             Authentication authentication) {
-        boolean isDuplicate = projectCollaboratorService.exists(
-                projectCollaborator.getUserID(),
-                projectCollaborator.getProjectID(),
-                projectCollaborator.getRoleID());
-        if (isDuplicate) {
-            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-        }
+
         projectCollaboratorService.addProjectCollaborator(projectCollaborator,
                 userService.getAuthenticatedUser(authentication));
-        return new ResponseEntity<Void>(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

@@ -28,9 +28,9 @@ public class ProjectController {
     private final ProjectCollaboratorService projectCollaboratorService;
     private final UserService userService;
 
-    @Autowired
-    public ProjectController(ProjectService projectService, ProjectCollaboratorService projectCollaboratorService,
-            UserService userService) {
+    public ProjectController(ProjectService projectService,
+                             ProjectCollaboratorService projectCollaboratorService,
+                             UserService userService) {
         this.projectService = projectService;
         this.projectCollaboratorService = projectCollaboratorService;
         this.userService = userService;
@@ -39,11 +39,12 @@ public class ProjectController {
     @PostMapping
     public ResponseEntity<Project> createProject(@RequestBody ProjectCreationDTO request,
             Authentication authentication) {
-
+        //TODO: Move the logic into the service
         Project project = request.getProject();
         ProjectCollaborator projectCollaborator = request.getProjectCollaborator();
 
         Project savedProject = projectService.createProject(project, userService.getAuthenticatedUser(authentication));
+        //TODO: You do not need any details from the client about project collaborator when creating a project
         projectCollaborator.setProjectID(savedProject.getProjectID());
         projectCollaborator.setRoleID(Roles.PROJECT_LEAD.getRole());
         projectCollaborator.setJoinedAt(LocalDateTime.now());
@@ -58,10 +59,6 @@ public class ProjectController {
     public ResponseEntity<List<ProjectAndRoleDTO>> getAllProjects(Authentication authentication) {
         List<ProjectAndRoleDTO> allUserProjects = projectService
                 .getAllProjects(userService.getAuthenticatedUser(authentication));
-
-        if (allUserProjects.size() == 0) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
-        }
 
         return ResponseEntity.ok(allUserProjects);
     }

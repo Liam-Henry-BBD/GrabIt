@@ -40,6 +40,7 @@ public class HomeController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
+
     @GetMapping("/docs")
     public String welcome() {
         return """
