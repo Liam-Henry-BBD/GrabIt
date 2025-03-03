@@ -23,10 +23,16 @@ public class ProjectCollaboratorService {
 
     @Transactional
     public void addProjectCollaborator(ProjectCollaborator projectCollaborator, User user) {
-        projectCollaboratorRepository.findByProjectID(projectCollaborator.getProjectID());
+        boolean userExists = projectCollaboratorRepository.existsByUserIDAndProjectID(user.getUserID(), projectCollaborator.getProjectID());
+    
+        if (userExists) {
+            throw new IllegalArgumentException("User is already a collaborator for this project.");
+        }
+    
         projectCollaboratorRepository.insertCollaborator(projectCollaborator.getJoinedAt(),
                 user.getUserID(), projectCollaborator.getRoleID(), projectCollaborator.getProjectID());
     }
+    
 
     public ProjectCollaborator getProjectCollaboratorByID(Integer id) {
         return projectCollaboratorRepository.findById(id.intValue()).orElse(null);
@@ -40,9 +46,8 @@ public class ProjectCollaboratorService {
         return projectCollaboratorRepository.findByIsActive(true);
     }
 
-    public boolean exists(Integer userID, Integer projectID, Byte roleID) {
-        return projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(userID,
-                projectID, roleID);
+    public boolean exists(Integer userID, Integer projectID) {
+        return projectCollaboratorRepository.existsByUserIDAndProjectID(userID, projectID);
     }
 
 }
