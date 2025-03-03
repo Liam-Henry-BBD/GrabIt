@@ -38,7 +38,7 @@ public class TaskService {
 
         boolean allowed = taskRepository.existsTaskByUserIDAndTaskID(taskID, user.getUserID());
         if (!allowed) {
-            throw new BadRequest("Cannot access task.");
+            throw new BadRequest("Cannot access task because you are not a collaborator.");
         }
 
         return taskRepository.findById(taskID)
@@ -129,7 +129,6 @@ public class TaskService {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new NotFound("Task not found."));
 
-        // Verifies if a user is lead
         boolean allowed = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(),
                 task.getProject().getProjectID(),
                 Roles.PROJECT_LEAD.getRole());
@@ -143,10 +142,9 @@ public class TaskService {
 
     public List<TaskCollaborator> getTaskCollaborators(Integer taskID, User user) {
 
-        // If you are working on the task, you can see how else is working on it
         boolean allowed = taskRepository.existsTaskByUserIDAndTaskID(taskID, user.getUserID());
         if (!allowed) {
-            throw new BadRequest("Cannot task collaborators.");
+            throw new BadRequest("Cannot access list because you are not a collaborator in this task.");
         }
 
         return taskCollaboratorRepository.findByTaskID(taskID);
@@ -167,15 +165,15 @@ public class TaskService {
         if (!allowed) {
             throw new BadRequest("User is not a member of this project.");
         }
+
         boolean alreadyCollaborator = taskCollaboratorRepository.existsByTaskIDAndUserID(taskID, user.getUserID());
         if (alreadyCollaborator) {
             throw new BadRequest("User is already a collaborator.");
         }
 
-        // Save collaborator
         taskCollaboratorRepository.createCollaborator(LocalDate.now(), user.getUserID(), Roles.TASK_GRABBER.getRole(),
                 task.getTaskID());
-        // Move status to grabber
+
         TaskStatus newStatus = taskStatusRepository.findById((int) Status.GRABBED.getStatus())
                 .orElseThrow(() -> new NotFound("Task status not found."));
         task.setTaskStatus(newStatus);
