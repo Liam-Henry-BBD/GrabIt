@@ -4,7 +4,6 @@ API/target/
 !API/.mvn/wrapper/maven-wrapper.jar
 !API/**/src/main/**/target/
 !API/**/src/test/**/target/
-.env
 
 ### IntelliJ IDEA ###
 .idea
