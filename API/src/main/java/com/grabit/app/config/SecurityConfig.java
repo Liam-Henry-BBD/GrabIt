@@ -30,8 +30,7 @@ public class SecurityConfig {
                 .addFilterBefore(new AuthFilter(), BasicAuthenticationFilter.class)
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
-                                .userService(userService)))
-                .csrf(AbstractHttpConfigurer::disable);
+                                .userService(userService)));
         return http.build();
     }
 }
