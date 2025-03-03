@@ -30,6 +30,7 @@ public class TaskCollaboratorController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    //TODO: Cannot see collaborators if you are not a collab
     @GetMapping("/{taskCollabID}")
     public ResponseEntity<TaskCollaborator> getTaskCollaboratorByID(@PathVariable Integer taskCollabID) {
         Optional<TaskCollaborator> taskCollaborator = Optional

@@ -20,6 +20,13 @@ public class ExceptionResolver {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(Conflict.class)
+    public ResponseEntity<Error> handleConflict(Conflict ex) {
+        Error error = new Error(ex.getReason(), HttpStatus.CONFLICT.value());
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+
     @ExceptionHandler(BadRequest.class)
     public ResponseEntity<Error> handleBadRequest(BadRequest ex) {
         Error error = new Error(ex.getReason(), HttpStatus.BAD_REQUEST.value());
