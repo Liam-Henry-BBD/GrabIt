@@ -128,6 +128,7 @@ public class TaskService {
         return taskRepository.save(updatedTask);
     }
 
+    @Transactional
     public void deleteTask(Integer id, User user) {
 
         Task task = taskRepository.findById(id)

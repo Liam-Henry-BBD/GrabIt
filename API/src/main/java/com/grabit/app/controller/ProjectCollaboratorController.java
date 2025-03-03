@@ -16,6 +16,8 @@ public class ProjectCollaboratorController {
 
     @Autowired
     private ProjectCollaboratorService projectCollaboratorService;
+
+    @Autowired
     private UserService userService;
 
     @GetMapping("/{projectCollabID}")
