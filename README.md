@@ -12,10 +12,20 @@ The GrabIt system is a project management tool designed for teams to manage task
 2. **Set Up Project and Tasks**  
    The team lead creates tasks within the project, providing task names, descriptions, and setting deadlines. Each task can be assigned a point value based on its difficulty.
 
-3. **Invite Team Members**  
+3. **Leader Assigns Task Points**  
+   The team lead assigns a point value to each task, based on its complexity. Tasks can have one of three point values:
+
+   - **Simple (Green)**: 5 points
+   - **Medium (Yellow)**: 10 points
+   - **Hard (Red)**: 15 points
+
+4. **Set Task Deadlines**  
+   The team lead adds deadlines to each task.
+
+5. **Invite Team Members**  
    The team lead invites team members to join the project.
 
-4. **Team Members Task Grab**  
+6. **Team Members Task Grab**  
    Team members browse the list of available tasks. When they select a task to work on, it is removed from the "Available Tasks" list and transferred to the "Tasks Grabbed" list.
 
    **Trajectory of a Task**
@@ -23,16 +33,6 @@ The GrabIt system is a project management tool designed for teams to manage task
    Grabbed
    Reviewed
    Complete
-
-5. **Leader Assigns Task Points**  
-   The team lead assigns a point value to each task, based on its complexity. Tasks can have one of three point values:
-
-   - **Simple (Green)**: 5 points
-   - **Medium (Yellow)**: 10 points
-   - **Hard (Red)**: 15 points
-
-6. **Set Task Deadlines**  
-   The team lead adds deadlines to each task.
 
 ## Task Tracking
 
@@ -68,17 +68,6 @@ The system provides tracking of scores for team members and the entire project:
 - **Task Tracking**: Tasks are tracked through different stages: available, taken, and complete.
 - **Leaderboard**: Tracks accumulated points by team members and the team as a whole.
 
-## Example Flow
-
-1. **Team Lead** logs into the system and sets up a new project called "Website Development".
-2. **Team Lead** adds tasks to the project, such as:
-   - Design Homepage (Medium, 10 points)
-   - Develop API (Hard, 15 points)
-   - QA Testing (Simple, 5 points)
-3. **Team Members** are invited to join the project and can "grab" a task from the available list.
-4. **Team Lead** sets a deadline for each task, e.g., the "Develop API" task has a deadline of 5 days.
-5. As team members complete tasks, their points are tracked and updated in the **Leaderboard**.
-
 ## Technologies
 
 This system could be implemented with the following technologies:
@@ -86,12 +75,6 @@ This system could be implemented with the following technologies:
 - **Backend**: Java (Spring boot)
 - **Database**: MS SQL Server
 - **Authentication**: Google OAuth2
-
-## Future Features
-
-- **Task Discussion**: Ability for team members to comment or discuss tasks.
-- **Advanced Leaderboard**: With filters for showing points per project or per user.
-- **Notifications**: Alerts for approaching deadlines or task updates.
 
 ---
 
@@ -209,13 +192,13 @@ You can set environment variables directly on your operating system or in your d
 **Linux/macOS:**
 ```sh
 sh
-export DB_URI=grabit_db_uri
-export DB_PORT=grabit_db_port
-export DB_NAME=grabit_db_name
-export DB_USER=grabit_db_user
-export DB_PASSWORD=grabit_db_password
-export CLIENT_ID=grabit_client_id
-export CLIENT_SECRET=grabit_client_secret
+export DB_URI = grabit_db_uri
+export DB_PORT = grabit_db_port
+export DB_NAME = grabit_db_name
+export DB_USER = grabit_db_user
+export DB_PASSWORD = grabit_db_password
+export GITHUB_CLIENT_ID = grabit_client_id
+export GITHUB_CLIENT_SECRET = grabit_client_secret
 ```
 
 **Windows:**
@@ -226,8 +209,8 @@ setx DB_PORT "grabit_db_port"
 setx DB_NAME "grabit_db_name"
 setx DB_USER "grabit_db_user"
 setx DB_PASSWORD "grabit_db_password"
-setx CLIENT_ID "grabit_client_id"
-setx CLIENT_SECRET "grabit_client_secret"
+setx GITHUB_CLIENT_ID "grabit_client_id"
+setx GITHUB_CLIENT_SECRET "grabit_client_secret"
 ```
 
 ## Running the Project's API Endpoints

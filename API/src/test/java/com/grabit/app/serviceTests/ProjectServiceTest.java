@@ -76,7 +76,7 @@ class ProjectServiceTest {
     @Test
     void testGetProjectByIdNotFound() {
         when(projectRepository.findById(999)).thenReturn(Optional.empty());
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> projectService.getProjectByID(999));
+        assertThrows(RuntimeException.class, () -> projectService.getProjectByID(999));
 
         verify(projectRepository, times(1)).findById(999);
     }
