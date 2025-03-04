@@ -1,43 +1,45 @@
 package com.grabit.app.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 
 import com.grabit.app.model.ProjectCollaborator;
 import com.grabit.app.service.ProjectCollaboratorService;
+import com.grabit.app.service.UserService;
 
 @RestController
 @RequestMapping("/api/project-collaborators")
 public class ProjectCollaboratorController {
 
-    @Autowired
-    private ProjectCollaboratorService projectCollaboratorService;
+    private final ProjectCollaboratorService projectCollaboratorService;
+    private final UserService userService;
+
+    public ProjectCollaboratorController(ProjectCollaboratorService projectCollaboratorService, UserService userService) {
+        this.projectCollaboratorService = projectCollaboratorService;
+        this.userService = userService;
+    }
 
     @GetMapping("/{projectCollabID}")
-    public ProjectCollaborator getProjectCollaboratorByID(@PathVariable Long projectCollabID) {
-        return projectCollaboratorService.getProjectCollaboratorByID(projectCollabID);
+    public ResponseEntity<ProjectCollaborator> getProjectCollaboratorByID(@PathVariable Integer projectCollabID) {
+        ProjectCollaborator collaborator = projectCollaboratorService.getProjectCollaboratorByID(projectCollabID);
+        return ResponseEntity.ok(collaborator);
     }
 
     @DeleteMapping("/{projectCollabID}")
-    public void deactivateProjectCollaborator(@PathVariable Long projectCollabID) {
+    public ResponseEntity<Void> deactivateProjectCollaborator(@PathVariable Integer projectCollabID, Authentication authentication) {
         projectCollaboratorService.deactivateProjectCollaborator(projectCollabID);
+
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping
-    public ResponseEntity<Void> createProjectCollaborator(@RequestBody ProjectCollaborator projectCollaborator) {
-        boolean isDuplicate = projectCollaboratorService.exists(
-            projectCollaborator.getUserID().longValue(), 
-            projectCollaborator.getProjectID().longValue(), 
-            projectCollaborator.getRoleID().longValue()
-        );
-        if(isDuplicate) {
-            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-        }
-        projectCollaboratorService.addProjectCollaborator(projectCollaborator);
-        return new ResponseEntity<Void>(HttpStatus.CREATED);
+    public ResponseEntity<Void> createProjectCollaborator(@RequestBody ProjectCollaborator projectCollaborator,
+            Authentication authentication) {
+
+        projectCollaboratorService.addProjectCollaborator(projectCollaborator,
+                userService.getAuthenticatedUser(authentication));
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
-
-

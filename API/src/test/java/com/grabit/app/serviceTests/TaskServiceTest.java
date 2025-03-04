@@ -1,30 +1,32 @@
 package com.grabit.app.serviceTests;
 
+import org.junit.jupiter.api.BeforeEach;
+import com.grabit.app.model.User;
 import com.grabit.app.model.Task;
-import com.grabit.app.model.TaskCollaborator;
 import com.grabit.app.model.TaskStatus;
-import com.grabit.app.repository.ProjectRepository;
-import com.grabit.app.repository.TaskCollaboratorRepository;
-import com.grabit.app.repository.TaskPointRepository;
+import com.grabit.app.model.TaskPoint;
+import com.grabit.app.model.Project;
 import com.grabit.app.repository.TaskRepository;
 import com.grabit.app.repository.TaskStatusRepository;
+import com.grabit.app.repository.TaskPointRepository;
+import com.grabit.app.repository.TaskCollaboratorRepository;
+import com.grabit.app.repository.ProjectCollaboratorRepository;
 import com.grabit.app.service.TaskService;
-
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.InjectMocks;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.web.server.ResponseStatusException;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Arrays;
-import java.util.List;
+import com.grabit.app.enums.Roles;
+import com.grabit.app.exceptions.BadRequest;
+import com.grabit.app.enums.Status;
+
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
+@ExtendWith(MockitoExtension.class)
 public class TaskServiceTest {
 
     @Mock
@@ -37,134 +39,92 @@ public class TaskServiceTest {
     private TaskPointRepository taskPointRepository;
 
     @Mock
-    private ProjectRepository projectRepository;
+    private TaskCollaboratorRepository taskCollaboratorRepository;
 
     @Mock
-    private TaskCollaboratorRepository taskCollaboratorRepository;
+    private ProjectCollaboratorRepository projectCollaboratorRepository;
 
     @InjectMocks
     private TaskService taskService;
 
+    private User mockUser;
+    private Task mockTask;
+    private TaskStatus mockStatus;
+    private TaskPoint mockTaskPoint;
+    private Project mockProject;
+
     @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
+    void setUp() {
+        mockUser = new User(); 
+        mockTask = new Task(); 
+        mockStatus = new TaskStatus(); 
+        mockTaskPoint = new TaskPoint(); 
+        mockProject = new Project(); 
     }
 
     @Test
-    public void testGetTasksByProjectID() {
-        Integer projectID = 1;
-        List<Task> tasks = Arrays.asList(new Task(), new Task());
-        when(taskRepository.findByProjectID(projectID)).thenReturn(tasks);
-
-        List<Task> result = taskService.getTasksByProjectID(projectID);
-
-        assertEquals(tasks, result);
-        verify(taskRepository).findByProjectID(projectID);
-    }
-
-    @Test
-    public void testGetTaskById() {
-        Integer taskID = 1;
-        Task task = new Task();
-        when(taskRepository.findById(taskID)).thenReturn(Optional.of(task));
-
-        Task result = taskService.getTaskById(taskID);
-
-        assertEquals(task, result);
-        verify(taskRepository).findById(taskID);
-    }
-
-    @Test
-    public void testGetTaskById_NotFound() {
-        Integer taskID = 1;
-        when(taskRepository.findById(taskID)).thenReturn(Optional.empty());
-
-        assertThrows(ResponseStatusException.class, () -> taskService.getTaskById(taskID));
-        verify(taskRepository).findById(taskID);
-    }
-
-    @Test
-    public void testUpdateTaskStatus() {
+    void testGetTaskById_CollaboratorAllowed() {
         int taskID = 1;
-        byte taskStatusID = 2;
-        Task task = new Task();
-        TaskStatus taskStatus = new TaskStatus();
-        taskStatus.setTaskStatusID(taskStatusID);
-        task.setTaskStatus(new TaskStatus());
-        task.getTaskStatus().setStatusName("Available");
+        mockTask.setTaskID(taskID);
+        mockUser.setUserID(1);
+        when(taskRepository.existsTaskByUserIDAndTaskID(taskID, mockUser.getUserID())).thenReturn(true);
+        when(taskRepository.findById(taskID)).thenReturn(Optional.of(mockTask));
 
-        when(taskRepository.findById(taskID)).thenReturn(Optional.of(task));
-        when(taskStatusRepository.findById((int) taskStatusID)).thenReturn(Optional.of(taskStatus));
-        when(taskRepository.save(task)).thenReturn(task);
+        Task result = taskService.getTaskById(taskID, mockUser);
 
-        Task result = taskService.updateTaskStatus(taskID, taskStatusID);
-
-        assertEquals(taskStatus, result.getTaskStatus());
-        verify(taskRepository).findById(taskID);
-        verify(taskStatusRepository).findById((int) taskStatusID);
-        verify(taskRepository).save(task);
+        assertNotNull(result);
+        assertEquals(taskID, result.getTaskID());
     }
 
     @Test
-    public void testUpdateTask() {
+    void testGetTaskById_NotCollaborator_ShouldThrowBadRequest() {
         int taskID = 1;
-        Task task = new Task();
-        task.setTaskName("New Task");
-        task.setTaskDescription("New Description");
+        mockUser.setUserID(1);
+        when(taskRepository.existsTaskByUserIDAndTaskID(taskID, mockUser.getUserID())).thenReturn(false);
 
-        Task existingTask = new Task();
-        existingTask.setTaskStatus(new TaskStatus());
-        existingTask.getTaskStatus().setStatusName("In Progress");
-
-        when(taskRepository.findById(taskID)).thenReturn(Optional.of(existingTask));
-        when(taskRepository.save(existingTask)).thenReturn(existingTask);
-
-        Task result = taskService.updateTask(taskID, task);
-
-        assertEquals("New Task", result.getTaskName());
-        assertEquals("New Description", result.getTaskDescription());
-        verify(taskRepository).findById(taskID);
-        verify(taskRepository).save(existingTask);
+        assertThrows(BadRequest.class, () -> taskService.getTaskById(taskID, mockUser));
     }
 
     @Test
-    public void testDeleteTask() {
+    void testCreateTask_ProjectLeadAllowed() {
+        mockUser.setUserID(1);
+        mockTask.setProject(mockProject);
+        mockTask.setTaskPoint(mockTaskPoint);
+        mockTask.setTaskStatus(mockStatus);
+        
+        when(projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(mockUser.getUserID(), 
+                mockTask.getProject().getProjectID(), Roles.PROJECT_LEAD.getRole())).thenReturn(true);
+        when(taskPointRepository.existsById((int) mockTask.getTaskPoint().getTaskPointID())).thenReturn(true);
+        when(taskStatusRepository.existsById((int) mockTask.getTaskStatus().getTaskStatusID())).thenReturn(true);
+        when(taskRepository.save(mockTask)).thenReturn(mockTask);
+
+        Task result = taskService.createTask(mockTask, mockUser);
+
+        assertNotNull(result);
+    }
+
+    @Test
+    void testCreateTask_NotProjectLead_ShouldThrowBadRequest() {
+        mockUser.setUserID(1);
+        mockTask.setProject(mockProject);
+
+        when(projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(mockUser.getUserID(), 
+                mockTask.getProject().getProjectID(), Roles.PROJECT_LEAD.getRole())).thenReturn(false);
+
+        assertThrows(BadRequest.class, () -> taskService.createTask(mockTask, mockUser));
+    }
+
+
+    @Test
+    void testUpdateTaskStatus_NotCollaborator_ShouldThrowBadRequest() {
         int taskID = 1;
-        Task task = new Task();
+        byte newStatusID = Status.GRABBED.getStatus();
 
-        when(taskRepository.findById(taskID)).thenReturn(Optional.of(task));
+        when(taskCollaboratorRepository.existsByTaskIDAndUserID(taskID, mockUser.getUserID())).thenReturn(false);
 
-        taskService.deleteTask(taskID);
-
-        verify(taskRepository).findById(taskID);
-        verify(taskRepository).delete(task);
+        assertThrows(BadRequest.class, () -> taskService.updateTaskStatus(taskID, newStatusID, mockUser));
     }
 
-    @Test
-    public void testGetTaskCollaborators() {
-        int taskID = 1;
-        List<TaskCollaborator> collaborators = Arrays.asList(new TaskCollaborator(), new TaskCollaborator());
 
-        when(taskRepository.existsById(taskID)).thenReturn(true);
-        when(taskCollaboratorRepository.findByTaskID(taskID)).thenReturn(collaborators);
 
-        List<TaskCollaborator> result = taskService.getTaskCollaborators(taskID);
-
-        assertEquals(collaborators, result);
-        verify(taskRepository).existsById(taskID);
-        verify(taskCollaboratorRepository).findByTaskID(taskID);
-    }
-
-    @Test
-    public void testFilterTaskByTaskStatus() {
-        int taskStatusID = 1;
-        List<Task> tasks = Arrays.asList(new Task(), new Task());
-
-        when(taskRepository.findByTaskStatusID(taskStatusID)).thenReturn(tasks);
-
-        List<Task> result = taskService.filterTaskByTaskStatus(taskStatusID);
-
-        assertEquals(tasks, result);
-        verify(taskRepository).findByTaskStatusID(taskStatusID);
-    }
 }

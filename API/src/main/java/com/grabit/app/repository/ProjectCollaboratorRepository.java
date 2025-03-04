@@ -15,15 +15,15 @@ import com.grabit.app.model.ProjectCollaborator;
 @Repository
 public interface ProjectCollaboratorRepository extends JpaRepository<ProjectCollaborator, Integer> {
 
-        List<ProjectCollaborator> findByProjectCollaboratorID(Long ProjectCollaboratorID);
+        List<ProjectCollaborator> findByProjectCollaboratorID(Integer ProjectCollaboratorID);
 
         List<ProjectCollaborator> findByIsActiveOrderByJoinedAtDesc(boolean isActive);
 
         List<ProjectCollaborator> findByIsActive(boolean isActive);
 
-        long ProjectID(int projectID);
+        Integer ProjectID(Integer projectID);
 
-        long countByProjectIDAndIsActive(int projectID, boolean isActive);
+        Integer countByProjectIDAndIsActive(Integer projectID, boolean isActive);
 
         @Query(value = "SELECT p.projectID, COUNT(pc.projectID) FROM  Projects p JOIN ProjectCollaborators pc on pc.projectID = p.projectID GROUP BY p.projectID", nativeQuery = true)
         List<Object[]> countCollaboratorsByProject();
@@ -31,17 +31,17 @@ public interface ProjectCollaboratorRepository extends JpaRepository<ProjectColl
         @Query(value = "SELECT p.projectID, COUNT(pc.projectID) FROM  Projects p JOIN ProjectCollaborators pc on pc.projectID = p.projectID WHERE pc.isActive = true GROUP BY p.projectID", nativeQuery = true)
         List<Object[]> countActiveCollaboratorsByProject();
 
-        List<ProjectCollaborator> findByProjectID(int projectID);
+        List<ProjectCollaborator> findByProjectID(Integer projectID);
 
-        List<ProjectCollaborator> findByProjectIDAndIsActive(int projectID, boolean isActive);
+        List<ProjectCollaborator> findByProjectIDAndIsActive(Integer projectID, boolean isActive);
 
-        long countByProjectIDAndJoinedAtAfter(int projectID, LocalDateTime date);
+        Integer countByProjectIDAndJoinedAtAfter(Integer projectID, LocalDateTime date);
 
         @Query(value = "SELECT p.projectID, COUNT(pc.projectID) FROM  Projects p JOIN ProjectCollaborators pc on pc.projectID = p.projectID GROUP BY p.projectID", nativeQuery = true)
         List<Object[]> countCollaboratorsByAllProjects();
 
         @Query(value = "SELECT * FROM ProjectCollaborators pc WHERE pc.projectID = :projectID ORDER BY pc.joinedAt ASC", nativeQuery = true)
-        ProjectCollaborator findFirstCollaboratorForProject(int projectID);
+        ProjectCollaborator findFirstCollaboratorForProject(Integer projectID);
 
         @Query(value = "SELECT * FROM Projects p WHERE NOT EXISTS (SELECT 1 FROM ProjectCollaborators pc WHERE pc.projectID = p.projectID)", nativeQuery = true)
         List<Project> findProjectsWithNoCollaborators();
@@ -49,17 +49,18 @@ public interface ProjectCollaboratorRepository extends JpaRepository<ProjectColl
         @Query(value = "SELECT p.projectID, COUNT(pc.projectID) FROM  Projects p JOIN ProjectCollaborators pc on pc.projectID = p.projectID WHERE p.projectID IN :projectIDs GROUP BY p.projectID", nativeQuery = true)
         List<Object[]> countCollaboratorsByProjectIDs(@Param(value = "projectIDs") List<Integer> projectIDs);
 
-        List<ProjectCollaborator> findByProjectIDAndJoinedAtBefore(int projectID, LocalDateTime date);
+        List<ProjectCollaborator> findByProjectIDAndJoinedAtBefore(Integer projectID, LocalDateTime date);
 
         @Modifying
         @Query(value = "INSERT INTO ProjectCollaborators(JoinedAt, UserID, RoleID, ProjectID) VALUES(:joinedAt, :userID, :roleID, :projectID)", nativeQuery = true)
-        void insertCollaborator(LocalDateTime joinedAt, Integer userID, Integer roleID, Integer projectID);
+        void insertCollaborator(LocalDateTime joinedAt, Integer userID, Byte roleID, Integer projectID);
 
         @Query("SELECT CASE WHEN COUNT(pc) > 0 THEN true ELSE false END FROM ProjectCollaborator pc WHERE pc.userID = :userID AND pc.projectID = :projectID AND pc.roleID = :roleID")
-        boolean existsByUserIDAndProjectIDAndRoleID(@Param("userID") int userID, @Param("projectID") int projectID,
-                        @Param("roleID") int roleID);
+        boolean existsByUserIDAndProjectIDAndRoleID(@Param("userID") Integer userID,
+                        @Param("projectID") Integer projectID,
+                        @Param("roleID") Byte roleID);
 
         @Query("SELECT CASE WHEN COUNT(pc) > 0 THEN true ELSE false END FROM ProjectCollaborator pc WHERE pc.userID = :userID AND pc.projectID = :projectID ")
-        boolean existsByUserIDAndProjectID(@Param("userID") int userID, @Param("projectID") int projectID);
+        boolean existsByUserIDAndProjectID(@Param("userID") Integer userID, @Param("projectID") Integer projectID);
 
 }

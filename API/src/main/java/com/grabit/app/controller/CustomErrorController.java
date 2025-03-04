@@ -24,6 +24,7 @@ public class CustomErrorController implements ErrorController {
             case 404 -> message = "Resource not found!";
             case 403 -> message = "Access denied!";
             case 500 -> message = "Internal server error!";
+            case 401 -> message = "Unauthorized!";
         }
 
         ErrorResponse errorResponse = new ErrorResponse(statusCode, message);
