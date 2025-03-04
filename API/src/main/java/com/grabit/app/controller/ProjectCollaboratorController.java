@@ -40,6 +40,6 @@ public class ProjectCollaboratorController {
 
         projectCollaboratorService.addProjectCollaborator(projectCollaborator,
                 userService.getAuthenticatedUser(authentication));
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
