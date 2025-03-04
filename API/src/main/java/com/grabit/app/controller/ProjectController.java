@@ -38,12 +38,10 @@ public class ProjectController {
     @PostMapping
     public ResponseEntity<Project> createProject(@RequestBody ProjectCreationDTO request,
             Authentication authentication) {
-        //TODO: Move the logic into the service
         Project project = request.getProject();
         ProjectCollaborator projectCollaborator = request.getProjectCollaborator();
 
         Project savedProject = projectService.createProject(project, userService.getAuthenticatedUser(authentication));
-        //TODO: You do not need any details from the client about project collaborator when creating a project
         projectCollaborator.setProjectID(savedProject.getProjectID());
         projectCollaborator.setRoleID(Roles.PROJECT_LEAD.getRole());
         projectCollaborator.setJoinedAt(LocalDateTime.now());
