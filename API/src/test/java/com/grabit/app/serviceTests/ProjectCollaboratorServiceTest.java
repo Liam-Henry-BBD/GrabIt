@@ -88,10 +88,10 @@ class ProjectCollaboratorServiceTest {
 
     @Test
     void testExists() {
-        when(projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(100, 200, (byte) 1))
+        when(projectCollaboratorRepository.existsByUserIDAndProjectID(100, 200))
                 .thenReturn(true);
 
-        boolean result = projectCollaboratorService.exists(100, 200, (byte) 1);
+        boolean result = projectCollaboratorService.exists(100, 200);
 
         assertTrue(result);
     }

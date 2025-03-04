@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import com.grabit.app.model.TaskCollaborator;
 import com.grabit.app.service.TaskCollaboratorService;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/task-collaborators")
 public class TaskCollaboratorController {

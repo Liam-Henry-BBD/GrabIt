@@ -2,9 +2,6 @@ package com.grabit.app.service;
 
 import com.grabit.app.exceptions.BadRequest;
 import com.grabit.app.exceptions.Conflict;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.grabit.app.model.ProjectCollaborator;
