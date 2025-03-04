@@ -28,13 +28,6 @@ public class ProjectCollaboratorService {
 
     @Transactional
     public void addProjectCollaborator(ProjectCollaborator projectCollaborator, User user) {
-        boolean isDuplicate = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(
-                projectCollaborator.getUserID(),
-                projectCollaborator.getProjectID(),
-                projectCollaborator.getRoleID());
-        if (isDuplicate) {
-            throw new Conflict("User already a collaborator.");
-        }
 
         boolean userExists = projectCollaboratorRepository.existsByUserIDAndProjectID(user.getUserID(), projectCollaborator.getProjectID());
     
