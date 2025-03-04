@@ -34,9 +34,15 @@ public class ProjectCollaboratorControllerTests {
 
     @Test
     public void testGetProjectCollaboratorByID() {
-        projectCollaboratorController.getProjectCollaboratorByID(1);
+        projectCollaboratorController.getProjectCollaboratorByID(1L);
 
-        verify(projectCollaboratorService, times(1)).getProjectCollaboratorByID(1);
+        verify(projectCollaboratorService, times(1)).getProjectCollaboratorByID(1L);
     }
 
+    @Test
+    public void testDeactivateProjectCollaborator() {
+        projectCollaboratorController.deactivateProjectCollaborator(1L);
+
+        verify(projectCollaboratorService, times(1)).deactivateProjectCollaborator(1L);
+    }
 }
