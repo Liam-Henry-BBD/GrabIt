@@ -1,58 +1,49 @@
 package com.grabit.app.modelTests;
 
 import org.junit.jupiter.api.Test;
-import java.time.LocalDateTime;
+
 import com.grabit.app.model.ProjectCollaborator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ProjectCollaboratorTest {
+import java.time.LocalDateTime;
+
+public class ProjectCollaboratorTest {
 
     @Test
-    void testProjectCollaboratorConstructorAndGettersSetters() {
-
-        Integer projectCollaboratorID = 1;
-        Integer userID = 100;
-        Integer projectID = 200;
-        Byte roleID = 1;
+    public void testProjectCollaboratorConstructorAndGetters() {
         LocalDateTime joinedAt = LocalDateTime.now();
-        boolean isActive = true;
-        ProjectCollaborator collaborator = new ProjectCollaborator(projectCollaboratorID, userID, projectID, roleID, joinedAt, isActive);
+        ProjectCollaborator projectCollaborator = new ProjectCollaborator(1, 2, 3, 4, joinedAt, true);
 
-        assertEquals(projectCollaboratorID, collaborator.getProjectCollaboratorID());
-        assertEquals(userID, collaborator.getUserID());
-        assertEquals(projectID, collaborator.getProjectID());
-        assertEquals(roleID, collaborator.getRoleID());
-        assertEquals(joinedAt, collaborator.getJoinedAt());
-        assertEquals(isActive, collaborator.isActive());
+        assertEquals(1, projectCollaborator.getProjectCollaboratorID());
+        assertEquals(2, projectCollaborator.getUserID());
+        assertEquals(3, projectCollaborator.getProjectID());
+        assertEquals(4, projectCollaborator.getRoleID());
+        assertEquals(joinedAt, projectCollaborator.getJoinedAt());
+        assertTrue(projectCollaborator.isActive());
     }
 
     @Test
-    void testProjectCollaboratorSettersAndGetters() {
+    public void testProjectCollaboratorSetters() {
+        ProjectCollaborator projectCollaborator = new ProjectCollaborator();
+        LocalDateTime joinedAt = LocalDateTime.now();
 
-        ProjectCollaborator collaborator = new ProjectCollaborator();
-        collaborator.setProjectCollaboratorID(1);
-        collaborator.setUserID(100);
-        collaborator.setProjectID(200);
-        collaborator.setRoleID((byte) 1);
-        collaborator.setJoinedAt(LocalDateTime.now());
-        collaborator.setActive(true);
+        projectCollaborator.setProjectCollaboratorID(1);
+        assertEquals(1, projectCollaborator.getProjectCollaboratorID());
 
-        assertEquals(1, collaborator.getProjectCollaboratorID());
-        assertEquals(100, collaborator.getUserID());
-        assertEquals(200, collaborator.getProjectID());
-        assertEquals((byte) 1, collaborator.getRoleID());
-        assertNotNull(collaborator.getJoinedAt()); 
-        assertTrue(collaborator.isActive());
-    }
+        projectCollaborator.setUserID(2);
+        assertEquals(2, projectCollaborator.getUserID());
 
-    @Test
-    void testDefaultConstructor() {
-        
-        ProjectCollaborator collaborator = new ProjectCollaborator();
-        assertNotNull(collaborator);  
-        assertNull(collaborator.getProjectCollaboratorID());  
-        assertFalse(collaborator.isActive()); 
-        assertNull(collaborator.getJoinedAt()); 
+        projectCollaborator.setProjectID(3);
+        assertEquals(3, projectCollaborator.getProjectID());
+
+        projectCollaborator.setRoleID(4);
+        assertEquals(4, projectCollaborator.getRoleID());
+
+        projectCollaborator.setJoinedAt(joinedAt);
+        assertEquals(joinedAt, projectCollaborator.getJoinedAt());
+
+        projectCollaborator.setActive(true);
+        assertTrue(projectCollaborator.isActive());
     }
 }

@@ -1,36 +1,34 @@
 package com.grabit.app.config;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
-import com.grabit.app.service.UserService;
-
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import com.grabit.app.service.CustomOAuth2UserService;
+import org.springframework.context.annotation.Configuration;
 
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig {
 
-    private final UserService userService;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
-    public SecurityConfig(UserService userService) {
-        this.userService = userService;
+    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService) {
+        this.customOAuth2UserService = customOAuth2UserService;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/public/**").permitAll()
                         .anyRequest().authenticated())
-                .addFilterBefore(new AuthFilter(), BasicAuthenticationFilter.class)
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
-                                .userService(userService))).csrf(AbstractHttpConfigurer::disable);;
+                                .userService(customOAuth2UserService)))
+                .csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
 }

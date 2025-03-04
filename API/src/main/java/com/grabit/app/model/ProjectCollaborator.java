@@ -27,7 +27,7 @@ public class ProjectCollaborator {
     private Integer projectID;
 
     @Column(name = "RoleID", nullable = false)
-    private Byte roleID;
+    private Integer roleID;
 
     @Column(name = "JoinedAt", nullable = false)
     private LocalDateTime joinedAt;

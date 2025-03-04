@@ -1,10 +1,9 @@
 package com.grabit.app.service;
 
-import com.grabit.app.exceptions.BadRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.grabit.app.model.ProjectCollaborator;
-import com.grabit.app.model.User;
 import com.grabit.app.repository.ProjectCollaboratorRepository;
 
 import jakarta.transaction.Transactional;
@@ -14,36 +13,24 @@ import java.util.List;
 @Service
 public class ProjectCollaboratorService {
 
+    @Autowired
+    private ProjectCollaboratorRepository projectCollaboratorRepository;
 
-    private final ProjectCollaboratorRepository projectCollaboratorRepository;
-
-    public ProjectCollaboratorService(ProjectCollaboratorRepository projectCollaboratorRepository) {
-        this.projectCollaboratorRepository = projectCollaboratorRepository;
-    }
-
-    public List<ProjectCollaborator> getAllProjectCollaboratorsByProjectID(Integer projectID) {
+    public List<ProjectCollaborator> getAllProjectCollaboratorsByProjectID(int projectID) {
         return projectCollaboratorRepository.findByProjectID(projectID);
     }
 
     @Transactional
-    public void addProjectCollaborator(ProjectCollaborator projectCollaborator, User user) {
-
-        boolean userExists = projectCollaboratorRepository.existsByUserIDAndProjectID(user.getUserID(), projectCollaborator.getProjectID());
-    
-        if (userExists) {
-            throw new BadRequest("User is already a collaborator for this project.");
-        }
-    
-        projectCollaboratorRepository.insertCollaborator(projectCollaborator.getJoinedAt(),
-                user.getUserID(), projectCollaborator.getRoleID(), projectCollaborator.getProjectID());
+    public void addProjectCollaborator(ProjectCollaborator projectCollaborator) {
+        projectCollaboratorRepository.findByProjectID(projectCollaborator.getProjectID());
+        projectCollaboratorRepository.insertCollaborator(projectCollaborator.getJoinedAt(), projectCollaborator.getUserID(), projectCollaborator.getRoleID(), projectCollaborator.getProjectID());
     }
-    
 
-    public ProjectCollaborator getProjectCollaboratorByID(Integer id) {
+    public ProjectCollaborator getProjectCollaboratorByID(Long id) {
         return projectCollaboratorRepository.findById(id.intValue()).orElse(null);
     }
 
-    public void deactivateProjectCollaborator(Integer id) {
+    public void deactivateProjectCollaborator(Long id) {
         projectCollaboratorRepository.deleteById(id.intValue());
     }
 
@@ -51,8 +38,8 @@ public class ProjectCollaboratorService {
         return projectCollaboratorRepository.findByIsActive(true);
     }
 
-    public boolean exists(Integer userID, Integer projectID) {
-        return projectCollaboratorRepository.existsByUserIDAndProjectID(userID, projectID);
+    public boolean exists(Long userID, Long projectID, Long roleID) {
+        return projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(userID.intValue(), projectID.intValue(), roleID.intValue());
     }
-
+    
 }

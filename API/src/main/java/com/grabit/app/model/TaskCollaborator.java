@@ -34,9 +34,20 @@ public class TaskCollaborator {
     private Task task;
 
     @Column(name = "JoinedAt", nullable = false)
-    private LocalDate joinedAt = LocalDate.now();
+    private LocalDate joinedAt;
 
     @Column(name = "isActive", nullable = false)
     private Boolean isActive = true;
 
+    @Override
+    public String toString() {
+        return "TaskCollaborator{" +
+                "taskCollaboratorID=" + taskCollaboratorID +
+                ", user=" + user.getUserID() +
+                ", role=" + role.getRoleID() +
+                ", task=" + task.getTaskID() +
+                ", joinedAt=" + joinedAt +
+                ", isActive=" + isActive +
+                '}';
+    }
 }
