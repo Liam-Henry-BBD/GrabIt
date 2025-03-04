@@ -15,6 +15,7 @@ public class ProjectAndRoleDTO {
     private String projectDescription;
     private Timestamp createdAt;
     private Timestamp updatedAt;
-    private Integer collaboratorUserID;
+    private Integer userID;
+    private Integer ProjectCollaboratorID;
     private Byte collaboratorRole;
 }
