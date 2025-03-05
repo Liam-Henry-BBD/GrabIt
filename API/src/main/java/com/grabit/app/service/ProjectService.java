@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.grabit.app.dto.ProjectAndRoleDTO;
+import com.grabit.app.dto.ProjectCreationDTO;
 import com.grabit.app.dto.ProjectLeaderboardDTO;
 import com.grabit.app.enums.Roles;
 import com.grabit.app.model.Project;
@@ -38,7 +39,10 @@ public class ProjectService extends Task {
 
     }
 
-    public Project createProject(Project project, User user) {
+    public Project createProject(ProjectCreationDTO request, User user) {
+        Project project = new Project();
+        project.setProjectName(request.getProjectName());
+        project.setProjectDescription(request.getProjectDescription());
         project.setCreatedAt(new Date());
         project.setUpdatedAt(new Date());
         return projectRepository.save(project);
@@ -71,7 +75,7 @@ public class ProjectService extends Task {
 
     public void closeProject(Integer projectID) {
         projectRepository.findById(projectID).orElseThrow(() -> new NotFound("Project not found"));
-        //TODO: Soft deletion, deacticate the project instead?
+        // TODO: Soft deletion, deacticate the project instead?
         projectRepository.deleteById(projectID);
     }
 

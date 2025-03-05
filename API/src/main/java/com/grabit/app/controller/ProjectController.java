@@ -11,10 +11,10 @@ import com.grabit.app.enums.Roles;
 import com.grabit.app.model.Project;
 import com.grabit.app.model.ProjectCollaborator;
 import com.grabit.app.model.Task;
+import com.grabit.app.model.User;
 import com.grabit.app.service.ProjectCollaboratorService;
 import com.grabit.app.service.ProjectService;
 import com.grabit.app.service.UserService;
-
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,8 +28,8 @@ public class ProjectController {
     private final UserService userService;
 
     public ProjectController(ProjectService projectService,
-                             ProjectCollaboratorService projectCollaboratorService,
-                             UserService userService) {
+            ProjectCollaboratorService projectCollaboratorService,
+            UserService userService) {
         this.projectService = projectService;
         this.projectCollaboratorService = projectCollaboratorService;
         this.userService = userService;
@@ -38,18 +38,22 @@ public class ProjectController {
     @PostMapping
     public ResponseEntity<Project> createProject(@RequestBody ProjectCreationDTO request,
             Authentication authentication) {
-        Project project = request.getProject();
-        ProjectCollaborator projectCollaborator = request.getProjectCollaborator();
 
-        Project savedProject = projectService.createProject(project, userService.getAuthenticatedUser(authentication));
-        projectCollaborator.setProjectID(savedProject.getProjectID());
+        User user = userService.getAuthenticatedUser(authentication);
+
+        Project newProject = projectService.createProject(request, user);
+
+        ProjectCollaborator projectCollaborator = new ProjectCollaborator();
+
+        projectCollaborator.setUserID(user.getUserID());
+        projectCollaborator.setProjectID(newProject.getProjectID());
         projectCollaborator.setRoleID(Roles.PROJECT_LEAD.getRole());
         projectCollaborator.setJoinedAt(LocalDateTime.now());
         projectCollaborator.setActive(true);
-        projectCollaboratorService.addProjectCollaborator(projectCollaborator,
-                userService.getAuthenticatedUser(authentication));
 
-        return new ResponseEntity<>(savedProject, HttpStatus.CREATED);
+        projectCollaboratorService.addProjectCollaborator(projectCollaborator, user);
+
+        return new ResponseEntity<>(newProject, HttpStatus.CREATED);
     }
 
     @GetMapping

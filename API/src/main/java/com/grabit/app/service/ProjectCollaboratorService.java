@@ -35,7 +35,7 @@ public class ProjectCollaboratorService {
         }
     
         projectCollaboratorRepository.insertCollaborator(projectCollaborator.getJoinedAt(),
-                user.getUserID(), projectCollaborator.getRoleID(), projectCollaborator.getProjectID());
+                projectCollaborator.getUserID(), projectCollaborator.getRoleID(), projectCollaborator.getProjectID());
     }
     
 
