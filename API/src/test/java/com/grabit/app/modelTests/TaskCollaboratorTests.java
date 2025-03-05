@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
 
-public class TaskCollaboratorTest {
+public class TaskCollaboratorTests {
 
     @Test
     public void testTaskCollaboratorConstructorAndGetters() {

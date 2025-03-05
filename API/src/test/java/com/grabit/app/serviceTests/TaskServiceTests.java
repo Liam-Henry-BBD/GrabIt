@@ -27,7 +27,7 @@ import com.grabit.app.enums.Status;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-public class TaskServiceTest {
+public class TaskServiceTests {
 
     @Mock
     private TaskRepository taskRepository;

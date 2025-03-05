@@ -6,7 +6,7 @@ import com.grabit.app.model.TaskPoint;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TaskPointTest {
+public class TaskPointTests {
 
     @Test
     public void testTaskPointConstructorAndGetters() {

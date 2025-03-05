@@ -7,7 +7,7 @@ import com.grabit.app.model.Project;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.Date;
 
-public class ProjectTest {
+public class ProjectTests {
     @Test
     public void testProjectConstructorAndGetters() {
         Date createdAt = new Date();

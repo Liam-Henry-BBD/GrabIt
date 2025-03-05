@@ -12,7 +12,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class TaskTest {
+public class TaskTests {
 
     @Test
     public void testTaskConstructorAndGetters() {

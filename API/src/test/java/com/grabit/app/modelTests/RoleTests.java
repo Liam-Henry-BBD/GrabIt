@@ -5,7 +5,7 @@ import com.grabit.app.model.Role;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
-public class RoleTest {
+public class RoleTests {
     @Test
     public void testRoleConstructorAndGetter() {
         Role role = new Role((byte) 1, "lead");

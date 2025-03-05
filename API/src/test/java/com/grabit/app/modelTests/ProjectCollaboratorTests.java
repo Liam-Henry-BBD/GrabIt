@@ -6,7 +6,7 @@ import com.grabit.app.model.ProjectCollaborator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ProjectCollaboratorTest {
+class ProjectCollaboratorTests {
 
     @Test
     void testProjectCollaboratorConstructorAndGettersSetters() {

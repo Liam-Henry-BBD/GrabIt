@@ -7,7 +7,7 @@ import com.grabit.app.model.TaskStatus;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TaskStatusTest {
+class TaskStatusTests {
 
     private TaskStatus taskStatus;
 

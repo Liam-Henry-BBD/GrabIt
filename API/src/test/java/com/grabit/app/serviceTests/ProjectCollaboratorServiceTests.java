@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ProjectCollaboratorServiceTest {
+class ProjectCollaboratorServiceTests {
 
     @Mock
     private ProjectCollaboratorRepository projectCollaboratorRepository;
