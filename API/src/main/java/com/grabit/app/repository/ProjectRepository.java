@@ -41,9 +41,6 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
                 p.ProjectID,
                 p.ProjectName,
                 p.ProjectDescription,
-                p.CreatedAt,
-                p.UpdatedAt,
-                pc.UserID ,
                 pc.ProjectCollaboratorID,
                 pc.RoleID AS CollaboratorRole
             FROM

@@ -68,7 +68,8 @@ public class ProjectController {
     public ResponseEntity<Project> getProjectByID(@PathVariable Integer projectID,
             Authentication authentication) {
 
-        if (!projectService.isCollaborator(projectID, userService.getAuthenticatedUser(authentication))) {
+        if (!projectService.isProjectCollaborator(projectID,
+                userService.getAuthenticatedUser(authentication).getUserID())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
 
@@ -95,7 +96,8 @@ public class ProjectController {
     public ResponseEntity<List<Task>> getProjectTasks(@PathVariable Integer projectID,
             Authentication authentication) {
 
-        if (!projectService.isCollaborator(projectID, userService.getAuthenticatedUser(authentication))) {
+        if (!projectService.isProjectCollaborator(projectID,
+                userService.getAuthenticatedUser(authentication).getUserID())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
         return ResponseEntity.ok(projectService.getProjectTasksByProjectID(projectID));
@@ -105,7 +107,8 @@ public class ProjectController {
     public ResponseEntity<List<ProjectCollaborator>> getProjectCollaborators(@PathVariable Integer projectID,
             Authentication authentication) {
 
-        if (!projectService.isCollaborator(projectID, userService.getAuthenticatedUser(authentication))) {
+        if (!projectService.isProjectCollaborator(projectID,
+                userService.getAuthenticatedUser(authentication).getUserID())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
         return ResponseEntity.ok(projectService.getProjectCollaboratorsByProjectID(projectID));
@@ -115,7 +118,8 @@ public class ProjectController {
     public ResponseEntity<Object> getProjectLeaderboard(@PathVariable Integer projectID,
             Authentication authentication) {
 
-        if (!projectService.isCollaborator(projectID, userService.getAuthenticatedUser(authentication))) {
+        if (!projectService.isProjectCollaborator(projectID,
+                userService.getAuthenticatedUser(authentication).getUserID())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
         return ResponseEntity.ok(projectService.getProjectLeaderboardByProjectID(projectID));

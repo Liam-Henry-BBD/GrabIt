@@ -49,18 +49,16 @@ public class ProjectService extends Task {
     }
 
     public boolean isProjectCollaborator(Integer userID, Integer projectID) {
-        if (userID == null) {
+        if (userID == null || projectID == null) {
             return false;
         }
         return projectCollaboratorRepository.existsByUserIDAndProjectID(userID, projectID);
     }
 
     public boolean isProjectLead(User user, Integer projectID) {
-
-        if (user == null) {
+        if (user == null || projectID == null) {
             return false;
         }
-
         return projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(), projectID,
                 Roles.PROJECT_LEAD.getRole());
     }
@@ -113,10 +111,5 @@ public class ProjectService extends Task {
         existingProject.setProjectDescription(project.getProjectDescription());
         existingProject.setUpdatedAt(new Date());
         return projectRepository.save(existingProject);
-    }
-
-    public boolean isCollaborator(Integer projectID, User user) {
-
-        return isProjectCollaborator(user.getUserID(), projectID);
     }
 }
