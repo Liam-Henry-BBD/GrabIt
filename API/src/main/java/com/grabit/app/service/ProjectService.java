@@ -52,6 +52,14 @@ public class ProjectService extends Task {
         if (userID == null || projectID == null) {
             return false;
         }
+        
+        if (projectCollaboratorRepository.existsByUserIDAndProjectID(userID, projectID)) {
+            return true;
+        }
+
+        if (projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(userID, projectID, Roles.PROJECT_LEAD.getRole())) {
+            return true;
+        }
         return projectCollaboratorRepository.existsByUserIDAndProjectID(userID, projectID);
     }
 
@@ -59,6 +67,17 @@ public class ProjectService extends Task {
         if (user == null || projectID == null) {
             return false;
         }
+
+        if (projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(), projectID,
+                Roles.PROJECT_LEAD.getRole())) {
+            return true;
+        }
+
+        if (projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(), projectID,
+                Roles.PROJECT_LEAD.getRole())) {
+            return true;
+        }
+
         return projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(), projectID,
                 Roles.PROJECT_LEAD.getRole());
     }
@@ -73,7 +92,10 @@ public class ProjectService extends Task {
 
     public void closeProject(Integer projectID) {
         projectRepository.findById(projectID).orElseThrow(() -> new NotFound("Project not found"));
-        // TODO: Soft deletion, deacticate the project instead?
+
+        if (taskRepository.countByProjectID(projectID) > 0) {
+            throw new NotFound("Cannot close project with active tasks.");
+        }
         projectRepository.deleteById(projectID);
     }
 
@@ -101,6 +123,16 @@ public class ProjectService extends Task {
     }
 
     public List<ProjectCollaborator> getProjectCollaboratorsByProjectID(Integer projectID) {
+
+        if (projectRepository.findById(projectID).
+                orElseThrow(() -> new NotFound("Project not found")) == null) {
+            throw new NotFound("Project not found");
+        }
+
+        if (projectCollaboratorRepository.countByProjectIDAndIsActive(projectID, true) == 0) {
+            throw new NotFound("No collaborators found for this project.");
+        }
+
         return projectCollaboratorRepository.findByProjectID(projectID);
     }
 

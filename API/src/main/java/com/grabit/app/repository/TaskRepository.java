@@ -18,4 +18,6 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
 
     @Query(value = "SELECT CASE WHEN COUNT(task) > 0 THEN TRUE ELSE FALSE END FROM Task task JOIN ProjectCollaborator pc ON pc.projectID = task.project.projectID WHERE pc.userID = :userID AND task.taskID = :taskID")
     boolean existsTaskByUserIDAndTaskID(Integer taskID, Integer userID);
+
+    Long countByProjectID(Integer projectID);
 }

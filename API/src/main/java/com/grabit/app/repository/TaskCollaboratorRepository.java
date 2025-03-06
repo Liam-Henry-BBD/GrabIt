@@ -35,4 +35,11 @@ public interface TaskCollaboratorRepository extends JpaRepository<TaskCollaborat
 
     @Query(value = "SELECT CASE WHEN COUNT(tc) > 0 THEN TRUE ELSE FALSE END FROM TaskCollaborator tc WHERE tc.task.taskID = :taskID AND tc.user.userID = :userID AND tc.role.roleID = :roleID")
     boolean existsByIdAndUserIDAndRoleID(Integer taskID, Integer userID, Byte roleID);
+
+    boolean existsByUserIDAndTaskID(Integer userID, Integer taskID);
+
+    @Query(value = "SELECT * FROM TaskCollaborators tc WHERE TaskID = :taskID AND UserID = :userID", nativeQuery = true)
+    TaskCollaborator findByTaskIDAndUserID(@Param("taskID") Integer taskID, @Param("userID") Integer userID);
+
+    boolean existsByTaskIDAndRoleID(Integer taskID, byte roleID);
 }

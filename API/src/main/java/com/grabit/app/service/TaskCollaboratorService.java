@@ -58,6 +58,16 @@ public class TaskCollaboratorService {
             throw new BadRequest("Cannot add collaborator: Task deadline has passed.");
         }
 
+        if (taskCollaboratorRepository.existsByUserIDAndTaskID(user.getUserID(), task.getTaskID())) {
+            throw new BadRequest("User is already a collaborator for this task.");
+        }
+
+        if (role.getRoleID() == Roles.TASK_GRABBER.getRole()) {
+            if (taskCollaboratorRepository.existsByTaskIDAndRoleID(task.getTaskID(), Roles.TASK_GRABBER.getRole())) {
+                throw new BadRequest("Task already has a grabber.");
+            }
+        }
+
         taskCollaboratorRepository.createCollaborator(LocalDate.now(), user.getUserID(), role.getRoleID(),
                 task.getTaskID());
     }
@@ -72,6 +82,19 @@ public class TaskCollaboratorService {
 
         if (!taskCollaborator.get().getUser().getUserID().equals(user.getUserID())) {
             throw new BadRequest("User does not belong to this task.");
+        }
+
+        if (!taskCollaborator.get().getIsActive()) {
+            throw new BadRequest("Task Collaborator is not active.");
+        }
+
+        if (taskCollaborator.get().getTask().getTaskStatus().getStatusName().contains("Complete")) {
+            throw new BadRequest("Task is already complete.");
+        }
+
+        if (taskCollaborator.get().getTask().getTaskDeadline() != null
+                && taskCollaborator.get().getTask().getTaskDeadline().isBefore(LocalDate.now())) {
+            throw new BadRequest("Task deadline has passed.");
         }
 
         return taskCollaborator.get();
@@ -92,6 +115,25 @@ public class TaskCollaboratorService {
         if (!taskCollaborator.getIsActive()) {
             throw new BadRequest("Task Collaborator is already not active");
         }
+
+        if (taskCollaborator.getTask().getTaskStatus().getStatusName().contains("Complete")) {
+            throw new BadRequest("Cannot deactivate collaborator: Task is already complete.");
+        }
+
+        if (taskCollaborator.getTask().getTaskDeadline() != null
+                && taskCollaborator.getTask().getTaskDeadline().isBefore(LocalDate.now())) {
+            throw new BadRequest("Cannot deactivate collaborator: Task deadline has passed.");
+        }
+
+        if (taskCollaborator.getRole().getRoleID() == Roles.TASK_GRABBER.getRole()) {
+            throw new BadRequest("Cannot deactivate grabber.");
+        }
+
+        if (taskCollaboratorRepository.existsByTaskIDAndRoleID(taskCollaborator.getTask().getTaskID(),
+                Roles.TASK_GRABBER.getRole())) {
+            throw new BadRequest("Cannot deactivate collaborator: Task already has a grabber.");
+        }
+
         taskCollaborator.setIsActive(false);
         taskCollaboratorRepository.save(taskCollaborator);
         return taskCollaborator;
