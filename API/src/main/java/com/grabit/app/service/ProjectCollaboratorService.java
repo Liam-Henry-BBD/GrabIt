@@ -14,37 +14,40 @@ import java.util.List;
 @Service
 public class ProjectCollaboratorService {
 
+    private final ProjectService projectService;
 
     private final ProjectCollaboratorRepository projectCollaboratorRepository;
 
-    public ProjectCollaboratorService(ProjectCollaboratorRepository projectCollaboratorRepository) {
+    public ProjectCollaboratorService(ProjectService projectService,
+            ProjectCollaboratorRepository projectCollaboratorRepository) {
+        this.projectService = projectService;
         this.projectCollaboratorRepository = projectCollaboratorRepository;
     }
 
     public List<ProjectCollaborator> getAllProjectCollaboratorsByProjectID(Integer projectID) {
         return projectCollaboratorRepository.findByProjectID(projectID);
-        }
+    }
 
-        @Transactional
-        public void addProjectCollaborator(ProjectCollaborator projectCollaborator, User user) {
+    @Transactional
+    public void addProjectCollaborator(ProjectCollaborator projectCollaborator, User user) {
 
-        boolean userExists = projectCollaboratorRepository.existsByUserIDAndProjectID(user.getUserID(), projectCollaborator.getProjectID());
-        
+        boolean userExists = projectCollaboratorRepository.existsByUserIDAndProjectID(user.getUserID(),
+                projectCollaborator.getProjectID());
+
         if (userExists) {
             throw new BadRequest("User is already a collaborator for this project.");
         }
 
-        ProjectCollaborator Projectlead = projectCollaboratorRepository.findByRoleIDAndProjectID((byte) 1, projectCollaborator.getProjectID());
-        if (Projectlead == null || Projectlead.getRoleID() != 1) {
-            throw new BadRequest("Only a lead can add a collaborator.");
+        boolean isProjectLead = projectService.isProjectLead(user, projectCollaborator.getProjectID());
+        if (!isProjectLead) {
+            throw new BadRequest("Only project leaders can add project collaborators.");
         }
-        
+
         projectCollaboratorRepository.insertCollaborator(projectCollaborator.getJoinedAt(),
                 projectCollaborator.getUserID(), projectCollaborator.getRoleID(), projectCollaborator.getProjectID());
     }
-    
 
-        public ProjectCollaborator getProjectCollaboratorByID(Integer id) {
+    public ProjectCollaborator getProjectCollaboratorByID(Integer id) {
         return projectCollaboratorRepository.findById(id.intValue()).orElse(null);
     }
 
@@ -62,7 +65,7 @@ public class ProjectCollaboratorService {
 
     public ProjectCollaborator updateProjectCollaborator(Integer id, ProjectCollaborator projectCollaboratorDetails) {
         ProjectCollaborator projectCollaborator = projectCollaboratorRepository.findById(id.intValue()).orElse(null);
-        
+
         if (projectCollaborator == null) {
             return null;
         }
@@ -85,8 +88,9 @@ public class ProjectCollaboratorService {
 
         projectCollaborator.setRoleID(projectCollaboratorDetails.getRoleID());
         projectCollaboratorRepository.save(projectCollaborator);
-            return projectCollaborator;
-        }
+        return projectCollaborator;
+    }
+
     public List<ProjectCollaborator> getAllProjectCollaborators() {
         return projectCollaboratorRepository.findAll();
     }
@@ -99,36 +103,32 @@ public class ProjectCollaboratorService {
     @Transactional
     public ProjectCollaborator putProjectCollaborator(Integer id, ProjectCollaborator projectCollaboratorDetails) {
         ProjectCollaborator existingCollaborator = projectCollaboratorRepository.findById(id).orElse(null);
-    
+
         if (existingCollaborator == null) {
             return null;
         }
 
-        if(projectCollaboratorDetails.getUserID() != null) {
+        if (projectCollaboratorDetails.getUserID() != null) {
             existingCollaborator.setUserID(projectCollaboratorDetails.getUserID());
         }
 
-        if(projectCollaboratorDetails.getRoleID() != null) {
+        if (projectCollaboratorDetails.getRoleID() != null) {
             existingCollaborator.setRoleID(projectCollaboratorDetails.getRoleID());
         }
 
-        if(projectCollaboratorDetails.getProjectID() != null) {
+        if (projectCollaboratorDetails.getProjectID() != null) {
             existingCollaborator.setProjectID(projectCollaboratorDetails.getProjectID());
         }
 
-        if(projectCollaboratorDetails.getJoinedAt() != null) {
+        if (projectCollaboratorDetails.getJoinedAt() != null) {
             existingCollaborator.setJoinedAt(projectCollaboratorDetails.getJoinedAt());
         }
-    
+
         existingCollaborator.setUserID(projectCollaboratorDetails.getUserID());
         existingCollaborator.setRoleID(projectCollaboratorDetails.getRoleID());
         existingCollaborator.setProjectID(projectCollaboratorDetails.getProjectID());
         existingCollaborator.setJoinedAt(projectCollaboratorDetails.getJoinedAt());
-    
+
         return projectCollaboratorRepository.save(existingCollaborator);
     }
 }
-
-
-
-

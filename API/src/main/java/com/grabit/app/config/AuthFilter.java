@@ -51,8 +51,11 @@ public class AuthFilter implements Filter {
             } else {
                 sendHttpResponse(httpResponse, "UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
             }
-        } catch (URISyntaxException | InterruptedException e) {
-            throw new RuntimeException(e);
+        } catch (URISyntaxException e) {
+            sendHttpResponse(httpResponse, "BAD REQUEST", HttpStatus.BAD_REQUEST);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            sendHttpResponse(httpResponse, "INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -43,11 +43,18 @@ public class TaskCollaboratorService {
         Task task = taskRepository.findById(taskCollaborator.getTask().getTaskID())
                 .orElseThrow(() -> new NotFound("Task not found."));
 
-        boolean allowed = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(),
+        boolean isUserAllowed = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(),
                 task.getProject().getProjectID(), Roles.PROJECT_MEMBER.getRole());
 
-        if (!allowed) {
-            throw new BadRequest("Cannot add collaborator.");
+        boolean isProjectLead = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(),
+                task.getProject().getProjectID(), Roles.PROJECT_LEAD.getRole());
+
+        if (!isProjectLead) {
+            throw new BadRequest("Only project leaders can add task collaborators.");
+        }
+
+        if (!isUserAllowed) {
+            throw new BadRequest("User cannot be added as a task collaborator in a project they are not a collaborator in.");
         }
 
         if (task.getTaskStatus().getStatusName().contains("Complete")) {
