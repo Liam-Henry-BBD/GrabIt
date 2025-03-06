@@ -84,6 +84,20 @@ public class ProjectControllerTests {
     }
 
     @Test
+    public void testGetProjectByID_FORBIDDEN() {
+        User testUser = new User();
+        testUser.setUserID(1);
+
+        when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
+        when(projectService.isProjectCollaborator(anyInt(), eq(testUser.getUserID()))).thenReturn(false);
+
+        ResponseEntity<Project> response = projectController.getProjectByID(1, authentication);
+
+        verify(projectService, times(0)).getProjectByID(anyInt());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
     public void testCloseProject() {
         User testUser = new User();
 
@@ -95,6 +109,20 @@ public class ProjectControllerTests {
         verify(projectService, times(1)).isProjectLead(eq(testUser), anyInt());
         verify(projectService, times(1)).closeProject(anyInt());
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+    }
+
+    @Test
+    public void testCloseProject_FORBIDDEN() {
+        User testUser = new User();
+        when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
+        when(projectService.isProjectLead(eq(testUser), anyInt())).thenReturn(false);
+
+        ResponseEntity<Void> response = projectController.closeProject(1, authentication);
+
+        verify(projectService, times(1)).isProjectLead(eq(testUser), anyInt());
+        verify(projectService, times(0)).closeProject(anyInt());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test
@@ -112,6 +140,20 @@ public class ProjectControllerTests {
         verify(projectService, times(1)).getProjectTasksByProjectID(anyInt());
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(tasks);
+    }
+
+    @Test
+    public void testGetProjectTasks_FORBIDDEN() {
+        User testUser = new User();
+        testUser.setUserID(2);
+
+        when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
+        when(projectService.isProjectCollaborator(anyInt(), eq(testUser.getUserID()))).thenReturn(false);
+
+        ResponseEntity<List<Task>> response = projectController.getProjectTasks(1, authentication);
+
+        verify(projectService, times(0)).getProjectTasksByProjectID(anyInt());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test
@@ -133,6 +175,20 @@ public class ProjectControllerTests {
     }
 
     @Test
+    public void testGetProjectCollaborators_FORBIDDEN() {
+        User testUser = new User();
+        testUser.setUserID(6);
+
+        when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
+        when(projectService.isProjectCollaborator(anyInt(), eq(testUser.getUserID()))).thenReturn(false);
+
+        ResponseEntity<List<ProjectCollaborator>> response = projectController.getProjectCollaborators(1, authentication);
+
+        verify(projectService, times(0)).getProjectCollaboratorsByProjectID(anyInt());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
     public void testGetProjectLeaderboard() {
         User testUser = new User();
         testUser.setUserID(3);
@@ -151,6 +207,21 @@ public class ProjectControllerTests {
     }
 
     @Test
+    public void testGetProjectLeaderboard_FORBIDDEN() {
+        User testUser = new User();
+        testUser.setUserID(3);
+
+        when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
+        when(projectService.isProjectCollaborator(anyInt(), eq(testUser.getUserID()))).thenReturn(false);
+
+        ResponseEntity<Object> response = projectController.getProjectLeaderboard(1, authentication);
+
+        verify(projectService, times(1)).isProjectCollaborator(anyInt(), eq(testUser.getUserID()));
+        verify(projectService, times(0)).getProjectLeaderboardByProjectID(anyInt());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
     public void testUpdateProject() {
         User testUser = new User();
 
@@ -164,5 +235,19 @@ public class ProjectControllerTests {
         verify(projectService, times(1)).updateProject(anyInt(), any(Project.class));
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(project);
+    }
+
+    @Test
+    public void testUpdateProject_FORBIDDEN() {
+        User testUser = new User();
+        testUser.setUserID(4);
+
+        when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
+        when(projectService.isProjectLead(eq(testUser), anyInt())).thenReturn(false);
+
+        ResponseEntity<Project> response = projectController.updateProject(1, project, authentication);
+
+        verify(projectService, times(0)).updateProject(anyInt(), any(Project.class));
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 }
