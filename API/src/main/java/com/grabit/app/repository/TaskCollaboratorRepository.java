@@ -51,4 +51,6 @@ public interface TaskCollaboratorRepository extends JpaRepository<TaskCollaborat
 
     @Query(value = "SELECT * FROM TaskCollaborators tc WHERE TaskID = :taskID AND IsActive = 1", nativeQuery = true)
     List<TaskCollaborator> findByTaskIDAndIsActive(@Param("taskID") Integer taskID);
+
+    boolean existsByTaskIDAndUserIDAndRoleID(Integer taskID, Integer userID, byte roleID);
 }

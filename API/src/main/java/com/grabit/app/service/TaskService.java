@@ -41,6 +41,19 @@ public class TaskService {
             throw new BadRequest("Cannot access task because you are not a collaborator.");
         }
 
+        if (!taskRepository.existsById(taskID)) {
+            throw new NotFound("Task not found.");
+        }
+
+        if (!taskCollaboratorRepository.existsByTaskIDAndUserID(taskID, user.getUserID())) {
+            throw new BadRequest("User is not a collaborator in this task.");
+        }
+
+        if (!taskCollaboratorRepository.existsByTaskIDAndUserIDAndRoleID(taskID, user.getUserID(),
+                Roles.TASK_GRABBER.getRole())) {
+            throw new BadRequest("User is not a grabber in this task.");
+        }
+        
         return taskRepository.findById(taskID)
                 .orElseThrow(() -> new NotFound("Task not found"));
     }
@@ -60,6 +73,18 @@ public class TaskService {
 
         if (!taskStatusRepository.existsById((int) task.getTaskStatus().getTaskStatusID())) {
             throw new NotFound("Task status not found.");
+        }
+
+        if (task.getTaskDeadline() != null && task.getTaskDeadline().isBefore(LocalDate.now())) {
+            throw new BadRequest("Task deadline cannot be in the past.");
+        }
+
+        if (task.getTaskStatus().getStatusName().contains("Complete")) {
+            throw new BadRequest("Task is already completed.");
+        }
+
+        if (taskCollaboratorRepository.existsByTaskIDAndUserID(task.getTaskID(), user.getUserID())) {
+            throw new BadRequest("User is already a collaborator.");
         }
         return taskRepository.save(task);
     }
@@ -91,6 +116,11 @@ public class TaskService {
         if (task.getTaskStatus().getTaskStatusID() == Status.AVAILABLE.getStatus()
                 && taskStatusID != Status.GRABBED.getStatus()) {
             throw new BadRequest("Task must move from available to grabbed.");
+        }
+
+        if (task.getTaskStatus().getTaskStatusID() == Status.GRABBED.getStatus()
+                && taskStatusID != Status.REVIEW.getStatus()) {
+            throw new BadRequest("Task must move from grabbed to review.");
         }
 
         TaskStatus taskStatus = taskStatusRepository.findById((int) taskStatusID)

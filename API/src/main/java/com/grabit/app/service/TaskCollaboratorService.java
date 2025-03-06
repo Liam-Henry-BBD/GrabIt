@@ -74,6 +74,7 @@ public class TaskCollaboratorService {
                 throw new BadRequest("Task already has a grabber.");
             }
         }
+        
 
         taskCollaboratorRepository.createCollaborator(LocalDate.now(), user.getUserID(), role.getRoleID(),
                 task.getTaskID());

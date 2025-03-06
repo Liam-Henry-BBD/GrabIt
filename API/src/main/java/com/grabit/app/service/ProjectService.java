@@ -60,6 +60,7 @@ public class ProjectService extends Task {
         if (projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(userID, projectID, Roles.PROJECT_LEAD.getRole())) {
             return true;
         }
+
         return projectCollaboratorRepository.existsByUserIDAndProjectID(userID, projectID);
     }
 
@@ -87,7 +88,7 @@ public class ProjectService extends Task {
         if (user == null) {
             return null;
         }
-        
+
         return projectRepository.getProjectsByUserID(user.getUserID());
     }
 
@@ -113,6 +114,9 @@ public class ProjectService extends Task {
 
         if (results.length == 0) {
             return "No tasks have been completed yet.";
+        }
+        if (results[0].length != 3) {
+            return "An error occurred while fetching the leaderboard.";
         }
 
         List<ProjectLeaderboardDTO> leaderboard = Arrays.stream(results)
