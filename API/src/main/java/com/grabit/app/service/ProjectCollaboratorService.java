@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.grabit.app.model.ProjectCollaborator;
 import com.grabit.app.model.User;
 import com.grabit.app.repository.ProjectCollaboratorRepository;
+import com.grabit.app.service.ProjectService;
 
 import jakarta.transaction.Transactional;
 
@@ -14,10 +15,12 @@ import java.util.List;
 @Service
 public class ProjectCollaboratorService {
 
+    private final ProjectService projectService;
 
     private final ProjectCollaboratorRepository projectCollaboratorRepository;
 
-    public ProjectCollaboratorService(ProjectCollaboratorRepository projectCollaboratorRepository) {
+    public ProjectCollaboratorService(ProjectService projectService, ProjectCollaboratorRepository projectCollaboratorRepository) {
+        this.projectService = projectService;
         this.projectCollaboratorRepository = projectCollaboratorRepository;
     }
 
@@ -29,11 +32,16 @@ public class ProjectCollaboratorService {
     public void addProjectCollaborator(ProjectCollaborator projectCollaborator, User user) {
 
         boolean userExists = projectCollaboratorRepository.existsByUserIDAndProjectID(user.getUserID(), projectCollaborator.getProjectID());
-    
+
         if (userExists) {
             throw new BadRequest("User is already a collaborator for this project.");
         }
-    
+
+        boolean isProjectLead = projectService.isProjectLead(user, projectCollaborator.getProjectID());
+        if (!isProjectLead) {
+            throw new BadRequest("Only project leaders can add project collaborators.");
+        }
+
         projectCollaboratorRepository.insertCollaborator(projectCollaborator.getJoinedAt(),
                 projectCollaborator.getUserID(), projectCollaborator.getRoleID(), projectCollaborator.getProjectID());
     }

@@ -9,7 +9,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-
 @RestControllerAdvice
 public class ExceptionResolver {
 
@@ -24,7 +23,6 @@ public class ExceptionResolver {
         Error error = new Error(ex.getReason(), HttpStatus.CONFLICT.value());
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
-
 
     @ExceptionHandler(BadRequest.class)
     public ResponseEntity<Error> handleBadRequest(BadRequest ex) {
@@ -56,7 +54,6 @@ public class ExceptionResolver {
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Error> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
         Error error = new Error("Method not supported.", HttpStatus.METHOD_NOT_ALLOWED.value());
@@ -68,5 +65,4 @@ public class ExceptionResolver {
         Error error = new Error("Method not supported, Please review the endpoint again.", HttpStatus.METHOD_NOT_ALLOWED.value());
         return new ResponseEntity<>(error, HttpStatus.METHOD_NOT_ALLOWED);
     }
-
 }
