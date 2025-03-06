@@ -83,6 +83,11 @@ public class ProjectService extends Task {
     }
 
     public List<ProjectAndRoleDTO> getAllProjects(User user) {
+
+        if (user == null) {
+            return null;
+        }
+        
         return projectRepository.getProjectsByUserID(user.getUserID());
     }
 
@@ -143,5 +148,9 @@ public class ProjectService extends Task {
         existingProject.setProjectDescription(project.getProjectDescription());
         existingProject.setUpdatedAt(new Date());
         return projectRepository.save(existingProject);
+    }
+
+    public void putProject(Project project) {
+        projectRepository.save(project);
     }
 }

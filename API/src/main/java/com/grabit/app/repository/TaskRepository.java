@@ -20,4 +20,10 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     boolean existsTaskByUserIDAndTaskID(Integer taskID, Integer userID);
 
     Long countByProjectID(Integer projectID);
+
+    @Query(value = "SELECT * FROM Tasks task WHERE TaskID = :taskID", nativeQuery = true)
+    Task findByTaskID(Integer taskID);
+
+    @Query(value = "SELECT * FROM Tasks task WHERE TaskPointID = :taskPointID", nativeQuery = true)
+    List<Task> findByTaskPointID(Integer taskPointID);
 }

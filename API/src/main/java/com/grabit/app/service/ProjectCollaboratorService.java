@@ -96,6 +96,16 @@ public class ProjectCollaboratorService {
     }
 
     public void putProjectCollaborator(ProjectCollaborator projectCollaborator) {
+
+        if (projectCollaboratorRepository.existsByUserIDAndProjectID(projectCollaborator.getUserID(),
+                projectCollaborator.getProjectID())) {
+            throw new BadRequest("User is already a collaborator for this project.");
+        }
+
+        if(projectService.isProjectLead(null, null)) {
+            throw new BadRequest("Only project leaders can add project collaborators.");
+        }
+            
         projectCollaboratorRepository.save(projectCollaborator);
 
     }

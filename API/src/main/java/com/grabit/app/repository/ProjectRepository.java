@@ -51,5 +51,5 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
                 pc.UserID = :userID;
             """, nativeQuery = true)
     List<ProjectAndRoleDTO> getProjectsByUserID(@Param("userID") Integer userID);
-
+    
 }

@@ -65,4 +65,23 @@ public interface ProjectCollaboratorRepository extends JpaRepository<ProjectColl
 
         ProjectCollaborator findByRoleIDAndProjectID(Byte roleID, Integer projectID);
 
+        @Modifying
+        @Query(value = "UPDATE ProjectCollaborators SET IsActive = :isActive WHERE ProjectCollaboratorID = :projectCollaboratorID", nativeQuery = true)
+        void updateIsActiveByProjectCollaboratorID(@Param("isActive") boolean isActive, @Param("projectCollaboratorID") Integer projectCollaboratorID);
+
+        @Modifying
+        @Query(value = "UPDATE ProjectCollaborators SET IsActive = :isActive WHERE ProjectID = :projectID", nativeQuery = true)
+        void updateIsActiveByProjectID(@Param("isActive") boolean isActive, @Param("projectID") Integer projectID);
+
+        @Modifying
+        @Query(value = "UPDATE ProjectCollaborators SET IsActive = :isActive WHERE ProjectID = :projectID AND UserID = :userID", nativeQuery = true)
+        void updateIsActiveByProjectIDAndUserID(@Param("isActive") boolean isActive, @Param("projectID") Integer projectID, @Param("userID") Integer userID);
+
+        @Modifying
+        @Query(value = "UPDATE ProjectCollaborators SET IsActive = :isActive WHERE ProjectID = :projectID AND RoleID = :roleID", nativeQuery = true)
+        void updateIsActiveByProjectIDAndRoleID(@Param("isActive") boolean isActive, @Param("projectID") Integer projectID, @Param("roleID") Byte roleID);
+
+        ProjectCollaborator isProjectLeader(Integer projectID);
+
+        
 }

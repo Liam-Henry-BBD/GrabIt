@@ -42,4 +42,13 @@ public interface TaskCollaboratorRepository extends JpaRepository<TaskCollaborat
     TaskCollaborator findByTaskIDAndUserID(@Param("taskID") Integer taskID, @Param("userID") Integer userID);
 
     boolean existsByTaskIDAndRoleID(Integer taskID, byte roleID);
+
+    @Query(value = "SELECT * FROM TaskCollaborators tc WHERE TaskID = :taskID AND RoleID = :roleID", nativeQuery = true)
+    List<TaskCollaborator> findByTaskIDAndRoleID(@Param("taskID") Integer taskID, @Param("roleID") Byte roleID);
+
+    @Query(value = "SELECT * FROM TaskCollaborators tc WHERE TaskID = :taskID AND RoleID = :roleID AND IsActive = 1", nativeQuery = true)
+    List<TaskCollaborator> findByTaskIDAndRoleIDAndIsActive(@Param("taskID") Integer taskID, @Param("roleID") Byte roleID);
+
+    @Query(value = "SELECT * FROM TaskCollaborators tc WHERE TaskID = :taskID AND IsActive = 1", nativeQuery = true)
+    List<TaskCollaborator> findByTaskIDAndIsActive(@Param("taskID") Integer taskID);
 }
