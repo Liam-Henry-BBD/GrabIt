@@ -87,6 +87,7 @@ public class ProjectController {
         if (!isCollaborator) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
+        
 
         projectService.closeProject(projectID);
         return ResponseEntity.noContent().build();
