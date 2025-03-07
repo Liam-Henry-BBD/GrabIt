@@ -149,7 +149,6 @@ public class TaskService {
         if (task.getTaskDeadline() != null && task.getTaskDeadline().isBefore(LocalDate.now())) {
             throw new BadRequest("Task deadline cannot be in the past.");
         }
-
         updatedTask.setTaskName(task.getTaskName());
         updatedTask.setTaskDescription(task.getTaskDescription());
         updatedTask.setTaskDeadline(task.getTaskDeadline());

@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import com.grabit.app.model.Auth2User;
 import org.springframework.security.core.Authentication;
@@ -37,8 +38,9 @@ public class UserService extends DefaultOAuth2UserService {
     }
 
     public User getAuthenticatedUser(Authentication authentication) {
-        String currentUserGitHubID = ((Auth2User) authentication.getPrincipal()).getName();
-        return userRepository.findByGitHubID(currentUserGitHubID);
+        OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+        String username = oidcUser.getClaims().get("email").toString().split("@")[0];
+        return userRepository.findByGitHubID(username);
     }
 
     @Override

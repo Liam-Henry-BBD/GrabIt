@@ -49,34 +49,16 @@ public class ProjectService extends Task {
     }
 
     public boolean isProjectCollaborator(Integer userID, Integer projectID) {
-        if (userID == null || projectID == null) {
+        if (userID == null) {
             return false;
         }
-        
-        if (projectCollaboratorRepository.existsByUserIDAndProjectID(userID, projectID)) {
-            return true;
-        }
-
-        if (projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(userID, projectID, Roles.PROJECT_LEAD.getRole())) {
-            return true;
-        }
-
         return projectCollaboratorRepository.existsByUserIDAndProjectID(userID, projectID);
     }
 
     public boolean isProjectLead(User user, Integer projectID) {
-        if (user == null || projectID == null) {
+
+        if (user == null) {
             return false;
-        }
-
-        if (projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(), projectID,
-                Roles.PROJECT_LEAD.getRole())) {
-            return true;
-        }
-
-        if (projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(), projectID,
-                Roles.PROJECT_LEAD.getRole())) {
-            return true;
         }
 
         return projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(), projectID,
@@ -84,11 +66,6 @@ public class ProjectService extends Task {
     }
 
     public List<ProjectAndRoleDTO> getAllProjects(User user) {
-
-        if (user == null) {
-            return null;
-        }
-
         return projectRepository.getProjectsByUserID(user.getUserID());
     }
 
@@ -98,10 +75,7 @@ public class ProjectService extends Task {
 
     public void closeProject(Integer projectID) {
         projectRepository.findById(projectID).orElseThrow(() -> new NotFound("Project not found"));
-
-        if (taskRepository.countByProjectID(projectID) > 0) {
-            throw new NotFound("Cannot close project with active tasks.");
-        }
+        //TODO: Soft deletion, deacticate the project instead?
         projectRepository.deleteById(projectID);
     }
 
@@ -114,9 +88,6 @@ public class ProjectService extends Task {
 
         if (results.length == 0) {
             return "No tasks have been completed yet.";
-        }
-        if (results[0].length != 3) {
-            return "An error occurred while fetching the leaderboard.";
         }
 
         List<ProjectLeaderboardDTO> leaderboard = Arrays.stream(results)
@@ -132,16 +103,6 @@ public class ProjectService extends Task {
     }
 
     public List<ProjectCollaborator> getProjectCollaboratorsByProjectID(Integer projectID) {
-
-        if (projectRepository.findById(projectID).
-                orElseThrow(() -> new NotFound("Project not found")) == null) {
-            throw new NotFound("Project not found");
-        }
-
-        if (projectCollaboratorRepository.countByProjectIDAndIsActive(projectID, true) == 0) {
-            throw new NotFound("No collaborators found for this project.");
-        }
-
         return projectCollaboratorRepository.findByProjectID(projectID);
     }
 
@@ -154,7 +115,8 @@ public class ProjectService extends Task {
         return projectRepository.save(existingProject);
     }
 
-    public void putProject(Project project) {
-        projectRepository.save(project);
+    public boolean isCollaborator(Integer projectID, User user) {
+
+        return isProjectCollaborator(user.getUserID(), projectID);
     }
 }
