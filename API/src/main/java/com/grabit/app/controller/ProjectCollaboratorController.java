@@ -22,7 +22,7 @@ public class ProjectCollaboratorController {
     }
 
     @GetMapping("/{projectCollabID}")
-    public ResponseEntity<ProjectCollaborator> getProjectCollaboratorByID(@PathVariable Integer projectCollabID) {
+    public ResponseEntity<ProjectCollaborator> getProjectCollaboratorByID(@PathVariable Integer projectCollabID, Authentication authentication) {
         ProjectCollaborator collaborator = projectCollaboratorService.getProjectCollaboratorByID(projectCollabID);
         return ResponseEntity.ok(collaborator);
     }
