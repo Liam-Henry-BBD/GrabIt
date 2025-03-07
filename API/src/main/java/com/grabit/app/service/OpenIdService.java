@@ -21,11 +21,6 @@ public class OpenIdService implements OAuth2UserService<OidcUserRequest, OidcUse
     @Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
         OidcUser oidcUser = delegate.loadUser(userRequest);
-//        OAuth2AuthenticationToken authenticationToken = new OAuth2AuthenticationToken(
-//                oidcUser,
-//                null,
-//                "google");
-//        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         return new DefaultOidcUser(null, userRequest.getIdToken(), oidcUser.getUserInfo());
     }
 }

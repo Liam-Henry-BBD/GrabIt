@@ -47,6 +47,14 @@ public class ProjectCollaboratorService {
                 projectCollaborator.getUserID(), projectCollaborator.getRoleID(), projectCollaborator.getProjectID());
     }
 
+    @Transactional
+    public void addProjectLead(ProjectCollaborator projectCollaborator, User user) {
+
+
+        projectCollaboratorRepository.insertCollaborator(projectCollaborator.getJoinedAt(),
+                projectCollaborator.getUserID(), projectCollaborator.getRoleID(), projectCollaborator.getProjectID());
+    }
+
     public ProjectCollaborator getProjectCollaboratorByID(Integer id) {
         return projectCollaboratorRepository.findById(id.intValue()).orElse(null);
     }
