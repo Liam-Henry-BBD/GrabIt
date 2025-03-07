@@ -86,7 +86,6 @@ public class AuthFilter implements Filter {
 
             OAuth2AuthenticationToken authentication = new OAuth2AuthenticationToken(oidcUser, authorities, "google");
 
-//            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -98,27 +97,7 @@ public class AuthFilter implements Filter {
         }
     }
 
-    public String getUserDetails(String token) throws URISyntaxException, IOException, InterruptedException {
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest httpRequest = HttpRequest
-                .newBuilder().uri(new URI("https://api.github.com/user"))
-                .header("Authorization", "Bearer " + token)
-                .GET().build();
 
-        HttpResponse<String> send = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        if (send.statusCode() != HttpStatus.OK.value()) {
-            return null;
-        }
-        return send.body();
-    }
-
-    public void attachPrincipalToSecurityContext(String userObject) throws JsonProcessingException {
-        OAuth2AuthenticationToken authenticationToken = new OAuth2AuthenticationToken(
-                new Auth2User(userObject),
-                null,
-                "github");
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-    }
 
     public void sendHttpResponse(HttpServletResponse httpResponse, String message, HttpStatus status)
             throws IOException {

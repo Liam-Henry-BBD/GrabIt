@@ -27,8 +27,6 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-//            l
-//                        .anyRequest().authenticated())
                 .addFilterBefore(authFilter, BasicAuthenticationFilter.class)
                 .oauth2Login(Customizer.withDefaults());
 
