@@ -51,7 +51,7 @@ public class ProjectController {
         projectCollaborator.setJoinedAt(LocalDateTime.now());
         projectCollaborator.setActive(true);
 
-        projectCollaboratorService.addProjectCollaborator(projectCollaborator, user);
+        projectCollaboratorService.addProjectLead(projectCollaborator, user);
 
         return new ResponseEntity<>(newProject, HttpStatus.CREATED);
     }

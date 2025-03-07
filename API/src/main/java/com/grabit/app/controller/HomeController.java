@@ -27,8 +27,8 @@ public class HomeController {
     @GetMapping
     public ResponseEntity<TokenDTO> home(HttpServletRequest request, Authentication principal) {
         OidcUser user = (OidcUser) principal.getPrincipal();
-        System.out.println(((CsrfToken) request.getAttribute("_csrf")).getToken());
-        TokenDTO token = new TokenDTO(user.getIdToken().getTokenValue());
+        String csrf = ((CsrfToken) request.getAttribute("_csrf")).getToken();
+        TokenDTO token = new TokenDTO(user.getIdToken().getTokenValue(), csrf);
         return ResponseEntity.ok(token);
     }
 }
