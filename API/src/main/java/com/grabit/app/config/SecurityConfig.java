@@ -22,7 +22,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .addFilterBefore(authFilter, BasicAuthenticationFilter.class)
-                .authorizeHttpRequests(authz -> authz
+                .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login/**", "/oauth2/**", "/favicon.ico", "/").authenticated()
                         .anyRequest().permitAll())
                 .oauth2Login(Customizer.withDefaults())

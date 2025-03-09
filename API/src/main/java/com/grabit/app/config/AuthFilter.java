@@ -70,11 +70,8 @@ public class AuthFilter implements Filter {
                 jwtDecoder = JwtDecoders.fromIssuerLocation("https://accounts.google.com");
             }
             Jwt jwt = jwtDecoder.decode(token);
-
             Map<String, Object> claims = jwt.getClaims();
-
             String email = (String) claims.get("email");
-            String name = (String) claims.get("name");
             String emailSplit = email.split("@")[0];
             userService.saveOrUpdateUser(emailSplit);
 
@@ -92,8 +89,7 @@ public class AuthFilter implements Filter {
             filterChain.doFilter(servletRequest, servletResponse);
 
         } catch (Exception e) {
-            System.out.println(e);
-            sendHttpResponse(httpResponse, "UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
+            sendHttpResponse(httpResponse, "Token is invalid.", HttpStatus.UNAUTHORIZED);
         }
     }
 
