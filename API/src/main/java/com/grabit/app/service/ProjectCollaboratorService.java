@@ -1,6 +1,10 @@
 package com.grabit.app.service;
 
+import com.grabit.app.enums.Roles;
 import com.grabit.app.exceptions.BadRequest;
+import com.grabit.app.exceptions.NotFound;
+import com.grabit.app.model.Role;
+import com.grabit.app.repository.RoleRepository;
 import org.springframework.stereotype.Service;
 
 import com.grabit.app.model.ProjectCollaborator;
@@ -9,6 +13,7 @@ import com.grabit.app.repository.ProjectCollaboratorRepository;
 
 import jakarta.transaction.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -17,11 +22,13 @@ public class ProjectCollaboratorService {
     private final ProjectService projectService;
 
     private final ProjectCollaboratorRepository projectCollaboratorRepository;
+    private final RoleRepository roleRepository;
 
     public ProjectCollaboratorService(ProjectService projectService,
-            ProjectCollaboratorRepository projectCollaboratorRepository) {
+                                      ProjectCollaboratorRepository projectCollaboratorRepository, RoleRepository roleRepository) {
         this.projectService = projectService;
         this.projectCollaboratorRepository = projectCollaboratorRepository;
+        this.roleRepository = roleRepository;
     }
 
     public List<ProjectCollaborator> getAllProjectCollaboratorsByProjectID(Integer projectID) {
@@ -31,8 +38,16 @@ public class ProjectCollaboratorService {
     @Transactional
     public void addProjectCollaborator(ProjectCollaborator projectCollaborator, User user) {
 
-        boolean userExists = projectCollaboratorRepository.existsByUserIDAndProjectID(user.getUserID(),
+        boolean userExists = projectCollaboratorRepository.existsByUserIDAndProjectID(projectCollaborator.getUserID(),
                 projectCollaborator.getProjectID());
+
+
+        Role role = roleRepository.findById(Integer.valueOf(projectCollaborator.getRoleID()))
+                .orElseThrow(() -> new NotFound("Role not found"));
+
+            if (!role.getRoleID().equals(Roles.PROJECT_MEMBER.getRole())) {
+            throw new BadRequest("Collaborators can only be added as a project member");
+        }
 
         if (userExists) {
             throw new BadRequest("User is already a collaborator for this project.");
@@ -43,7 +58,7 @@ public class ProjectCollaboratorService {
             throw new BadRequest("Only project leaders can add project collaborators.");
         }
 
-        projectCollaboratorRepository.insertCollaborator(projectCollaborator.getJoinedAt(),
+        projectCollaboratorRepository.insertCollaborator(LocalDateTime.now(),
                 projectCollaborator.getUserID(), projectCollaborator.getRoleID(), projectCollaborator.getProjectID());
     }
 

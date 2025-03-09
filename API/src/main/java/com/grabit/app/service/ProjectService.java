@@ -16,7 +16,9 @@ import com.grabit.app.repository.ProjectCollaboratorRepository;
 import com.grabit.app.repository.ProjectRepository;
 import com.grabit.app.repository.TaskCollaboratorRepository;
 import com.grabit.app.repository.TaskRepository;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -39,13 +41,18 @@ public class ProjectService extends Task {
 
     }
 
+
+    @Transactional
     public Project createProject(ProjectCreationDTO request, User user) {
         Project project = new Project();
         project.setProjectName(request.getProjectName());
         project.setProjectDescription(request.getProjectDescription());
         project.setCreatedAt(new Date());
         project.setUpdatedAt(new Date());
-        return projectRepository.save(project);
+        Project newProject = projectRepository.save(project);
+        //Add project lead
+        projectCollaboratorRepository.insertCollaborator(LocalDateTime.now(), user.getUserID(), Roles.PROJECT_LEAD.getRole(), newProject.getProjectID());
+        return newProject;
     }
 
     public boolean isProjectCollaborator(Integer userID, Integer projectID) {
@@ -73,10 +80,10 @@ public class ProjectService extends Task {
         return projectRepository.findById(projectID).orElseThrow(() -> new NotFound("Project not found"));
     }
 
+    @Transactional
     public void closeProject(Integer projectID) {
         projectRepository.findById(projectID).orElseThrow(() -> new NotFound("Project not found"));
-        //TODO: Soft deletion, deacticate the project instead?
-        projectRepository.deleteById(projectID);
+        projectRepository.deactivateProject(projectID);
     }
 
     public List<Task> getProjectTasksByProjectID(Integer projectID) {
@@ -116,7 +123,6 @@ public class ProjectService extends Task {
     }
 
     public boolean isCollaborator(Integer projectID, User user) {
-
         return isProjectCollaborator(user.getUserID(), projectID);
     }
 }

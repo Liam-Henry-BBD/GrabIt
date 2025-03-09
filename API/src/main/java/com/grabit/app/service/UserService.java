@@ -3,6 +3,7 @@ package com.grabit.app.service;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import com.grabit.app.exceptions.NotFound;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -49,7 +50,7 @@ public class UserService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         String githubID = Optional.ofNullable(oAuth2User.getAttribute("login"))
                                   .map(Object::toString)
-                                  .orElseThrow(() -> new IllegalArgumentException("GitHub ID not found"));
+                                  .orElseThrow(() -> new NotFound("Google ID not found"));
         this.saveOrUpdateUser(githubID);
         return oAuth2User;
     }

@@ -1,7 +1,9 @@
 package com.grabit.app.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import com.grabit.app.enums.Roles;
 import com.grabit.app.enums.Status;
@@ -71,33 +73,37 @@ public class TaskService {
             throw new NotFound("Task point not found.");
         }
 
-        if (!taskStatusRepository.existsById((int) task.getTaskStatus().getTaskStatusID())) {
-            throw new NotFound("Task status not found.");
-        }
+        TaskStatus taskStatus = taskStatusRepository.findById((int) Status.AVAILABLE.getStatus())
+                .orElseThrow(() -> new NotFound("Task status not found."));
 
         if (task.getTaskDeadline() != null && task.getTaskDeadline().isBefore(LocalDate.now())) {
             throw new BadRequest("Task deadline cannot be in the past.");
         }
-
-        if (task.getTaskStatus().getStatusName().contains("Complete")) {
-            throw new BadRequest("Task is already completed.");
-        }
-
-        if (taskCollaboratorRepository.existsByTaskIDAndUserID(task.getTaskID(), user.getUserID())) {
-            throw new BadRequest("User is already a collaborator.");
-        }
+        task.setTaskStatus(taskStatus);
         return taskRepository.save(task);
     }
 
     public Task updateTaskStatus(int taskID, byte taskStatusID, User user) {
+
+
+
+        Task task = taskRepository.findById(taskID)
+                .orElseThrow(() -> new NotFound("Task not found"));
+
+
+        boolean isLead = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(),
+                task.getProject().getProjectID(), Roles.PROJECT_LEAD.getRole());
+        //Change status to complete when you are a project lead
+        if (taskStatusID == Status.COMPLETE.getStatus() && !isLead) {
+            throw new BadRequest("User is not a lead in this project.");
+        }
 
         boolean allowed = taskCollaboratorRepository.existsByTaskIDAndUserID(taskID, user.getUserID());
         if (!allowed) {
             throw new BadRequest("User is not a member of this task.");
         }
 
-        Task task = taskRepository.findById(taskID)
-                .orElseThrow(() -> new NotFound("Task not found"));
+
 
         if (task.getTaskStatus().getStatusName().contains("Complete")) {
             throw new BadRequest("Task is already completed.");
@@ -121,6 +127,10 @@ public class TaskService {
         if (task.getTaskStatus().getTaskStatusID() == Status.GRABBED.getStatus()
                 && taskStatusID != Status.REVIEW.getStatus()) {
             throw new BadRequest("Task must move from grabbed to review.");
+        }
+
+        if (task.getTaskStatus().getTaskStatusID() == Status.REVIEW.getStatus()) {
+            task.setTaskReviewRequestedAt(LocalDateTime.now());
         }
 
         TaskStatus taskStatus = taskStatusRepository.findById((int) taskStatusID)
@@ -170,7 +180,7 @@ public class TaskService {
             throw new BadRequest("Cannot delete task. Not a project lead.");
         }
 
-        taskCollaboratorRepository.deactivateCollaborators(id);
+        taskRepository.deactivateTask(id);
     }
 
     public List<TaskCollaborator> getTaskCollaborators(Integer taskID, User user) {
