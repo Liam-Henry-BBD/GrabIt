@@ -29,4 +29,8 @@ public class Project {
     @Getter
     @Setter
     private Date updatedAt;
+    @Setter
+    @Getter
+    @Column(name = "isActive", nullable = false)
+    private boolean isActive;
 }

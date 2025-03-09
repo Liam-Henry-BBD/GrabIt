@@ -63,6 +63,9 @@ public class Task {
     @Column(name = "TaskCompletedAt")
     private Date taskCompletedAt;
 
+    @Column(name = "isActive", nullable = false)
+    private boolean isActive;
+
     @PrePersist
     void prePersist() {
         if (taskCreatedAt == null) {

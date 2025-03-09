@@ -38,7 +38,7 @@ public class ExceptionResolver {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Error> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
-        Error error = new Error("Validation failed: " + ex.getBindingResult().toString(), HttpStatus.BAD_REQUEST.value());
+        Error error = new Error("Validation failed", HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 

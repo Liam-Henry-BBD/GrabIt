@@ -30,8 +30,8 @@ public class ProjectCollaborator {
     private Byte roleID;
 
     @Column(name = "JoinedAt", nullable = false)
-    private LocalDateTime joinedAt;
+    private LocalDateTime joinedAt = LocalDateTime.now();
 
     @Column(name = "isActive", nullable = false)
-    private boolean isActive;
+    private boolean isActive = true;
 }

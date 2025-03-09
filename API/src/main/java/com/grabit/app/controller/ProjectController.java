@@ -40,19 +40,7 @@ public class ProjectController {
             Authentication authentication) {
 
         User user = userService.getAuthenticatedUser(authentication);
-
         Project newProject = projectService.createProject(request, user);
-
-        ProjectCollaborator projectCollaborator = new ProjectCollaborator();
-
-        projectCollaborator.setUserID(user.getUserID());
-        projectCollaborator.setProjectID(newProject.getProjectID());
-        projectCollaborator.setRoleID(Roles.PROJECT_LEAD.getRole());
-        projectCollaborator.setJoinedAt(LocalDateTime.now());
-        projectCollaborator.setActive(true);
-
-        projectCollaboratorService.addProjectLead(projectCollaborator, user);
-
         return new ResponseEntity<>(newProject, HttpStatus.CREATED);
     }
 
@@ -68,8 +56,7 @@ public class ProjectController {
     public ResponseEntity<Project> getProjectByID(@PathVariable Integer projectID,
             Authentication authentication) {
 
-        if (!projectService.isProjectCollaborator(projectID,
-                userService.getAuthenticatedUser(authentication).getUserID())) {
+        if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(), projectID)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
 
@@ -87,7 +74,6 @@ public class ProjectController {
         if (!isCollaborator) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
-        
 
         projectService.closeProject(projectID);
         return ResponseEntity.noContent().build();
@@ -97,8 +83,7 @@ public class ProjectController {
     public ResponseEntity<List<Task>> getProjectTasks(@PathVariable Integer projectID,
             Authentication authentication) {
 
-        if (!projectService.isProjectCollaborator(projectID,
-                userService.getAuthenticatedUser(authentication).getUserID())) {
+        if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),projectID)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
         return ResponseEntity.ok(projectService.getProjectTasksByProjectID(projectID));
@@ -108,8 +93,7 @@ public class ProjectController {
     public ResponseEntity<List<ProjectCollaborator>> getProjectCollaborators(@PathVariable Integer projectID,
             Authentication authentication) {
 
-        if (!projectService.isProjectCollaborator(projectID,
-                userService.getAuthenticatedUser(authentication).getUserID())) {
+        if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(), projectID)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
         return ResponseEntity.ok(projectService.getProjectCollaboratorsByProjectID(projectID));
@@ -119,8 +103,7 @@ public class ProjectController {
     public ResponseEntity<Object> getProjectLeaderboard(@PathVariable Integer projectID,
             Authentication authentication) {
 
-        if (!projectService.isProjectCollaborator(projectID,
-                userService.getAuthenticatedUser(authentication).getUserID())) {
+        if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(), projectID)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
         return ResponseEntity.ok(projectService.getProjectLeaderboardByProjectID(projectID));
