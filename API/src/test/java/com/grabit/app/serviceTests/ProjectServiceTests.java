@@ -34,7 +34,7 @@ class ProjectServiceTests {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        project = new Project(1, "Project 1", "Description", new Date(), new Date());
+        project = new Project(1, "Project 1", "Description", new Date(), new Date(), true);
         user = new User();
         projectCreationDTO = new ProjectCreationDTO(project.getProjectName(), project.getProjectDescription());
         projectCreationDTO.setProjectName("Project 1");

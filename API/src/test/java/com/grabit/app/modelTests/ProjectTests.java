@@ -12,7 +12,7 @@ public class ProjectTests {
     public void testProjectConstructorAndGetters() {
         Date createdAt = new Date();
         Date updatedAt = new Date();
-        Project project = new Project(1, "ProjectName", "ProjectDescription", createdAt, updatedAt);
+        Project project = new Project(1, "ProjectName", "ProjectDescription", createdAt, updatedAt, true);
 
         assertEquals(1, project.getProjectID());
         assertEquals("ProjectName", project.getProjectName());
