@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 
 import com.grabit.app.dto.ProjectAndRoleDTO;
 import com.grabit.app.dto.ProjectCreationDTO;
+import com.grabit.app.dto.TaskDTO;
 import com.grabit.app.enums.Roles;
 import com.grabit.app.model.Project;
 import com.grabit.app.model.ProjectCollaborator;
@@ -56,7 +57,8 @@ public class ProjectController {
     public ResponseEntity<Project> getProjectByID(@PathVariable Integer projectID,
             Authentication authentication) {
 
-        if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(), projectID)) {
+        if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),
+                projectID)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
 
@@ -83,17 +85,30 @@ public class ProjectController {
     public ResponseEntity<List<Task>> getProjectTasks(@PathVariable Integer projectID,
             Authentication authentication) {
 
-        if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),projectID)) {
+        if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),
+                projectID)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
         return ResponseEntity.ok(projectService.getProjectTasksByProjectID(projectID));
+    }
+
+    @GetMapping("/{projectID}/my-tasks")
+    public ResponseEntity<List<TaskDTO>> getMyProjectTasks(@PathVariable Integer projectID,
+            Authentication authentication) {
+        Integer userID = userService.getAuthenticatedUser(authentication).getUserID();
+
+        if (!projectService.isProjectCollaborator(userID, projectID)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+        return ResponseEntity.ok(projectService.getProjectTasksByProjectIDAndUserID(projectID, userID));
     }
 
     @GetMapping("/{projectID}/collaborators")
     public ResponseEntity<List<ProjectCollaborator>> getProjectCollaborators(@PathVariable Integer projectID,
             Authentication authentication) {
 
-        if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(), projectID)) {
+        if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),
+                projectID)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
         return ResponseEntity.ok(projectService.getProjectCollaboratorsByProjectID(projectID));
@@ -103,7 +118,8 @@ public class ProjectController {
     public ResponseEntity<Object> getProjectLeaderboard(@PathVariable Integer projectID,
             Authentication authentication) {
 
-        if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(), projectID)) {
+        if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),
+                projectID)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
         return ResponseEntity.ok(projectService.getProjectLeaderboardByProjectID(projectID));

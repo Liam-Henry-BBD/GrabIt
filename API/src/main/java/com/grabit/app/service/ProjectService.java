@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.grabit.app.dto.ProjectAndRoleDTO;
 import com.grabit.app.dto.ProjectCreationDTO;
 import com.grabit.app.dto.ProjectLeaderboardDTO;
+import com.grabit.app.dto.TaskDTO;
 import com.grabit.app.enums.Roles;
 import com.grabit.app.model.Project;
 import com.grabit.app.model.ProjectCollaborator;
@@ -41,7 +42,6 @@ public class ProjectService extends Task {
 
     }
 
-
     @Transactional
     public Project createProject(ProjectCreationDTO request, User user) {
         Project project = new Project();
@@ -50,8 +50,9 @@ public class ProjectService extends Task {
         project.setCreatedAt(new Date());
         project.setUpdatedAt(new Date());
         Project newProject = projectRepository.save(project);
-        //Add project lead
-        projectCollaboratorRepository.insertCollaborator(LocalDateTime.now(), user.getUserID(), Roles.PROJECT_LEAD.getRole(), newProject.getProjectID());
+        // Add project lead
+        projectCollaboratorRepository.insertCollaborator(LocalDateTime.now(), user.getUserID(),
+                Roles.PROJECT_LEAD.getRole(), newProject.getProjectID());
         return newProject;
     }
 
@@ -88,6 +89,10 @@ public class ProjectService extends Task {
 
     public List<Task> getProjectTasksByProjectID(Integer projectID) {
         return taskRepository.findByProjectID(projectID);
+    }
+
+    public List<TaskDTO> getProjectTasksByProjectIDAndUserID(Integer projectID, Integer userId) {
+        return taskRepository.findByProjectIDAndUserID(projectID, userId);
     }
 
     public Object getProjectLeaderboardByProjectID(Integer projectID) {
