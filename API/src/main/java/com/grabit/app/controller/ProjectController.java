@@ -56,7 +56,7 @@ public class ProjectController {
             Authentication authentication) {
         if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),
                 projectID)) {
-            throw new BadRequest("You are not a leader on this project");
+            throw new BadRequest("You are not a collaborator on this project");
         }
 
         Project project = projectService.getProjectByID(projectID);
