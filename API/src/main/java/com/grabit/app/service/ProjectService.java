@@ -44,7 +44,7 @@ public class ProjectService extends Task {
     }
 
     @Transactional
-    public Project createProject(ProjectCreationDTO request, User user) {
+    public void createProject(ProjectCreationDTO request, User user) {
         Project project = new Project();
         project.setProjectName(request.getProjectName());
         project.setProjectDescription(request.getProjectDescription());
@@ -54,7 +54,7 @@ public class ProjectService extends Task {
         Project newProject = projectRepository.save(project);
         projectCollaboratorRepository.insertCollaborator(LocalDateTime.now(), user.getUserID(),
                 Roles.PROJECT_LEAD.getRole(), newProject.getProjectID());
-        return newProject;
+
     }
 
     public boolean isProjectCollaborator(Integer userID, Integer projectID) {

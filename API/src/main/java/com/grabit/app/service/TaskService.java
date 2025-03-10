@@ -38,7 +38,6 @@ public class TaskService {
 
     public Task getTaskById(Integer taskID, User user) {
 
-
         Task task = taskRepository.findById(taskID)
                 .orElseThrow(() -> new NotFound("Task not found"));
 
@@ -50,21 +49,11 @@ public class TaskService {
         if (!allowed && !isLead) {
             throw new BadRequest("Cannot access task because you are not a project collaborator.");
         }
-//
-//
-//        if (!taskCollaboratorRepository.existsByTaskIDAndUserID(taskID, user.getUserID()) && !isLead) {
-//            throw new BadRequest("User is not a collaborator in this task.");
-//        }
-//
-//        if (!taskCollaboratorRepository.existsByTaskIDAndUserIDAndRoleID(taskID, user.getUserID(),
-//                Roles.TASK_GRABBER.getRole())) {
-//            throw new BadRequest("User is not a grabber in this task.");
-//        }
-        
+
         return task;
     }
 
-    public Task createTask(Task task, User user) {
+    public void createTask(Task task, User user) {
 
         boolean allowed = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(),
                 task.getProject().getProjectID(), Roles.PROJECT_LEAD.getRole());
@@ -85,20 +74,17 @@ public class TaskService {
         }
         task.setTaskStatus(taskStatus);
         task.setActive(true);
-        return taskRepository.save(task);
+        taskRepository.save(task);
     }
 
     public Task updateTaskStatus(int taskID, byte taskStatusID, User user) {
 
-
-
         Task task = taskRepository.findById(taskID)
                 .orElseThrow(() -> new NotFound("Task not found"));
 
-
         boolean isLead = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(),
                 task.getProject().getProjectID(), Roles.PROJECT_LEAD.getRole());
-        //Change status to complete when you are a project lead
+        // Change status to complete when you are a project lead
         if (taskStatusID == Status.COMPLETE.getStatus() && !isLead) {
             throw new BadRequest("User is not a lead in this project.");
         }
@@ -108,14 +94,12 @@ public class TaskService {
             throw new BadRequest("User is not a member of this task.");
         }
 
-
-
         if (task.getTaskStatus().getStatusName().contains("Complete")) {
             throw new BadRequest("Task is already completed.");
         }
 
         if (taskStatusID == Status.AVAILABLE.getStatus()
-                && task.getTaskStatus().getTaskStatusID() !=  Status.AVAILABLE.getStatus()) {
+                && task.getTaskStatus().getTaskStatusID() != Status.AVAILABLE.getStatus()) {
             throw new BadRequest("Task status cannot move to available.");
         }
 
@@ -190,7 +174,7 @@ public class TaskService {
 
     public List<TaskCollaborator> getTaskCollaborators(Integer taskID, User user) {
 
-        //TODO: Everyone on the project should be able to see the task collaborators?
+        // TODO: Everyone on the project should be able to see the task collaborators?
         boolean allowed = taskRepository.existsTaskByUserIDAndTaskID(taskID, user.getUserID());
         if (!allowed) {
             throw new BadRequest("Cannot access list because you are not a collaborator in this task.");
