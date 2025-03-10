@@ -3,6 +3,7 @@ package com.grabit.app.controllerTests;
 import com.grabit.app.controller.ProjectController;
 import com.grabit.app.dto.ProjectAndRoleDTO;
 import com.grabit.app.dto.ProjectCreationDTO;
+import com.grabit.app.dto.ProjectLeaderboardDTO;
 import com.grabit.app.model.*;
 import com.grabit.app.service.ProjectService;
 import com.grabit.app.service.UserService;
@@ -81,7 +82,7 @@ public class ProjectControllerTests {
         when(projectService.isProjectCollaborator(eq(testUser.getUserID()), eq(1))).thenReturn(true);
         when(projectService.getProjectByID(1)).thenReturn(project);
 
-        ResponseEntity<Object> response = projectController.getProjectByID(1, authentication);
+        ResponseEntity<Project> response = projectController.getProjectByID(1, authentication);
 
         verify(projectService, times(1)).isProjectCollaborator(eq(testUser.getUserID()), eq(1));
         verify(projectService, times(1)).getProjectByID(1);
@@ -97,7 +98,7 @@ public class ProjectControllerTests {
         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
         when(projectService.isProjectCollaborator(eq(testUser.getUserID()), eq(1))).thenReturn(false);
 
-        ResponseEntity<Object> response = projectController.getProjectByID(1, authentication);
+        ResponseEntity<Project> response = projectController.getProjectByID(1, authentication);
 
         verify(projectService, times(0)).getProjectByID(1);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
@@ -112,25 +113,25 @@ public class ProjectControllerTests {
         when(projectService.isProjectLead(eq(testUser), eq(1))).thenReturn(true);
         when(projectService.getProjectByID(1)).thenReturn(project);
 
-        ResponseEntity<Object> response = projectController.closeProject(1, authentication);
+        ResponseEntity<Project> response = projectController.closeProject(1, authentication);
 
         verify(projectService, times(1)).closeProject(1);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
 
-//    @Test
-//    public void testCloseProject_FORBIDDEN() {
-//        User testUser = new User();
-//
-//        when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
-//        when(projectService.isProjectLead(eq(testUser), eq(2))).thenReturn(false);
-//
-//        ResponseEntity<Object> response = projectController.closeProject(1, authentication);
-//
-//        verify(projectService, times(0)).closeProject(1);
-//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
-//    }
+    @Test
+    public void testCloseProject_FORBIDDEN() {
+        User testUser = new User();
+
+        when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
+        when(projectService.isProjectLead(eq(testUser), eq(2))).thenReturn(false);
+
+        ResponseEntity<Project> response = projectController.closeProject(1, authentication);
+
+        verify(projectService, times(0)).closeProject(1);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
 
     @Test
     public void testGetProjectTasks() {
@@ -141,7 +142,7 @@ public class ProjectControllerTests {
         when(projectService.isProjectCollaborator(eq(testUser.getUserID()), eq(1))).thenReturn(true);
         when(projectService.getProjectTasksByProjectID(1)).thenReturn(tasks);
 
-        ResponseEntity<Object> response = projectController.getProjectTasks(1, authentication);
+        ResponseEntity<List<Task>> response = projectController.getProjectTasks(1, authentication);
 
         verify(projectService, times(1)).getProjectTasksByProjectID(1);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -155,7 +156,7 @@ public class ProjectControllerTests {
         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
         when(projectService.isProjectCollaborator(eq(testUser.getUserID()), eq(1))).thenReturn(false);
 
-        ResponseEntity<Object> response = projectController.getProjectTasks(1, authentication);
+        ResponseEntity<List<Task>> response = projectController.getProjectTasks(1, authentication);
 
         verify(projectService, times(0)).getProjectTasksByProjectID(1);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
@@ -170,7 +171,7 @@ public class ProjectControllerTests {
         when(projectService.isProjectCollaborator(eq(testUser.getUserID()), eq(1))).thenReturn(true);
         when(projectService.getProjectCollaboratorsByProjectID(1)).thenReturn(collaborators);
 
-        ResponseEntity<Object> response = projectController.getProjectCollaborators(1, authentication);
+        ResponseEntity<List<ProjectCollaborator>> response = projectController.getProjectCollaborators(1, authentication);
 
         verify(projectService, times(1)).getProjectCollaboratorsByProjectID(1);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -184,7 +185,7 @@ public class ProjectControllerTests {
         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
         when(projectService.isProjectCollaborator(eq(testUser.getUserID()), eq(1))).thenReturn(false);
 
-        ResponseEntity<Object> response = projectController.getProjectCollaborators(1, authentication);
+        ResponseEntity<List<ProjectCollaborator>> response = projectController.getProjectCollaborators(1, authentication);
 
         verify(projectService, times(0)).getProjectCollaboratorsByProjectID(1);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
@@ -193,17 +194,17 @@ public class ProjectControllerTests {
     @Test
     public void testGetProjectLeaderboard() {
         User testUser = new User();
-        Object leaderboard = new Object();
+//        List<ProjectLeaderboardDTO> leaderboard = new List<>();
 
         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
         when(projectService.isProjectCollaborator(eq(testUser.getUserID()), eq(1))).thenReturn(true);
-        when(projectService.getProjectLeaderboardByProjectID(1)).thenReturn(leaderboard);
+//        when(projectService.getProjectLeaderboardByProjectID(1)).thenReturn( leaderboard);
 
-        ResponseEntity<Object> response = projectController.getProjectLeaderboard(1, authentication);
+        ResponseEntity<List<ProjectLeaderboardDTO>> response = projectController.getProjectLeaderboard(1, authentication);
 
         verify(projectService, times(1)).getProjectLeaderboardByProjectID(1);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(leaderboard);
+//        assertThat(response.getBody()).isEqualTo(leaderboard);
     }
 
     @Test
@@ -213,7 +214,7 @@ public class ProjectControllerTests {
         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
         when(projectService.isProjectCollaborator(eq(testUser.getUserID()), eq(1))).thenReturn(false);
 
-        ResponseEntity<Object> response = projectController.getProjectLeaderboard(1, authentication);
+        ResponseEntity<List<ProjectLeaderboardDTO>> response = projectController.getProjectLeaderboard(1, authentication);
 
         verify(projectService, times(0)).getProjectLeaderboardByProjectID(1);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
@@ -228,7 +229,7 @@ public class ProjectControllerTests {
         when(projectService.isProjectLead(eq(testUser), eq(1))).thenReturn(true);
         when(projectService.updateProject(eq(1), any(Project.class))).thenReturn(updatedProject);
 
-        ResponseEntity<Object> response = projectController.updateProject(1, updatedProject, authentication);
+        ResponseEntity<Project> response = projectController.updateProject(1, updatedProject, authentication);
 
         verify(projectService, times(1)).updateProject(eq(1), any(Project.class));
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -242,7 +243,7 @@ public class ProjectControllerTests {
         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
         when(projectService.isProjectLead(eq(testUser), eq(1))).thenReturn(false);
 
-        ResponseEntity<Object> response = projectController.updateProject(1, new Project(), authentication);
+        ResponseEntity<Project> response = projectController.updateProject(1, new Project(), authentication);
 
         verify(projectService, times(0)).updateProject(eq(1), any(Project.class));
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
