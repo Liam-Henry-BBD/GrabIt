@@ -1,10 +1,7 @@
 package com.grabit.app.controllerTests;
 
 import com.grabit.app.controller.ProjectController;
-import com.grabit.app.dto.CreateResponseDTO;
-import com.grabit.app.dto.ProjectAndRoleDTO;
-import com.grabit.app.dto.ProjectCreationDTO;
-import com.grabit.app.dto.ProjectLeaderboardDTO;
+import com.grabit.app.dto.*;
 import com.grabit.app.exceptions.BadRequest;
 import com.grabit.app.model.*;
 import com.grabit.app.service.ProjectService;
@@ -18,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -48,7 +46,6 @@ public class ProjectControllerTests {
     public void testCreateProject() {
         ProjectCreationDTO request = new ProjectCreationDTO("Project A", "Description");
         User testUser = new User();
-        Project newProject = new Project();
 
         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
 
@@ -154,6 +151,26 @@ public class ProjectControllerTests {
     }
 
     @Test
+    public void testGetMyProjectTasks() {
+        User testUser = new User();
+        testUser.setUserID(1);
+        Integer projectID = 1;
+        TaskDTO taskDTO = new TaskDTO("Task 1", "Task description", LocalDateTime.now(), "In Progress", "5 points", LocalDateTime.now().plusDays(1));
+        List<TaskDTO> tasks = List.of(taskDTO);
+
+        when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
+        when(projectService.isProjectCollaborator(testUser.getUserID(), projectID)).thenReturn(true);
+        when(projectService.getProjectTasksByProjectIDAndUserID(projectID, testUser.getUserID())).thenReturn(tasks);
+
+        ResponseEntity<List<TaskDTO>> response = projectController.getMyProjectTasks(projectID, authentication);
+
+        verify(projectService, times(1)).isProjectCollaborator(testUser.getUserID(), projectID);
+        verify(projectService, times(1)).getProjectTasksByProjectIDAndUserID(projectID, testUser.getUserID());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(tasks);
+    }
+
+    @Test
     public void testUpdateProject() {
         User testUser = new User();
         Project updatedProject = new Project();
@@ -168,8 +185,9 @@ public class ProjectControllerTests {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(updatedProject);
     }
+
     @Test
-    public void testGetProjectByID_BAD_REQUEST() {
+    public void testGetProjectByID_BadRequest() {
         User testUser = new User();
         testUser.setUserID(1);
 
@@ -184,7 +202,7 @@ public class ProjectControllerTests {
     }
 
     @Test
-    public void testCloseProject_BAD_REQUEST() {
+    public void testCloseProject_BadRequest() {
         User testUser = new User();
 
         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
@@ -198,7 +216,7 @@ public class ProjectControllerTests {
     }
 
     @Test
-    public void testGetProjectTasks_BAD_REQUEST() {
+    public void testGetProjectTasks_BadRequest() {
         User testUser = new User();
 
         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
@@ -212,7 +230,7 @@ public class ProjectControllerTests {
     }
 
     @Test
-    public void testGetProjectCollaborators_BAD_REQUEST() {
+    public void testGetProjectCollaborators_BadRequest() {
         User testUser = new User();
 
         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
@@ -226,7 +244,23 @@ public class ProjectControllerTests {
     }
 
     @Test
-    public void testGetProjectLeaderboard_BAD_REQUEST() {
+    public void testGetMyProjectTasks_BadRequest() {
+        User testUser = new User();
+        testUser.setUserID(1);
+        Integer projectID = 1;
+
+        when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
+        when(projectService.isProjectCollaborator(testUser.getUserID(), projectID)).thenReturn(false);
+
+        Exception exception = assertThrows(BadRequest.class, () -> {
+            projectController.getMyProjectTasks(projectID, authentication);
+        });
+
+        assertThat(exception.getMessage()).contains("400 BAD_REQUEST \"You are not a collaborator on this project\"");
+    }
+
+    @Test
+    public void testGetProjectLeaderboard_BadRequest() {
         User testUser = new User();
 
         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
@@ -240,7 +274,7 @@ public class ProjectControllerTests {
     }
 
     @Test
-    public void testUpdateProject_BAD_REQUEST() {
+    public void testUpdateProject_BadRequest() {
         User testUser = new User();
 
         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
