@@ -68,15 +68,6 @@ public class ProjectController {
         boolean isCollaborator = projectService.isProjectLead(userService.getAuthenticatedUser(authentication),
                 projectID);
 
-        Optional<Project> projectOptional = Optional.ofNullable(projectService.getProjectByID(projectID));
-
-        if (!projectOptional.isPresent()) {
-            JSONObject jsonResponse = new JSONObject();
-            jsonResponse.put("status", "NOT_FOUND");
-            jsonResponse.put("message", "Project does not exist");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(jsonResponse);
-        }
-
         if (!isCollaborator) {
             JSONObject jsonResponse = new JSONObject();
             jsonResponse.put("status", "FORBIDDEN");
