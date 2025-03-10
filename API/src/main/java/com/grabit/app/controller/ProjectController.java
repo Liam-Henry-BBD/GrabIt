@@ -9,11 +9,9 @@ import org.springframework.security.core.Authentication;
 import com.grabit.app.dto.ProjectAndRoleDTO;
 import com.grabit.app.dto.ProjectCreationDTO;
 import com.grabit.app.dto.TaskDTO;
-import com.grabit.app.enums.Roles;
 
 import com.grabit.app.model.Project;
 import com.grabit.app.model.User;
-import com.grabit.app.service.ProjectCollaboratorService;
 import com.grabit.app.service.ProjectService;
 import com.grabit.app.service.UserService;
 
@@ -25,14 +23,11 @@ import java.util.Optional;
 public class ProjectController {
 
     private final ProjectService projectService;
-    private final ProjectCollaboratorService projectCollaboratorService;
     private final UserService userService;
 
     public ProjectController(ProjectService projectService,
-            ProjectCollaboratorService projectCollaboratorService,
             UserService userService) {
         this.projectService = projectService;
-        this.projectCollaboratorService = projectCollaboratorService;
         this.userService = userService;
     }
 
@@ -100,7 +95,7 @@ public class ProjectController {
                 projectID)) {
             JSONObject jsonResponse = new JSONObject();
             jsonResponse.put("status", "FORBIDDEN");
-            jsonResponse.put("message", "You do not have permission to view the project tasks.");
+            jsonResponse.put("message", "You are not a collaborator on this project.");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(jsonResponse);
         }
 
@@ -113,6 +108,9 @@ public class ProjectController {
         Integer userID = userService.getAuthenticatedUser(authentication).getUserID();
 
         if (!projectService.isProjectCollaborator(userID, projectID)) {
+            JSONObject jsonResponse = new JSONObject();
+            jsonResponse.put("status", "FORBIDDEN");
+            jsonResponse.put("message", "You are not a collaborator on this project.");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
         return ResponseEntity.ok(projectService.getProjectTasksByProjectIDAndUserID(projectID, userID));
