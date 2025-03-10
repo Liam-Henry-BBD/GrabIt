@@ -64,7 +64,7 @@ public class Task {
     private Date taskCompletedAt;
 
     @Column(name = "isActive", nullable = false)
-    private boolean isActive;
+    private boolean isActive = true;
 
     @PrePersist
     void prePersist() {

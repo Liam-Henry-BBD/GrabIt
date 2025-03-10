@@ -1,6 +1,7 @@
 package com.grabit.app.exceptions;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -62,6 +63,12 @@ public class ExceptionResolver {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Error> handleBaseException(Exception ex) {
+        Error error = new Error("An unexpected error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(InvalidDataAccessResourceUsageException.class)
+    public ResponseEntity<Error> handleInvalidDataAccessException(Exception ex) {
         Error error = new Error("An unexpected error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }

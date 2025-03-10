@@ -52,6 +52,7 @@ public class ProjectService extends Task {
         project.setProjectDescription(request.getProjectDescription());
         project.setCreatedAt(new Date());
         project.setUpdatedAt(new Date());
+        project.setActive(true);
         Project newProject = projectRepository.save(project);
         projectCollaboratorRepository.insertCollaborator(LocalDateTime.now(), user.getUserID(),
                 Roles.PROJECT_LEAD.getRole(), newProject.getProjectID());

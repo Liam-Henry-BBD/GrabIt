@@ -49,8 +49,10 @@ public class TaskCollaboratorService {
         boolean isProjectLead = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(),
                 task.getProject().getProjectID(), Roles.PROJECT_LEAD.getRole());
 
-        if (!isProjectLead) {
-            throw new BadRequest("Only project leaders can add task collaborators.");
+        TaskCollaborator collaborator = taskCollaboratorRepository.findByTaskIDAndUserID(taskCollaborator.getTask().getTaskID(), user.getUserID());
+
+        if (!isProjectLead && !(collaborator.getRole().getRoleID() == Roles.TASK_GRABBER.getRole())) {
+            throw new BadRequest("Only project leads and grabbers can add task collaborators.");
         }
 
         if (!isUserAllowed) {
@@ -74,7 +76,7 @@ public class TaskCollaboratorService {
                 throw new BadRequest("Task already has a grabber.");
             }
         }
-        
+
 
         taskCollaboratorRepository.createCollaborator(LocalDate.now(), user.getUserID(), role.getRoleID(),
                 task.getTaskID());

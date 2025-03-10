@@ -38,26 +38,30 @@ public class TaskService {
 
     public Task getTaskById(Integer taskID, User user) {
 
-        boolean allowed = taskRepository.existsTaskByUserIDAndTaskID(taskID, user.getUserID());
-        if (!allowed) {
-            throw new BadRequest("Cannot access task because you are not a collaborator.");
-        }
 
-        if (!taskRepository.existsById(taskID)) {
-            throw new NotFound("Task not found.");
-        }
-
-        if (!taskCollaboratorRepository.existsByTaskIDAndUserID(taskID, user.getUserID())) {
-            throw new BadRequest("User is not a collaborator in this task.");
-        }
-
-        if (!taskCollaboratorRepository.existsByTaskIDAndUserIDAndRoleID(taskID, user.getUserID(),
-                Roles.TASK_GRABBER.getRole())) {
-            throw new BadRequest("User is not a grabber in this task.");
-        }
-        
-        return taskRepository.findById(taskID)
+        Task task = taskRepository.findById(taskID)
                 .orElseThrow(() -> new NotFound("Task not found"));
+
+        boolean allowed = taskRepository.existsTaskByUserIDAndTaskID(taskID, user.getUserID());
+
+        boolean isLead = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(),
+                task.getProject().getProjectID(), Roles.PROJECT_LEAD.getRole());
+
+        if (!allowed && !isLead) {
+            throw new BadRequest("Cannot access task because you are not a project collaborator.");
+        }
+//
+//
+//        if (!taskCollaboratorRepository.existsByTaskIDAndUserID(taskID, user.getUserID()) && !isLead) {
+//            throw new BadRequest("User is not a collaborator in this task.");
+//        }
+//
+//        if (!taskCollaboratorRepository.existsByTaskIDAndUserIDAndRoleID(taskID, user.getUserID(),
+//                Roles.TASK_GRABBER.getRole())) {
+//            throw new BadRequest("User is not a grabber in this task.");
+//        }
+        
+        return task;
     }
 
     public Task createTask(Task task, User user) {
@@ -80,6 +84,7 @@ public class TaskService {
             throw new BadRequest("Task deadline cannot be in the past.");
         }
         task.setTaskStatus(taskStatus);
+        task.setActive(true);
         return taskRepository.save(task);
     }
 
@@ -99,7 +104,7 @@ public class TaskService {
         }
 
         boolean allowed = taskCollaboratorRepository.existsByTaskIDAndUserID(taskID, user.getUserID());
-        if (!allowed) {
+        if (!allowed && !isLead) {
             throw new BadRequest("User is not a member of this task.");
         }
 

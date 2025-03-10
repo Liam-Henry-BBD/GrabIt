@@ -32,5 +32,5 @@ public class Project {
     @Setter
     @Getter
     @Column(name = "isActive", nullable = false)
-    private boolean isActive;
+    private boolean isActive = true;
 }
