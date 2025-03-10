@@ -69,7 +69,7 @@ public class ExceptionResolver {
 
     @ExceptionHandler(InvalidDataAccessResourceUsageException.class)
     public ResponseEntity<Error> handleInvalidDataAccessException(Exception ex) {
-        Error error = new Error("An unexpected error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+        Error error = new Error("An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR.value());
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

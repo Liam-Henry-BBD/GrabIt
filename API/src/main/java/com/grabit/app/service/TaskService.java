@@ -150,6 +150,7 @@ public class TaskService {
         updatedTask.setTaskDescription(task.getTaskDescription());
         updatedTask.setTaskDeadline(task.getTaskDeadline());
         updatedTask.setTaskStatus(task.getTaskStatus());
+        updatedTask.setActive(task.isActive());
         return taskRepository.save(updatedTask);
     }
 
