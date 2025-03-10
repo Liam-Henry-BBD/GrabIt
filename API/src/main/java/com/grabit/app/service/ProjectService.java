@@ -125,6 +125,7 @@ public class ProjectService extends Task {
         existingProject.setProjectName(project.getProjectName());
         existingProject.setProjectDescription(project.getProjectDescription());
         existingProject.setUpdatedAt(new Date());
+        existingProject.setActive(project.isActive());
         return projectRepository.save(existingProject);
     }
 

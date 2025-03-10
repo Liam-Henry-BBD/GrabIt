@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
 
+import com.grabit.app.dto.CreateResponseDTO;
 import com.grabit.app.dto.ProjectAndRoleDTO;
 import com.grabit.app.dto.ProjectCreationDTO;
 import com.grabit.app.dto.TaskDTO;
@@ -34,11 +35,12 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<Project> createProject(@RequestBody ProjectCreationDTO request,
+    public ResponseEntity<CreateResponseDTO> createProject(@RequestBody ProjectCreationDTO request,
             Authentication authentication) {
         User user = userService.getAuthenticatedUser(authentication);
-        Project newProject = projectService.createProject(request, user);
-        return new ResponseEntity<>(newProject, HttpStatus.CREATED);
+        projectService.createProject(request, user);
+        return new ResponseEntity<>(new CreateResponseDTO("Your project has been created successfully", 201),
+                HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -50,9 +52,8 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectID}")
-
     public ResponseEntity<Project> getProjectByID(@PathVariable Integer projectID,
-                                                  Authentication authentication) {
+            Authentication authentication) {
         if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),
                 projectID)) {
             throw new BadRequest("You are not a leader on this project");
@@ -78,7 +79,7 @@ public class ProjectController {
 
     @GetMapping("/{projectID}/tasks")
     public ResponseEntity<List<Task>> getProjectTasks(@PathVariable Integer projectID,
-                                                      Authentication authentication) {
+            Authentication authentication) {
         if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),
                 projectID)) {
             throw new BadRequest("You are not a collaborator on this project");
@@ -93,15 +94,14 @@ public class ProjectController {
         Integer userID = userService.getAuthenticatedUser(authentication).getUserID();
 
         if (!projectService.isProjectCollaborator(userID, projectID)) {
-                throw new BadRequest("You are not a collaborator on this project");
+            throw new BadRequest("You are not a collaborator on this project");
         }
         return ResponseEntity.ok(projectService.getProjectTasksByProjectIDAndUserID(projectID, userID));
     }
 
     @GetMapping("/{projectID}/collaborators")
-
     public ResponseEntity<List<ProjectCollaborator>> getProjectCollaborators(@PathVariable Integer projectID,
-                                                                             Authentication authentication) {
+            Authentication authentication) {
         if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),
                 projectID)) {
             throw new BadRequest("You are not a collaborator on this project");
@@ -113,7 +113,7 @@ public class ProjectController {
     @GetMapping("/{projectID}/leaderboard")
     public ResponseEntity<List<ProjectLeaderboardDTO>> getProjectLeaderboard(@PathVariable Integer projectID,
 
-                                                                             Authentication authentication) {
+            Authentication authentication) {
         if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),
                 projectID)) {
             throw new BadRequest("You are not a collaborator on this project");
@@ -124,7 +124,7 @@ public class ProjectController {
 
     @PutMapping("/{projectID}")
     public ResponseEntity<Project> updateProject(@PathVariable Integer projectID, @RequestBody Project project,
-                                                 Authentication authentication) {
+            Authentication authentication) {
         boolean isCollaborator = projectService.isProjectLead(userService.getAuthenticatedUser(authentication),
                 projectID);
 
