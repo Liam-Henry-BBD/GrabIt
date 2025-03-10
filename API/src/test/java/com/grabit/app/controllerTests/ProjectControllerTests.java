@@ -279,6 +279,7 @@ public class ProjectControllerTests {
 
         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
         when(projectService.isProjectLead(eq(testUser), eq(1))).thenReturn(false);
+
         Exception exception = assertThrows(BadRequest.class, () -> {
             projectController.updateProject(1, new Project(), authentication);
         });
