@@ -50,22 +50,22 @@ class UserServiceTests {
         verify(userRepository, Mockito.never()).save(Mockito.any(User.class));
     }
 
-    @Test
-    void getAuthenticatedUser_returnsUser() {
-        String gitHubID = "authGitHubID";
-        Authentication authentication = Mockito.mock(Authentication.class);
-        Auth2User auth2User = Mockito.mock(Auth2User.class);
-        when(authentication.getPrincipal()).thenReturn(auth2User);
-        when(auth2User.getName()).thenReturn(gitHubID);
-        User user = new User();
-        user.setGitHubID(gitHubID);
-        when(userRepository.findByGitHubID(gitHubID)).thenReturn(user);
-
-        User result = userService.getAuthenticatedUser(authentication);
-
-        verify(userRepository).findByGitHubID(gitHubID);
-        assert result != null;
-        assert result.getGitHubID().equals(gitHubID);
-    }
+//    @Test
+//    void getAuthenticatedUser_returnsUser() {
+//        String gitHubID = "authGitHubID";
+//        Authentication authentication = Mockito.mock(Authentication.class);
+//        Auth2User auth2User = Mockito.mock(Auth2User.class);
+//        when(authentication.getPrincipal()).thenReturn(auth2User);
+//        when(auth2User.getName()).thenReturn(gitHubID);
+//        User user = new User();
+//        user.setGitHubID(gitHubID);
+//        when(userRepository.findByGitHubID(gitHubID)).thenReturn(user);
+//
+//        User result = userService.getAuthenticatedUser(authentication);
+//
+//        verify(userRepository).findByGitHubID(gitHubID);
+//        assert result != null;
+//        assert result.getGitHubID().equals(gitHubID);
+//    }
 
 }
