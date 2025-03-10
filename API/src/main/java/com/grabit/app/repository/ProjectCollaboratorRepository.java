@@ -23,7 +23,6 @@ public interface ProjectCollaboratorRepository extends JpaRepository<ProjectColl
 
         Integer ProjectID(Integer projectID);
 
-        Integer countByProjectIDAndIsActive(Integer projectID, boolean isActive);
 
         @Query(value = "SELECT p.projectID, COUNT(pc.projectID) FROM  Projects p JOIN ProjectCollaborators pc on pc.projectID = p.projectID GROUP BY p.projectID", nativeQuery = true)
         List<Object[]> countCollaboratorsByProject();
@@ -35,7 +34,6 @@ public interface ProjectCollaboratorRepository extends JpaRepository<ProjectColl
 
         List<ProjectCollaborator> findByProjectIDAndIsActive(Integer projectID, boolean isActive);
 
-        Integer countByProjectIDAndJoinedAtAfter(Integer projectID, LocalDateTime date);
 
         @Query(value = "SELECT p.projectID, COUNT(pc.projectID) FROM  Projects p JOIN ProjectCollaborators pc on pc.projectID = p.projectID GROUP BY p.projectID", nativeQuery = true)
         List<Object[]> countCollaboratorsByAllProjects();
@@ -49,8 +47,6 @@ public interface ProjectCollaboratorRepository extends JpaRepository<ProjectColl
         @Query(value = "SELECT p.projectID, COUNT(pc.projectID) FROM  Projects p JOIN ProjectCollaborators pc on pc.projectID = p.projectID WHERE p.projectID IN :projectIDs GROUP BY p.projectID", nativeQuery = true)
         List<Object[]> countCollaboratorsByProjectIDs(@Param(value = "projectIDs") List<Integer> projectIDs);
 
-        List<ProjectCollaborator> findByProjectIDAndJoinedAtBefore(Integer projectID, LocalDateTime date);
-
         @Modifying
         @Query(value = "INSERT INTO ProjectCollaborators(JoinedAt, UserID, RoleID, ProjectID) VALUES(:joinedAt, :userID, :roleID, :projectID)", nativeQuery = true)
         void insertCollaborator(LocalDateTime joinedAt, Integer userID, Byte roleID, Integer projectID);
@@ -62,5 +58,23 @@ public interface ProjectCollaboratorRepository extends JpaRepository<ProjectColl
 
         @Query("SELECT CASE WHEN COUNT(pc) > 0 THEN true ELSE false END FROM ProjectCollaborator pc WHERE pc.userID = :userID AND pc.projectID = :projectID ")
         boolean existsByUserIDAndProjectID(@Param("userID") Integer userID, @Param("projectID") Integer projectID);
+
+
+        @Modifying
+        @Query(value = "UPDATE ProjectCollaborators SET IsActive = :isActive WHERE ProjectCollaboratorID = :projectCollaboratorID", nativeQuery = true)
+        void updateIsActiveByProjectCollaboratorID(@Param("isActive") boolean isActive, @Param("projectCollaboratorID") Integer projectCollaboratorID);
+
+        @Modifying
+        @Query(value = "UPDATE ProjectCollaborators SET IsActive = :isActive WHERE ProjectID = :projectID", nativeQuery = true)
+        void updateIsActiveByProjectID(@Param("isActive") boolean isActive, @Param("projectID") Integer projectID);
+
+        @Modifying
+        @Query(value = "UPDATE ProjectCollaborators SET IsActive = :isActive WHERE ProjectID = :projectID AND UserID = :userID", nativeQuery = true)
+        void updateIsActiveByProjectIDAndUserID(@Param("isActive") boolean isActive, @Param("projectID") Integer projectID, @Param("userID") Integer userID);
+
+        @Modifying
+        @Query(value = "UPDATE ProjectCollaborators SET IsActive = :isActive WHERE ProjectID = :projectID AND RoleID = :roleID", nativeQuery = true)
+        void updateIsActiveByProjectIDAndRoleID(@Param("isActive") boolean isActive, @Param("projectID") Integer projectID, @Param("roleID") Byte roleID);
+
 
 }

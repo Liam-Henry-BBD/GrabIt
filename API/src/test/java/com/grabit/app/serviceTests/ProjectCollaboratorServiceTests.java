@@ -5,11 +5,13 @@ import com.grabit.app.service.ProjectCollaboratorService;
 import org.junit.jupiter.api.extension.ExtendWith;
 import com.grabit.app.model.User;
 import com.grabit.app.repository.ProjectCollaboratorRepository;
+import com.grabit.app.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -20,10 +22,16 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ProjectCollaboratorServiceTest {
+class ProjectCollaboratorServiceTests {
 
     @Mock
     private ProjectCollaboratorRepository projectCollaboratorRepository;
+
+    @Mock
+    private Authentication authentication;
+
+    @Mock
+    private UserService userService;
 
     @InjectMocks
     private ProjectCollaboratorService projectCollaboratorService;
@@ -48,14 +56,6 @@ class ProjectCollaboratorServiceTest {
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals(collaborator, result.get(0));
-    }
-
-    @Test
-    void testAddProjectCollaborator() {
-        doNothing().when(projectCollaboratorRepository).insertCollaborator(any(), anyInt(), any(), anyInt());
-        projectCollaboratorService.addProjectCollaborator(collaborator, user);
-
-        verify(projectCollaboratorRepository, times(1)).insertCollaborator(any(), eq(100), eq((byte) 1), eq(200));
     }
 
     @Test

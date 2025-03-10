@@ -7,12 +7,12 @@ import com.grabit.app.model.Project;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.Date;
 
-public class ProjectTest {
+public class ProjectTests {
     @Test
     public void testProjectConstructorAndGetters() {
         Date createdAt = new Date();
         Date updatedAt = new Date();
-        Project project = new Project(1, "ProjectName", "ProjectDescription", createdAt, updatedAt);
+        Project project = new Project(1, "ProjectName", "ProjectDescription", createdAt, updatedAt, true);
 
         assertEquals(1, project.getProjectID());
         assertEquals("ProjectName", project.getProjectName());

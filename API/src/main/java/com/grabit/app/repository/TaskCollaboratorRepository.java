@@ -35,4 +35,25 @@ public interface TaskCollaboratorRepository extends JpaRepository<TaskCollaborat
 
     @Query(value = "SELECT CASE WHEN COUNT(tc) > 0 THEN TRUE ELSE FALSE END FROM TaskCollaborator tc WHERE tc.task.taskID = :taskID AND tc.user.userID = :userID AND tc.role.roleID = :roleID")
     boolean existsByIdAndUserIDAndRoleID(Integer taskID, Integer userID, Byte roleID);
+
+    @Query(value = "SELECT * FROM TaskCollaborators tc WHERE UserID = :userID AND TaskID =: taskID", nativeQuery = true)
+    boolean existsByUserIDAndTaskID(Integer userID, Integer taskID);
+
+    @Query(value = "SELECT * FROM TaskCollaborators tc WHERE TaskID = :taskID AND UserID = :userID", nativeQuery = true)
+    TaskCollaborator findByTaskIDAndUserID(@Param("taskID") Integer taskID, @Param("userID") Integer userID);
+
+    @Query(value = "SELECT * FROM TaskCollaborators tc WHERE UserID = :userID AND RoleID =: roleID", nativeQuery = true)
+    boolean existsByTaskIDAndRoleID(Integer taskID, byte roleID);
+
+    @Query(value = "SELECT * FROM TaskCollaborators tc WHERE TaskID = :taskID AND RoleID = :roleID", nativeQuery = true)
+    List<TaskCollaborator> findByTaskIDAndRoleID(@Param("taskID") Integer taskID, @Param("roleID") Byte roleID);
+
+    @Query(value = "SELECT * FROM TaskCollaborators tc WHERE TaskID = :taskID AND RoleID = :roleID AND IsActive = 1", nativeQuery = true)
+    List<TaskCollaborator> findByTaskIDAndRoleIDAndIsActive(@Param("taskID") Integer taskID, @Param("roleID") Byte roleID);
+
+    @Query(value = "SELECT * FROM TaskCollaborators tc WHERE TaskID = :taskID AND IsActive = 1", nativeQuery = true)
+    List<TaskCollaborator> findByTaskIDAndIsActive(@Param("taskID") Integer taskID);
+
+    @Query(value = "SELECT * FROM TaskCollaborators tc WHERE TaskID = :taskID AND UserID = :userID AND RoleID =: roleID", nativeQuery = true)
+    boolean existsByTaskIDAndUserIDAndRoleID(Integer taskID, Integer userID, byte roleID);
 }

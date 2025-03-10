@@ -12,15 +12,15 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class TaskTest {
+public class TaskTests {
 
     @Test
     public void testTaskConstructorAndGetters() {
-        Project project = new Project(1, "ProjectName", "ProjectDescription", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
+        Project project = new Project(1, "ProjectName", "ProjectDescription", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), true);
         TaskPoint taskPoint = new TaskPoint();
         TaskStatus taskStatus = new TaskStatus();
         LocalDateTime createdAt = LocalDateTime.now();
-        Task task = new Task(1, project, taskPoint, taskStatus, "TaskName", "TaskDescription", LocalDate.now(), createdAt, new Date(System.currentTimeMillis()), LocalDateTime.now(), new Date(System.currentTimeMillis()));
+        Task task = new Task(1, project, taskPoint, taskStatus, "TaskName", "TaskDescription", LocalDate.now(), createdAt, new Date(System.currentTimeMillis()), LocalDateTime.now(), new Date(System.currentTimeMillis()), true);
 
         assertEquals(1, task.getTaskID());
         assertEquals(project, task.getProject());
@@ -35,7 +35,7 @@ public class TaskTest {
     @Test
     public void testTaskSetters() {
         Task task = new Task();
-        Project project = new Project(2, "NewProjectName", "NewProjectDescription", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
+        Project project = new Project(2, "NewProjectName", "NewProjectDescription", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), true);
         TaskPoint taskPoint = new TaskPoint();
         TaskStatus taskStatus = new TaskStatus();
         LocalDateTime newCreatedAt = LocalDateTime.now();
@@ -64,7 +64,7 @@ public class TaskTest {
     @Test
     public void testTaskSettersIndividually() {
         Task task = new Task();
-        Project project = new Project(2, "NewProjectName", "NewProjectDescription", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
+        Project project = new Project(2, "NewProjectName", "NewProjectDescription", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), true);
         TaskPoint taskPoint = new TaskPoint();
         TaskStatus taskStatus = new TaskStatus();
         LocalDateTime newCreatedAt = LocalDateTime.now();

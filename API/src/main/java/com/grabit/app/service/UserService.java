@@ -3,10 +3,11 @@ package com.grabit.app.service;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import com.grabit.app.exceptions.NotFound;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import com.grabit.app.model.Auth2User;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,8 +38,9 @@ public class UserService extends DefaultOAuth2UserService {
     }
 
     public User getAuthenticatedUser(Authentication authentication) {
-        String currentUserGitHubID = ((Auth2User) authentication.getPrincipal()).getName();
-        return userRepository.findByGitHubID(currentUserGitHubID);
+        OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+        String username = oidcUser.getClaims().get("email").toString().split("@")[0];
+        return userRepository.findByGitHubID(username);
     }
 
     @Override
@@ -47,7 +49,7 @@ public class UserService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         String githubID = Optional.ofNullable(oAuth2User.getAttribute("login"))
                                   .map(Object::toString)
-                                  .orElseThrow(() -> new IllegalArgumentException("GitHub ID not found"));
+                                  .orElseThrow(() -> new NotFound("Google ID not found"));
         this.saveOrUpdateUser(githubID);
         return oAuth2User;
     }

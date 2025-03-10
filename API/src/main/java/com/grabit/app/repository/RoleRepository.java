@@ -7,4 +7,5 @@ import com.grabit.app.model.Role;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Integer> {
+    
 }

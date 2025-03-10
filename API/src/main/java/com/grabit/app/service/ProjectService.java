@@ -1,11 +1,14 @@
 package com.grabit.app.service;
 
+import com.grabit.app.exceptions.BadRequest;
 import com.grabit.app.exceptions.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.grabit.app.dto.ProjectAndRoleDTO;
+import com.grabit.app.dto.ProjectCreationDTO;
 import com.grabit.app.dto.ProjectLeaderboardDTO;
+import com.grabit.app.dto.TaskDTO;
 import com.grabit.app.enums.Roles;
 import com.grabit.app.model.Project;
 import com.grabit.app.model.ProjectCollaborator;
@@ -15,7 +18,9 @@ import com.grabit.app.repository.ProjectCollaboratorRepository;
 import com.grabit.app.repository.ProjectRepository;
 import com.grabit.app.repository.TaskCollaboratorRepository;
 import com.grabit.app.repository.TaskRepository;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -38,10 +43,18 @@ public class ProjectService extends Task {
 
     }
 
-    public Project createProject(Project project, User user) {
+    @Transactional
+    public void createProject(ProjectCreationDTO request, User user) {
+        Project project = new Project();
+        project.setProjectName(request.getProjectName());
+        project.setProjectDescription(request.getProjectDescription());
         project.setCreatedAt(new Date());
         project.setUpdatedAt(new Date());
-        return projectRepository.save(project);
+        project.setActive(true);
+        Project newProject = projectRepository.save(project);
+        projectCollaboratorRepository.insertCollaborator(LocalDateTime.now(), user.getUserID(),
+                Roles.PROJECT_LEAD.getRole(), newProject.getProjectID());
+
     }
 
     public boolean isProjectCollaborator(Integer userID, Integer projectID) {
@@ -69,21 +82,25 @@ public class ProjectService extends Task {
         return projectRepository.findById(projectID).orElseThrow(() -> new NotFound("Project not found"));
     }
 
+    @Transactional
     public void closeProject(Integer projectID) {
         projectRepository.findById(projectID).orElseThrow(() -> new NotFound("Project not found"));
-        //TODO: Soft deletion, deacticate the project instead?
-        projectRepository.deleteById(projectID);
+        projectRepository.deactivateProject(projectID);
     }
 
     public List<Task> getProjectTasksByProjectID(Integer projectID) {
         return taskRepository.findByProjectID(projectID);
     }
 
-    public Object getProjectLeaderboardByProjectID(Integer projectID) {
+    public List<TaskDTO> getProjectTasksByProjectIDAndUserID(Integer projectID, Integer userId) {
+        return taskRepository.findByProjectIDAndUserID(projectID, userId);
+    }
+
+    public List<ProjectLeaderboardDTO> getProjectLeaderboardByProjectID(Integer projectID) {
         String[][] results = projectRepository.getProjectLeaderboard(projectID);
 
         if (results.length == 0) {
-            return "No tasks have been completed yet.";
+            throw new BadRequest("No tasks have been completed.");
         }
 
         List<ProjectLeaderboardDTO> leaderboard = Arrays.stream(results)
@@ -108,11 +125,11 @@ public class ProjectService extends Task {
         existingProject.setProjectName(project.getProjectName());
         existingProject.setProjectDescription(project.getProjectDescription());
         existingProject.setUpdatedAt(new Date());
+        existingProject.setActive(project.isActive());
         return projectRepository.save(existingProject);
     }
 
     public boolean isCollaborator(Integer projectID, User user) {
-
         return isProjectCollaborator(user.getUserID(), projectID);
     }
 }

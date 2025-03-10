@@ -4,9 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+@AllArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
-public class TokenDTO {
-    private String token;
+public class CreateResponseDTO {
+    private String message;
+    private Integer status;
 }

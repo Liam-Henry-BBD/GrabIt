@@ -271,21 +271,15 @@ mvn spring-boot:run
 **POST Sample Request**
 
 ```sh
-{"project":
 {
     "projectName": "New Cartracker APP",
     "projectDescription": "Newly designed Cartracker app."
-},
-"projectCollaborator":
-{
-    "userID":113
-}
 }
 ```
 
 **PUT Sample Request**
 
-```
+```sh
 {
         "projectDescription": "A project to develop a new company website."
 }
@@ -305,7 +299,7 @@ mvn spring-boot:run
 
 **POST Sample Request**
 
-```
+```sh
 {
     "taskName": "Design Homepage",
     "taskDescription": "Create the homepage layout for the new website.",
@@ -324,7 +318,7 @@ mvn spring-boot:run
 
 **PUT Sample Request(task)**
 
-```
+```sh
 {
     "taskName": "Updated Design Homepage",
     "taskDescription": "Revise the homepage layout based on feedback.",
@@ -343,12 +337,21 @@ mvn spring-boot:run
 
 ## Endpoints for Project Collaborator
 
-| Method | Endpoint                                       | Description                                        |
-| ------ | ---------------------------------------------- | -------------------------------------------------- |
+| Method | Endpoint                     | Description                     |
+| ------ | ---------------------------- | -------------------------------------- |
 | GET    | `/api/project-collaborators/{projectCollabID}` | Retrieve a project collaborator by their ID.       |
 | DELETE | `/api/project-collaborators/{projectCollabID}` | Deactivate a project collaborator by their ID.     |
 | GET    | `/api/projects/{projectID}/collaborators`      | Retrieve all collaborators for a specific project. |
+|POST    | `/api/project-collaborators`                   | Add a project collaborator.
 
+**POST Sample Request (Project Collaborator)**
+```sh
+{
+            "userID": 1,
+            "projectID": 1,
+            "roleID": 1
+}
+```
 ## Endpoints for Task Collaborator
 
 | Method | Endpoint                                          | Description                                     |
@@ -358,3 +361,20 @@ mvn spring-boot:run
 | DELETE | `/api/task-collaborators/{taskCollabID}`          | Deactivate a task collaborator by their ID.     |
 | PUT    | `/api/task-collaborators/{taskCollabID}/activate` | Activate a task collaborator by their ID.       |
 | GET    | `/api/task-collaborators/task/{taskID}`           | Retrieve all collaborators for a specific task. |
+|POST    | `/api/task-collaborators`                         | Add a task collaborator.
+
+**POST Sample Request (Project Collaborator)**
+```sh
+{
+        "user": {
+            "userID": 1
+        },
+        "role": {
+            "roleID": 1
+        } ,
+        "task": {
+            "taskID": 1
+        },
+        "isActive": 1
+}
+```

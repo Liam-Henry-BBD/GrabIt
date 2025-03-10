@@ -1,25 +1,24 @@
 package com.grabit.app.dtoTests;
 
-import org.junit.jupiter.api.Test;
-
-import com.grabit.app.dto.ProjectCreationDTO;
-import com.grabit.app.model.Project;
-import com.grabit.app.model.ProjectCollaborator;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.grabit.app.dto.ProjectCreationDTO;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
 public class ProjectCreationDTOTests {
 
     @Test
-    public void testCreationGettersAndSetters() {
-        Project project = new Project();
-        ProjectCollaborator collaborator = new ProjectCollaborator();
-        ProjectCreationDTO dto = new ProjectCreationDTO(project, collaborator);
+    public void testProjectCreationDTO() {
 
-        dto.setProject(project);
-        dto.setProjectCollaborator(collaborator);
+        String projectName = "Project A";
+        String projectDescription = "This is a test project description for Project A";
 
-        assertEquals(project, dto.getProject());
-        assertEquals(collaborator, dto.getProjectCollaborator());
+        ProjectCreationDTO project = new ProjectCreationDTO(projectName, projectDescription);
+
+        assertEquals(projectName, project.getProjectName());
+        assertEquals(projectDescription, project.getProjectDescription());
     }
 }

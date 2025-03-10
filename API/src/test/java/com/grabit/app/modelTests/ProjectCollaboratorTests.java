@@ -6,7 +6,7 @@ import com.grabit.app.model.ProjectCollaborator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ProjectCollaboratorTest {
+class ProjectCollaboratorTests {
 
     @Test
     void testProjectCollaboratorConstructorAndGettersSetters() {
@@ -52,7 +52,7 @@ class ProjectCollaboratorTest {
         ProjectCollaborator collaborator = new ProjectCollaborator();
         assertNotNull(collaborator);  
         assertNull(collaborator.getProjectCollaboratorID());  
-        assertFalse(collaborator.isActive()); 
-        assertNull(collaborator.getJoinedAt()); 
+        assertTrue(collaborator.isActive()); 
+        assertNotNull(collaborator.getJoinedAt()); 
     }
 }
