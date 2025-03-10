@@ -47,8 +47,6 @@ public interface ProjectCollaboratorRepository extends JpaRepository<ProjectColl
         @Query(value = "SELECT p.projectID, COUNT(pc.projectID) FROM  Projects p JOIN ProjectCollaborators pc on pc.projectID = p.projectID WHERE p.projectID IN :projectIDs GROUP BY p.projectID", nativeQuery = true)
         List<Object[]> countCollaboratorsByProjectIDs(@Param(value = "projectIDs") List<Integer> projectIDs);
 
-//        List<ProjectCollaborator> findByProjectIDAndJoinedAtBefore(Integer projectID, LocalDateTime date);
-
         @Modifying
         @Query(value = "INSERT INTO ProjectCollaborators(JoinedAt, UserID, RoleID, ProjectID) VALUES(:joinedAt, :userID, :roleID, :projectID)", nativeQuery = true)
         void insertCollaborator(LocalDateTime joinedAt, Integer userID, Byte roleID, Integer projectID);

@@ -1,15 +1,10 @@
 package com.grabit.app.config;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.grabit.app.model.Auth2User;
 import com.grabit.app.service.UserService;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -22,16 +17,11 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 
 import java.util.*;
-
 import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
 
 
 @Controller
@@ -92,8 +82,6 @@ public class AuthFilter implements Filter {
             sendHttpResponse(httpResponse, "Token is invalid.", HttpStatus.UNAUTHORIZED);
         }
     }
-
-
 
     public void sendHttpResponse(HttpServletResponse httpResponse, String message, HttpStatus status)
             throws IOException {
