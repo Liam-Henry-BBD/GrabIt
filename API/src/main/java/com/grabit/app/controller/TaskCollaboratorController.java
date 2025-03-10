@@ -1,5 +1,6 @@
 package com.grabit.app.controller;
 
+import com.grabit.app.dto.CreateResponseDTO;
 import com.grabit.app.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +23,10 @@ public class TaskCollaboratorController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createTaskCollaborator(@RequestBody TaskCollaborator taskCollaborator, Authentication authentication) {
+    public ResponseEntity<CreateResponseDTO> createTaskCollaborator(@RequestBody TaskCollaborator taskCollaborator, Authentication authentication) {
         taskCollaboratorService.addTaskCollaborator(taskCollaborator, userService.getAuthenticatedUser(authentication));
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        CreateResponseDTO responseDTO = new CreateResponseDTO("Successfully added task collaborator", 201);
+        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 
     @GetMapping("/{taskCollabID}")

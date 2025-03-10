@@ -1,5 +1,6 @@
 package com.grabit.app.controller;
 
+import com.grabit.app.dto.CreateResponseDTO;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,11 +36,12 @@ public class ProjectCollaboratorController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createProjectCollaborator(@RequestBody ProjectCollaborator projectCollaborator,
-            Authentication authentication) {
+    public ResponseEntity<CreateResponseDTO> createProjectCollaborator(@RequestBody ProjectCollaborator projectCollaborator,
+                                                                       Authentication authentication) {
 
         projectCollaboratorService.addProjectCollaborator(projectCollaborator,
                 userService.getAuthenticatedUser(authentication));
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        CreateResponseDTO responseDTO = new CreateResponseDTO("Successfully added collaborator", 201);
+        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 }

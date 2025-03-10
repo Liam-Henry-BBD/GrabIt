@@ -1,6 +1,7 @@
 package com.grabit.app.controllerTests;
 
 import com.grabit.app.controller.TaskCollaboratorController;
+import com.grabit.app.dto.CreateResponseDTO;
 import com.grabit.app.model.TaskCollaborator;
 import com.grabit.app.model.User;
 import com.grabit.app.service.TaskCollaboratorService;
@@ -49,7 +50,7 @@ public class TaskCollaboratorControllerTests {
 
     @Test
     public void testCreateTaskCollaborator() {
-        ResponseEntity<Void> response = taskCollaboratorController.createTaskCollaborator(taskCollaborator, authentication);
+        ResponseEntity<CreateResponseDTO> response = taskCollaboratorController.createTaskCollaborator(taskCollaborator, authentication);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         verify(taskCollaboratorService).addTaskCollaborator(taskCollaborator, user);

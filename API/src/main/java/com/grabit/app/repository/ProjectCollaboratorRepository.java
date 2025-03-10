@@ -3,6 +3,7 @@ package com.grabit.app.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.grabit.app.model.TaskCollaborator;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -23,6 +24,8 @@ public interface ProjectCollaboratorRepository extends JpaRepository<ProjectColl
 
         Integer ProjectID(Integer projectID);
 
+        @Query("SELECT pc FROM ProjectCollaborator pc WHERE pc.userID = :userID AND pc.projectID = :projectID")
+        ProjectCollaborator findByProjectIDAndUserID(Integer projectID, Integer userID);
 
         @Query(value = "SELECT p.projectID, COUNT(pc.projectID) FROM  Projects p JOIN ProjectCollaborators pc on pc.projectID = p.projectID GROUP BY p.projectID", nativeQuery = true)
         List<Object[]> countCollaboratorsByProject();

@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -155,7 +156,7 @@ public class ProjectControllerTests {
         User testUser = new User();
         testUser.setUserID(1);
         Integer projectID = 1;
-        TaskDTO taskDTO = new TaskDTO("Task 1", "Task description", LocalDateTime.now(), "In Progress", "5 points", LocalDateTime.now().plusDays(1));
+        TaskDTO taskDTO = new TaskDTO(1, "Task 1", "Task description", (byte) 1, (byte) 1, LocalDateTime.now(), Timestamp.valueOf(LocalDateTime.now()));
         List<TaskDTO> tasks = List.of(taskDTO);
 
         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);

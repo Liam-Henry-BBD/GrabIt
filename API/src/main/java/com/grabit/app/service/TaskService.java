@@ -173,11 +173,15 @@ public class TaskService {
 
     public List<TaskCollaborator> getTaskCollaborators(Integer taskID, User user) {
 
-        boolean allowed = taskRepository.existsTaskByUserIDAndTaskID(taskID, user.getUserID());
-        if (!allowed) {
-            throw new BadRequest("Cannot access list because you are not a collaborator in this task.");
-        }
 
+        Task task = taskRepository.findById(taskID)
+                .orElseThrow(() -> new NotFound("Task not found."));
+
+
+        ProjectCollaborator collaborator = projectCollaboratorRepository.findByProjectIDAndUserID(task.getProject().getProjectID(), user.getUserID());
+        if(collaborator == null) {
+            throw new NotFound("Collaborator not found.");
+        }
         return taskCollaboratorRepository.findByTaskID(taskID);
     }
 
