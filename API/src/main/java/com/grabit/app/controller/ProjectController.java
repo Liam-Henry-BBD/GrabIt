@@ -1,5 +1,6 @@
 package com.grabit.app.controller;
 
+import net.minidev.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,16 +10,15 @@ import com.grabit.app.dto.ProjectAndRoleDTO;
 import com.grabit.app.dto.ProjectCreationDTO;
 import com.grabit.app.dto.TaskDTO;
 import com.grabit.app.enums.Roles;
+
 import com.grabit.app.model.Project;
-import com.grabit.app.model.ProjectCollaborator;
-import com.grabit.app.model.Task;
 import com.grabit.app.model.User;
 import com.grabit.app.service.ProjectCollaboratorService;
 import com.grabit.app.service.ProjectService;
 import com.grabit.app.service.UserService;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -39,7 +39,6 @@ public class ProjectController {
     @PostMapping
     public ResponseEntity<Project> createProject(@RequestBody ProjectCreationDTO request,
             Authentication authentication) {
-
         User user = userService.getAuthenticatedUser(authentication);
         Project newProject = projectService.createProject(request, user);
         return new ResponseEntity<>(newProject, HttpStatus.CREATED);
@@ -54,12 +53,14 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectID}")
-    public ResponseEntity<Project> getProjectByID(@PathVariable Integer projectID,
-            Authentication authentication) {
 
+    public ResponseEntity<Object> getProjectByID(@PathVariable Integer projectID,
+            Authentication authentication) {
         if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),
                 projectID)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+            JSONObject jsonResponse = new JSONObject();
+            jsonResponse.put("status", "FORBIDDEN");
+            jsonResponse.put("message", "You do not have permission to view this project.");
         }
 
         Project project = projectService.getProjectByID(projectID);
@@ -67,14 +68,25 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{projectID}")
-    public ResponseEntity<Void> closeProject(@PathVariable Integer projectID,
+    public ResponseEntity<Object> closeProject(@PathVariable Integer projectID,
             Authentication authentication) {
-
         boolean isCollaborator = projectService.isProjectLead(userService.getAuthenticatedUser(authentication),
                 projectID);
 
+        Optional<Project> projectOptional = Optional.ofNullable(projectService.getProjectByID(projectID));
+
+        if (!projectOptional.isPresent()) {
+            JSONObject jsonResponse = new JSONObject();
+            jsonResponse.put("status", "NOT_FOUND");
+            jsonResponse.put("message", "Project does not exist");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(jsonResponse);
+        }
+
         if (!isCollaborator) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+            JSONObject jsonResponse = new JSONObject();
+            jsonResponse.put("status", "FORBIDDEN");
+            jsonResponse.put("message", "You do not have permission to close this project.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(jsonResponse);
         }
 
         projectService.closeProject(projectID);
@@ -82,13 +94,16 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectID}/tasks")
-    public ResponseEntity<List<Task>> getProjectTasks(@PathVariable Integer projectID,
+    public ResponseEntity<Object> getProjectTasks(@PathVariable Integer projectID,
             Authentication authentication) {
-
         if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),
                 projectID)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+            JSONObject jsonResponse = new JSONObject();
+            jsonResponse.put("status", "FORBIDDEN");
+            jsonResponse.put("message", "You do not have permission to view the project tasks.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(jsonResponse);
         }
+
         return ResponseEntity.ok(projectService.getProjectTasksByProjectID(projectID));
     }
 
@@ -104,40 +119,48 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectID}/collaborators")
-    public ResponseEntity<List<ProjectCollaborator>> getProjectCollaborators(@PathVariable Integer projectID,
-            Authentication authentication) {
 
+    public ResponseEntity<Object> getProjectCollaborators(@PathVariable Integer projectID,
+            Authentication authentication) {
         if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),
                 projectID)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+            JSONObject jsonResponse = new JSONObject();
+            jsonResponse.put("status", "FORBIDDEN");
+            jsonResponse.put("message", "You do not have permission to view the project collaborators.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(jsonResponse);
         }
         return ResponseEntity.ok(projectService.getProjectCollaboratorsByProjectID(projectID));
     }
 
     @GetMapping("/{projectID}/leaderboard")
     public ResponseEntity<Object> getProjectLeaderboard(@PathVariable Integer projectID,
-            Authentication authentication) {
 
+            Authentication authentication) {
         if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),
                 projectID)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+            JSONObject jsonResponse = new JSONObject();
+            jsonResponse.put("status", "FORBIDDEN");
+            jsonResponse.put("message", "You do not have permission to view the project leaderboard.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(jsonResponse);
         }
+
         return ResponseEntity.ok(projectService.getProjectLeaderboardByProjectID(projectID));
     }
 
     @PutMapping("/{projectID}")
-    public ResponseEntity<Project> updateProject(@PathVariable Integer projectID, @RequestBody Project project,
+    public ResponseEntity<Object> updateProject(@PathVariable Integer projectID, @RequestBody Project project,
             Authentication authentication) {
-
         boolean isCollaborator = projectService.isProjectLead(userService.getAuthenticatedUser(authentication),
                 projectID);
 
         if (!isCollaborator) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+            JSONObject jsonResponse = new JSONObject();
+            jsonResponse.put("status", "FORBIDDEN");
+            jsonResponse.put("message", "You do not have permission to update this project.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(jsonResponse);
         }
 
         Project updatedProject = projectService.updateProject(projectID, project);
         return ResponseEntity.ok(updatedProject);
     }
-
 }

@@ -1,7 +1,10 @@
 package com.grabit.app.service;
 
 import com.grabit.app.exceptions.NotFound;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.grabit.app.dto.ProjectAndRoleDTO;
@@ -99,7 +102,10 @@ public class ProjectService extends Task {
         String[][] results = projectRepository.getProjectLeaderboard(projectID);
 
         if (results.length == 0) {
-            return "No tasks have been completed yet.";
+            JSONObject jsonResponse = new JSONObject();
+            jsonResponse.put("status", "OK");
+            jsonResponse.put("message", "No tasks have been completed yet.");
+            return ResponseEntity.status(HttpStatus.OK).body(jsonResponse);
         }
 
         List<ProjectLeaderboardDTO> leaderboard = Arrays.stream(results)
