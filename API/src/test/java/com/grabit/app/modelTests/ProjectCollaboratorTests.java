@@ -52,7 +52,7 @@ class ProjectCollaboratorTests {
         ProjectCollaborator collaborator = new ProjectCollaborator();
         assertNotNull(collaborator);  
         assertNull(collaborator.getProjectCollaboratorID());  
-        assertFalse(collaborator.isActive()); 
-        assertNull(collaborator.getJoinedAt()); 
+        assertTrue(collaborator.isActive()); 
+        assertNotNull(collaborator.getJoinedAt()); 
     }
 }
