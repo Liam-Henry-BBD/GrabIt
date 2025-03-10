@@ -1,130 +1,134 @@
 package com.grabit.app.serviceTests;
 
-import org.junit.jupiter.api.BeforeEach;
-import com.grabit.app.model.User;
-import com.grabit.app.model.Task;
-import com.grabit.app.model.TaskStatus;
-import com.grabit.app.model.TaskPoint;
-import com.grabit.app.model.Project;
-import com.grabit.app.repository.TaskRepository;
-import com.grabit.app.repository.TaskStatusRepository;
-import com.grabit.app.repository.TaskPointRepository;
-import com.grabit.app.repository.TaskCollaboratorRepository;
-import com.grabit.app.repository.ProjectCollaboratorRepository;
-import com.grabit.app.service.TaskService;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.grabit.app.enums.Roles;
-import com.grabit.app.exceptions.BadRequest;
-import com.grabit.app.enums.Status;
+import com.grabit.app.service.TaskService;
 
+import com.grabit.app.enums.Status;
+import com.grabit.app.exceptions.BadRequest;
+import com.grabit.app.exceptions.NotFound;
+import com.grabit.app.model.*;
+import com.grabit.app.repository.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.*;
 import java.util.Optional;
 
-@ExtendWith(MockitoExtension.class)
+import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 public class TaskServiceTests {
 
     @Mock
     private TaskRepository taskRepository;
-
+    
     @Mock
     private TaskStatusRepository taskStatusRepository;
-
+    
     @Mock
     private TaskPointRepository taskPointRepository;
-
+    
     @Mock
     private TaskCollaboratorRepository taskCollaboratorRepository;
-
+    
     @Mock
     private ProjectCollaboratorRepository projectCollaboratorRepository;
-
+    
     @InjectMocks
     private TaskService taskService;
 
-    private User mockUser;
-    private Task mockTask;
-    private TaskStatus mockStatus;
-    private TaskPoint mockTaskPoint;
-    private Project mockProject;
+    private User testUser;
+    private Task testTask;
+    private TaskStatus testStatus;
 
     @BeforeEach
-    void setUp() {
-        mockUser = new User(); 
-        mockTask = new Task(); 
-        mockStatus = new TaskStatus(); 
-        mockTaskPoint = new TaskPoint(); 
-        mockProject = new Project(); 
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        testUser = new User();
+        testUser.setUserID(1);
+        testTask = new Task();
+        testTask.setTaskID(1);
+        testTask.setProject(new Project());
+        testTask.setTaskStatus(new TaskStatus());
+        testStatus = new TaskStatus();
     }
-
-//    @Test
-//    void testGetTaskById_CollaboratorAllowed() {
-//        int taskID = 1;
-//        mockTask.setTaskID(taskID);
-//        mockUser.setUserID(1);
-//        when(taskRepository.existsTaskByUserIDAndTaskID(taskID, mockUser.getUserID())).thenReturn(true);
-//        when(taskRepository.findById(taskID)).thenReturn(Optional.of(mockTask));
-//
-//        Task result = taskService.getTaskById(taskID, mockUser);
-//
-//        assertNotNull(result);
-//        assertEquals(taskID, result.getTaskID());
-//    }
 
     @Test
-    void testGetTaskById_NotCollaborator_ShouldThrowBadRequest() {
-        int taskID = 1;
-        mockUser.setUserID(1);
-        when(taskRepository.existsTaskByUserIDAndTaskID(taskID, mockUser.getUserID())).thenReturn(false);
-
-        assertThrows(BadRequest.class, () -> taskService.getTaskById(taskID, mockUser));
+    public void testGetTaskById_Success() {
+        when(taskRepository.findById(1)).thenReturn(Optional.of(testTask));
+        when(taskRepository.existsTaskByUserIDAndTaskID(1, 1)).thenReturn(true);
+        when(projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(1, 1, Roles.PROJECT_LEAD.getRole())).thenReturn(false);
+        
+        Task task = taskService.getTaskById(1, testUser);
+        
+        assertThat(task).isEqualTo(testTask);
     }
-
-//    @Test
-//    void testCreateTask_ProjectLeadAllowed() {
-//        mockUser.setUserID(1);
-//        mockTask.setProject(mockProject);
-//        mockTask.setTaskPoint(mockTaskPoint);
-//        mockTask.setTaskStatus(mockStatus);
-//
-//        when(projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(mockUser.getUserID(),
-//                mockTask.getProject().getProjectID(), Roles.PROJECT_LEAD.getRole())).thenReturn(true);
-//        when(taskPointRepository.existsById((int) mockTask.getTaskPoint().getTaskPointID())).thenReturn(true);
-//        when(taskStatusRepository.existsById((int) mockTask.getTaskStatus().getTaskStatusID())).thenReturn(true);
-//        when(taskRepository.save(mockTask)).thenReturn(mockTask);
-//
-//        Task result = taskService.createTask(mockTask, mockUser);
-//
-//        assertNotNull(result);
-//    }
 
     @Test
-    void testCreateTask_NotProjectLead_ShouldThrowBadRequest() {
-        mockUser.setUserID(1);
-        mockTask.setProject(mockProject);
-
-        when(projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(mockUser.getUserID(), 
-                mockTask.getProject().getProjectID(), Roles.PROJECT_LEAD.getRole())).thenReturn(false);
-
-        assertThrows(BadRequest.class, () -> taskService.createTask(mockTask, mockUser));
+    public void testGetTaskById_Fail_NotFound() {
+        when(taskRepository.findById(1)).thenReturn(Optional.empty());
+        
+        assertThatThrownBy(() -> taskService.getTaskById(1, testUser))
+                .isInstanceOf(NotFound.class)
+                .hasMessageContaining("Task not found");
     }
-
 
     @Test
-    void testUpdateTaskStatus_NotCollaborator_ShouldThrowBadRequest() {
-        int taskID = 1;
-        byte newStatusID = Status.GRABBED.getStatus();
-
-        when(taskCollaboratorRepository.existsByTaskIDAndUserID(taskID, mockUser.getUserID())).thenReturn(false);
-
-        assertThrows(BadRequest.class, () -> taskService.updateTaskStatus(taskID, newStatusID, mockUser));
+    public void testCreateTask_Fail_NotProjectLead() {
+        when(projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(1, 1, Roles.PROJECT_LEAD.getRole())).thenReturn(false);
+        
+        assertThatThrownBy(() -> taskService.createTask(testTask, testUser))
+                .isInstanceOf(BadRequest.class)
+                .hasMessageContaining("User is not a lead of this project.");
     }
 
+    @Test
+    public void testUpdateTaskStatus_Fail_TaskNotFound() {
+        when(taskRepository.findById(1)).thenReturn(Optional.empty());
+        
+        assertThatThrownBy(() -> taskService.updateTaskStatus(1, Status.GRABBED.getStatus(), testUser))
+                .isInstanceOf(NotFound.class)
+                .hasMessageContaining("Task not found");
+    }
 
+    @Test
+    public void testUpdateTask_Fail_TaskAlreadyCompleted() {
+        when(taskRepository.findById(1)).thenReturn(Optional.of(testTask));
+        when(taskStatusRepository.findById((int)Status.COMPLETE.getStatus())).thenReturn(Optional.of(testStatus));
+        
+        assertThatThrownBy(() -> taskService.updateTask(1, testTask, testUser))
+                .isInstanceOf(BadRequest.class)
+                .hasMessageContaining("400 BAD_REQUEST \"Cannot update task. Not a project lead.");
+    }
 
+    @Test
+    public void testDeleteTask_Fail_NotProjectLead() {
+        when(taskRepository.findById(1)).thenReturn(Optional.of(testTask));
+        when(projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(1, 1, Roles.PROJECT_LEAD.getRole())).thenReturn(false);
+        
+        assertThatThrownBy(() -> taskService.deleteTask(1, testUser))
+                .isInstanceOf(BadRequest.class)
+                .hasMessageContaining("Cannot delete task. Not a project lead.");
+    }
+
+    @Test
+    public void testGrabTask_Fail_NotAvailable() {
+        when(taskRepository.findById(1)).thenReturn(Optional.of(testTask));
+        testTask.setTaskStatus(new TaskStatus(Status.GRABBED.getStatus(), "Grabbed"));
+        
+        assertThatThrownBy(() -> taskService.grabTask(1, 1, testUser))
+                .isInstanceOf(BadRequest.class)
+                .hasMessageContaining("Task is not available to be grabbed.");
+    }
+
+    @Test
+    public void testGrabTask_Fail_NotProjectCollaborator() {
+        when(taskRepository.findById(1)).thenReturn(Optional.of(testTask));
+        when(taskStatusRepository.findById((int)Status.AVAILABLE.getStatus())).thenReturn(Optional.of(testStatus));
+        when(projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(1, 1, Roles.PROJECT_MEMBER.getRole())).thenReturn(false);
+        
+        assertThatThrownBy(() -> taskService.grabTask(1, 1, testUser))
+                .isInstanceOf(BadRequest.class)
+                .hasMessageContaining("Task is not available to be grabbed.");
+    }
 }

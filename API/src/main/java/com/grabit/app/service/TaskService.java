@@ -3,7 +3,6 @@ package com.grabit.app.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import com.grabit.app.enums.Roles;
 import com.grabit.app.enums.Status;
@@ -84,7 +83,6 @@ public class TaskService {
 
         boolean isLead = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(),
                 task.getProject().getProjectID(), Roles.PROJECT_LEAD.getRole());
-        // Change status to complete when you are a project lead
         if (taskStatusID == Status.COMPLETE.getStatus() && !isLead) {
             throw new BadRequest("User is not a lead in this project.");
         }
@@ -174,7 +172,6 @@ public class TaskService {
 
     public List<TaskCollaborator> getTaskCollaborators(Integer taskID, User user) {
 
-        // TODO: Everyone on the project should be able to see the task collaborators?
         boolean allowed = taskRepository.existsTaskByUserIDAndTaskID(taskID, user.getUserID());
         if (!allowed) {
             throw new BadRequest("Cannot access list because you are not a collaborator in this task.");
