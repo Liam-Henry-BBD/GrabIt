@@ -58,16 +58,6 @@ class ProjectCollaboratorServiceTests {
         assertEquals(collaborator, result.get(0));
     }
 
-//    @Test
-//    void testAddProjectCollaborator() {
-//        when(userService.getAuthenticatedUser(authentication)).thenReturn(user);
-//
-//        doNothing().when(projectCollaboratorRepository).insertCollaborator(any(), anyInt(), any(), anyInt());
-//        projectCollaboratorService.addProjectCollaborator(collaborator, user);
-//
-//        verify(projectCollaboratorRepository, times(1)).insertCollaborator(any(), eq(100), eq((byte) 1), eq(200));
-//    }
-
     @Test
     void testGetProjectCollaboratorByID() {
         when(projectCollaboratorRepository.findById(1)).thenReturn(Optional.of(collaborator));
