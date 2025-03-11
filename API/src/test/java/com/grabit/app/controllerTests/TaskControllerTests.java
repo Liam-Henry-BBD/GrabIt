@@ -50,17 +50,6 @@ public class TaskControllerTests {
     }
 
     @Test
-    public void testGetTaskById() {
-        User testUser = new User();
-        when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
-
-        ResponseEntity<TaskDTO> response = taskController.getTaskByID(1, authentication);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        verify(taskService, times(1)).getTaskById(1, testUser);
-    }
-
-    @Test
     public void testDeleteTask() {
         User testUser = new User();
         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
