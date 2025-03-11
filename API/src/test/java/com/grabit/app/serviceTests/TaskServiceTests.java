@@ -25,12 +25,6 @@ public class TaskServiceTests {
     @Mock
     private TaskStatusRepository taskStatusRepository;
     
-//    @Mock
-//    private TaskPointRepository taskPointRepository;
-//
-//    @Mock
-//    private TaskCollaboratorRepository taskCollaboratorRepository;
-    
     @Mock
     private ProjectCollaboratorRepository projectCollaboratorRepository;
     
