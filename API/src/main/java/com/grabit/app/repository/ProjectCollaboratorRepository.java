@@ -3,7 +3,6 @@ package com.grabit.app.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.grabit.app.model.TaskCollaborator;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
