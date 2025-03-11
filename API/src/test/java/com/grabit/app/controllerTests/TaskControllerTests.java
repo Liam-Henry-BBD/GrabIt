@@ -2,6 +2,7 @@ package com.grabit.app.controllerTests;
 
 import com.grabit.app.controller.TaskController;
 import com.grabit.app.dto.CreateResponseDTO;
+import com.grabit.app.dto.TaskDTO;
 import com.grabit.app.model.Task;
 import com.grabit.app.model.TaskCollaborator;
 import com.grabit.app.model.User;
@@ -53,7 +54,7 @@ public class TaskControllerTests {
         User testUser = new User();
         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
 
-        ResponseEntity<Task> response = taskController.getTaskByID(1, authentication);
+        ResponseEntity<TaskDTO> response = taskController.getTaskByID(1, authentication);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         verify(taskService, times(1)).getTaskById(1, testUser);

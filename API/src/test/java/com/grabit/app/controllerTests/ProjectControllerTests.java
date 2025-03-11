@@ -115,7 +115,7 @@ public class ProjectControllerTests {
         when(projectService.isProjectCollaborator(eq(testUser.getUserID()), eq(1))).thenReturn(true);
         when(projectService.getProjectTasksByProjectID(1)).thenReturn(tasks);
 
-        ResponseEntity<List<Task>> response = projectController.getProjectTasks(1, authentication);
+        ResponseEntity<List<TaskDTO>> response = projectController.getProjectTasks(1, authentication);
 
         verify(projectService, times(1)).getProjectTasksByProjectID(1);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -156,7 +156,7 @@ public class ProjectControllerTests {
         User testUser = new User();
         testUser.setUserID(1);
         Integer projectID = 1;
-        TaskDTO taskDTO = new TaskDTO(1, "Task 1", "Task description", (byte) 1, (byte) 1, LocalDateTime.now(), Timestamp.valueOf(LocalDateTime.now()));
+        TaskDTO taskDTO = new TaskDTO(1, "Task 1", "Task description", Timestamp.valueOf(LocalDateTime.now()), (byte) 1, (byte) 1, LocalDateTime.now());
         List<TaskDTO> tasks = List.of(taskDTO);
 
         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);

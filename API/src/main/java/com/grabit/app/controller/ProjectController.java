@@ -85,14 +85,16 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectID}/tasks")
-    public ResponseEntity<List<Task>> getProjectTasks(@PathVariable Integer projectID,
+    public ResponseEntity<List<TaskDTO>> getProjectTasks(@PathVariable Integer projectID,
             Authentication authentication) {
         if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),
                 projectID)) {
             throw new BadRequest(responseMessages.get("invalidCollaborator"));
         }
 
-        return ResponseEntity.ok(projectService.getProjectTasksByProjectID(projectID));
+        List<Task> projectTasksByProjectID = projectService.getProjectTasksByProjectID(projectID);
+        List<TaskDTO> dtos = TaskDTO.getTasks(projectTasksByProjectID);
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/{projectID}/my-tasks")
