@@ -22,9 +22,9 @@ public class TaskCollaboratorService {
     private final RoleRepository roleRepository;
 
     public TaskCollaboratorService(TaskCollaboratorRepository taskCollaboratorRepository,
-            TaskRepository taskRepository,
-            RoleRepository roleRepository,
-            ProjectCollaboratorRepository projectCollaboratorRepository) {
+                                   TaskRepository taskRepository,
+                                   RoleRepository roleRepository,
+                                   ProjectCollaboratorRepository projectCollaboratorRepository) {
         this.taskCollaboratorRepository = taskCollaboratorRepository;
         this.taskRepository = taskRepository;
         this.roleRepository = roleRepository;
@@ -43,17 +43,23 @@ public class TaskCollaboratorService {
         ProjectCollaborator privileges = projectCollaboratorRepository
                 .findByProjectIDAndUserID(task.getProject().getProjectID(), user.getUserID());
 
+        if (privileges == null) {
+            throw new BadRequest("User is not a collaborator on this project");
+        }
+
+        TaskCollaborator adderIsCollaborator = taskCollaboratorRepository
+                .findByTaskIDAndUserID(task.getTaskID(), user.getUserID());
+
         TaskCollaborator collaborator = taskCollaboratorRepository
                 .findByTaskIDAndUserID(task.getTaskID(), taskCollaborator.getUser().getUserID());
 
         if (!(privileges.getRoleID().equals(Roles.PROJECT_LEAD.getRole()))
-                && !(collaborator.getRole().getRoleID() == Roles.TASK_GRABBER.getRole())) {
+                && !(adderIsCollaborator.getRole().getRoleID() == Roles.TASK_GRABBER.getRole())) {
             throw new BadRequest("Only project leads and grabbers can add task collaborators.");
         }
 
         boolean collaboratorExists = projectCollaboratorRepository
                 .existsByUserIDAndProjectID(taskCollaborator.getUser().getUserID(), task.getProject().getProjectID());
-
 
         if (!collaboratorExists) {
             throw new BadRequest("User cannot be added as a task collaborator in a project they are not a collaborator in.");
@@ -78,7 +84,7 @@ public class TaskCollaboratorService {
         }
 
         if (!taskCollaborator.getRole().getRoleID().equals(Roles.TASK_GRABBER.getRole())
-               && !taskCollaborator.getRole().getRoleID().equals(Roles.TASK_COLLABORATOR.getRole())) {
+                && !taskCollaborator.getRole().getRoleID().equals(Roles.TASK_COLLABORATOR.getRole())) {
             throw new BadRequest("User can only be a grabber(roleId:3) or collaborator(roleId:4) on a task");
         }
 
