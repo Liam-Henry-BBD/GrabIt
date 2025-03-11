@@ -46,7 +46,7 @@ public class ProjectController {
             Authentication authentication) {
         User user = userService.getAuthenticatedUser(authentication);
         projectService.createProject(request, user);
-        return new ResponseEntity<>(new CreateResponseDTO(responseMessages.get("InvalidCollaborator"), 201),
+        return new ResponseEntity<>(new CreateResponseDTO(responseMessages.get("created"), 201),
                 HttpStatus.CREATED);
     }
 
@@ -63,7 +63,7 @@ public class ProjectController {
             Authentication authentication) {
         if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),
                 projectID)) {
-            throw new BadRequest(responseMessages.get("InvalidCollaborator"));
+            throw new BadRequest(responseMessages.get("invalidCollaborator"));
         }
 
         Project project = projectService.getProjectByID(projectID);
@@ -77,7 +77,7 @@ public class ProjectController {
                 projectID);
 
         if (!isCollaborator) {
-            throw new BadRequest(responseMessages.get("InvalidROle"));
+            throw new BadRequest(responseMessages.get("invalidRole"));
         }
 
         projectService.closeProject(projectID);
@@ -89,7 +89,7 @@ public class ProjectController {
             Authentication authentication) {
         if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),
                 projectID)) {
-            throw new BadRequest(responseMessages.get("InvalidCollaborator"));
+            throw new BadRequest(responseMessages.get("invalidCollaborator"));
         }
 
         return ResponseEntity.ok(projectService.getProjectTasksByProjectID(projectID));
@@ -101,7 +101,7 @@ public class ProjectController {
         Integer userID = userService.getAuthenticatedUser(authentication).getUserID();
 
         if (!projectService.isProjectCollaborator(userID, projectID)) {
-            throw new BadRequest(responseMessages.get("InvalidCollaborator"));
+            throw new BadRequest(responseMessages.get("invalidCollaborator"));
         }
         return ResponseEntity.ok(projectService.getProjectTasksByProjectIDAndUserID(projectID, userID));
     }
@@ -111,7 +111,7 @@ public class ProjectController {
             Authentication authentication) {
         if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),
                 projectID)) {
-            throw new BadRequest(responseMessages.get("InvalidCollaborator"));
+            throw new BadRequest(responseMessages.get("invalidCollaborator"));
         }
 
         return ResponseEntity.ok(projectService.getProjectCollaboratorsByProjectID(projectID));
