@@ -23,6 +23,8 @@ public interface ProjectCollaboratorRepository extends JpaRepository<ProjectColl
 
         Integer ProjectID(Integer projectID);
 
+        @Query("SELECT pc FROM ProjectCollaborator pc WHERE pc.userID = :userID AND pc.projectID = :projectID")
+        ProjectCollaborator findByProjectIDAndUserID(Integer projectID, Integer userID);
 
         @Query(value = "SELECT p.projectID, COUNT(pc.projectID) FROM  Projects p JOIN ProjectCollaborators pc on pc.projectID = p.projectID GROUP BY p.projectID", nativeQuery = true)
         List<Object[]> countCollaboratorsByProject();

@@ -20,10 +20,13 @@ import com.grabit.app.service.ProjectService;
 import com.grabit.app.service.UserService;
 
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/projects")
 public class ProjectController {
+    private final Map<String, String> responseMessages;
 
     private final ProjectService projectService;
     private final UserService userService;
@@ -32,6 +35,10 @@ public class ProjectController {
             UserService userService) {
         this.projectService = projectService;
         this.userService = userService;
+        this.responseMessages = new HashMap<>();
+        this.responseMessages.put("created", "Your project has been created successfully");
+        this.responseMessages.put("invalidCollaborator", "You are not a collaborator on this project");
+        this.responseMessages.put("invalidRole", "You are not a leader on this project");
     }
 
     @PostMapping
@@ -39,7 +46,7 @@ public class ProjectController {
             Authentication authentication) {
         User user = userService.getAuthenticatedUser(authentication);
         projectService.createProject(request, user);
-        return new ResponseEntity<>(new CreateResponseDTO("Your project has been created successfully", 201),
+        return new ResponseEntity<>(new CreateResponseDTO(responseMessages.get("created"), 201),
                 HttpStatus.CREATED);
     }
 
@@ -56,7 +63,7 @@ public class ProjectController {
             Authentication authentication) {
         if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),
                 projectID)) {
-            throw new BadRequest("You are not a collaborator on this project");
+            throw new BadRequest(responseMessages.get("invalidCollaborator"));
         }
 
         Project project = projectService.getProjectByID(projectID);
@@ -70,7 +77,7 @@ public class ProjectController {
                 projectID);
 
         if (!isCollaborator) {
-            throw new BadRequest("You are not a leader on this project");
+            throw new BadRequest(responseMessages.get("invalidRole"));
         }
 
         projectService.closeProject(projectID);
@@ -78,14 +85,16 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectID}/tasks")
-    public ResponseEntity<List<Task>> getProjectTasks(@PathVariable Integer projectID,
+    public ResponseEntity<List<TaskDTO>> getProjectTasks(@PathVariable Integer projectID,
             Authentication authentication) {
         if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),
                 projectID)) {
-            throw new BadRequest("You are not a collaborator on this project");
+            throw new BadRequest(responseMessages.get("invalidCollaborator"));
         }
 
-        return ResponseEntity.ok(projectService.getProjectTasksByProjectID(projectID));
+        List<Task> projectTasksByProjectID = projectService.getProjectTasksByProjectID(projectID);
+        List<TaskDTO> dtos = TaskDTO.getTasks(projectTasksByProjectID);
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/{projectID}/my-tasks")
@@ -94,7 +103,7 @@ public class ProjectController {
         Integer userID = userService.getAuthenticatedUser(authentication).getUserID();
 
         if (!projectService.isProjectCollaborator(userID, projectID)) {
-            throw new BadRequest("You are not a collaborator on this project");
+            throw new BadRequest(responseMessages.get("invalidCollaborator"));
         }
         return ResponseEntity.ok(projectService.getProjectTasksByProjectIDAndUserID(projectID, userID));
     }
@@ -104,7 +113,7 @@ public class ProjectController {
             Authentication authentication) {
         if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),
                 projectID)) {
-            throw new BadRequest("You are not a collaborator on this project");
+            throw new BadRequest(responseMessages.get("invalidCollaborator"));
         }
 
         return ResponseEntity.ok(projectService.getProjectCollaboratorsByProjectID(projectID));
@@ -116,7 +125,7 @@ public class ProjectController {
             Authentication authentication) {
         if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),
                 projectID)) {
-            throw new BadRequest("You are not a collaborator on this project");
+            throw new BadRequest(responseMessages.get("invalidCollaborator"));
         }
 
         return ResponseEntity.ok(projectService.getProjectLeaderboardByProjectID(projectID));
@@ -129,7 +138,7 @@ public class ProjectController {
                 projectID);
 
         if (!isCollaborator) {
-            throw new BadRequest("You are not a leader on this project");
+            throw new BadRequest(responseMessages.get("invalidRole"));
         }
 
         Project updatedProject = projectService.updateProject(projectID, project);

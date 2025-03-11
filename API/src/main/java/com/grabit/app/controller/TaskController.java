@@ -1,5 +1,6 @@
 package com.grabit.app.controller;
 
+import com.grabit.app.dto.TaskDTO;
 import com.grabit.app.service.UserService;
 import jakarta.validation.Valid;
 
@@ -34,8 +35,10 @@ public class TaskController {
     }
 
     @GetMapping("/{taskID}")
-    public ResponseEntity<Task> getTaskByID(@PathVariable Integer taskID, Authentication authentication) {
-        return ResponseEntity.ok(taskService.getTaskById(taskID, userService.getAuthenticatedUser(authentication)));
+    public ResponseEntity<TaskDTO> getTaskByID(@PathVariable Integer taskID, Authentication authentication) {
+        Task task = taskService.getTaskById(taskID, userService.getAuthenticatedUser(authentication));
+        TaskDTO newDTO = new TaskDTO(task);
+        return ResponseEntity.ok(newDTO);
     }
 
     @DeleteMapping("/{taskID}")

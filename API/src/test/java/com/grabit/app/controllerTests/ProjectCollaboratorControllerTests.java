@@ -1,6 +1,7 @@
 package com.grabit.app.controllerTests;
 
 import com.grabit.app.controller.ProjectCollaboratorController;
+import com.grabit.app.dto.CreateResponseDTO;
 import com.grabit.app.model.ProjectCollaborator;
 import com.grabit.app.model.User;
 import com.grabit.app.service.ProjectCollaboratorService;
@@ -65,7 +66,7 @@ public class ProjectCollaboratorControllerTests {
     public void testCreateProjectCollaborator() {
         when(userService.getAuthenticatedUser(authentication)).thenReturn(user);
 
-        ResponseEntity<Void> response = projectCollaboratorController.createProjectCollaborator(projectCollaborator, authentication);
+        ResponseEntity<CreateResponseDTO> response = projectCollaboratorController.createProjectCollaborator(projectCollaborator, authentication);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         verify(projectCollaboratorService, times(1)).addProjectCollaborator(projectCollaborator, user);

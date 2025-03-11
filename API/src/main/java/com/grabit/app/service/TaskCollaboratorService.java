@@ -3,14 +3,10 @@ package com.grabit.app.service;
 import com.grabit.app.enums.Roles;
 import com.grabit.app.exceptions.BadRequest;
 import com.grabit.app.exceptions.NotFound;
+import com.grabit.app.model.*;
 import com.grabit.app.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.grabit.app.model.Role;
-import com.grabit.app.model.Task;
-import com.grabit.app.model.TaskCollaborator;
-import com.grabit.app.model.User;
 
 import java.time.LocalDate;
 
@@ -26,9 +22,9 @@ public class TaskCollaboratorService {
     private final RoleRepository roleRepository;
 
     public TaskCollaboratorService(TaskCollaboratorRepository taskCollaboratorRepository,
-            TaskRepository taskRepository,
-            RoleRepository roleRepository,
-            ProjectCollaboratorRepository projectCollaboratorRepository) {
+                                   TaskRepository taskRepository,
+                                   RoleRepository roleRepository,
+                                   ProjectCollaboratorRepository projectCollaboratorRepository) {
         this.taskCollaboratorRepository = taskCollaboratorRepository;
         this.taskRepository = taskRepository;
         this.roleRepository = roleRepository;
@@ -43,19 +39,29 @@ public class TaskCollaboratorService {
         Task task = taskRepository.findById(taskCollaborator.getTask().getTaskID())
                 .orElseThrow(() -> new NotFound("Task not found."));
 
-        boolean isUserAllowed = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(),
-                task.getProject().getProjectID(), Roles.PROJECT_MEMBER.getRole());
 
-        boolean isProjectLead = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(),
-                task.getProject().getProjectID(), Roles.PROJECT_LEAD.getRole());
+        ProjectCollaborator privileges = projectCollaboratorRepository
+                .findByProjectIDAndUserID(task.getProject().getProjectID(), user.getUserID());
 
-        TaskCollaborator collaborator = taskCollaboratorRepository.findByTaskIDAndUserID(taskCollaborator.getTask().getTaskID(), user.getUserID());
+        if (privileges == null) {
+            throw new BadRequest("User is not a collaborator on this project");
+        }
 
-        if (!isProjectLead && !(collaborator.getRole().getRoleID() == Roles.TASK_GRABBER.getRole())) {
+        TaskCollaborator adderIsCollaborator = taskCollaboratorRepository
+                .findByTaskIDAndUserID(task.getTaskID(), user.getUserID());
+
+        TaskCollaborator collaborator = taskCollaboratorRepository
+                .findByTaskIDAndUserID(task.getTaskID(), taskCollaborator.getUser().getUserID());
+
+        if (!(privileges.getRoleID().equals(Roles.PROJECT_LEAD.getRole()))
+                && !(adderIsCollaborator.getRole().getRoleID() == Roles.TASK_GRABBER.getRole())) {
             throw new BadRequest("Only project leads and grabbers can add task collaborators.");
         }
 
-        if (!isUserAllowed) {
+        boolean collaboratorExists = projectCollaboratorRepository
+                .existsByUserIDAndProjectID(taskCollaborator.getUser().getUserID(), task.getProject().getProjectID());
+
+        if (!collaboratorExists) {
             throw new BadRequest("User cannot be added as a task collaborator in a project they are not a collaborator in.");
         }
 
@@ -67,7 +73,7 @@ public class TaskCollaboratorService {
             throw new BadRequest("Cannot add collaborator: Task deadline has passed.");
         }
 
-        if (taskCollaboratorRepository.existsByUserIDAndTaskID(user.getUserID(), task.getTaskID())) {
+        if (collaborator != null) {
             throw new BadRequest("User is already a collaborator for this task.");
         }
 
@@ -77,8 +83,14 @@ public class TaskCollaboratorService {
             }
         }
 
+        if (!taskCollaborator.getRole().getRoleID().equals(Roles.TASK_GRABBER.getRole())
+                && !taskCollaborator.getRole().getRoleID().equals(Roles.TASK_COLLABORATOR.getRole())) {
+            throw new BadRequest("User can only be a grabber(roleId:3) or collaborator(roleId:4) on a task");
+        }
 
-        taskCollaboratorRepository.createCollaborator(LocalDate.now(), user.getUserID(), role.getRoleID(),
+        taskCollaboratorRepository.createCollaborator(LocalDate.now(),
+                taskCollaborator.getUser().getUserID(),
+                taskCollaborator.getRole().getRoleID(),
                 task.getTaskID());
     }
 
@@ -115,7 +127,14 @@ public class TaskCollaboratorService {
         boolean allowed = taskCollaboratorRepository.existsByIdAndUserIDAndRoleID(taskCollabID, user.getUserID(),
                 Roles.TASK_GRABBER.getRole());
 
-        if (!allowed) {
+        TaskCollaborator collaborator = taskCollaboratorRepository.findById(taskCollabID).get();
+
+        Task task = taskRepository.findById(collaborator.getTask().getTaskID()).get();
+
+        boolean isLead = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(), task.getProject().getProjectID(), Roles.PROJECT_LEAD.getRole());
+
+
+        if (!allowed && !isLead) {
             throw new BadRequest("Cannot deactivate this collaborator.");
         }
 
@@ -137,11 +156,6 @@ public class TaskCollaboratorService {
 
         if (taskCollaborator.getRole().getRoleID() == Roles.TASK_GRABBER.getRole()) {
             throw new BadRequest("Cannot deactivate grabber.");
-        }
-
-        if (taskCollaboratorRepository.existsByTaskIDAndRoleID(taskCollaborator.getTask().getTaskID(),
-                Roles.TASK_GRABBER.getRole())) {
-            throw new BadRequest("Cannot deactivate collaborator: Task already has a grabber.");
         }
 
         taskCollaborator.setIsActive(false);
@@ -169,5 +183,4 @@ public class TaskCollaboratorService {
         taskCollaboratorRepository.updateActiveStatus(taskCollaborator.getTaskCollaboratorID());
         return taskCollaborator;
     }
-
 }

@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-
 @Setter
 @Getter
 public class Auth2User implements OAuth2User{

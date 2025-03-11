@@ -23,7 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +34,7 @@ public class ProjectService extends Task {
     private final ProjectRepository projectRepository;
     private final TaskRepository taskRepository;
     private final ProjectCollaboratorRepository projectCollaboratorRepository;
+    private final Map<String, String> responseMessages;
 
     @Autowired
     public ProjectService(ProjectRepository projectRepository, TaskRepository taskRepository,
@@ -40,7 +43,9 @@ public class ProjectService extends Task {
         this.projectRepository = projectRepository;
         this.taskRepository = taskRepository;
         this.projectCollaboratorRepository = projectCollaboratorRepository;
-
+        this.responseMessages = new HashMap<>();
+        this.responseMessages.put("404", "Project not found");
+        this.responseMessages.put("noTasks", "No tasks have been completed");
     }
 
     @Transactional
@@ -79,12 +84,12 @@ public class ProjectService extends Task {
     }
 
     public Project getProjectByID(Integer projectID) {
-        return projectRepository.findById(projectID).orElseThrow(() -> new NotFound("Project not found"));
+        return projectRepository.findById(projectID).orElseThrow(() -> new NotFound(responseMessages.get("404")));
     }
 
     @Transactional
     public void closeProject(Integer projectID) {
-        projectRepository.findById(projectID).orElseThrow(() -> new NotFound("Project not found"));
+        projectRepository.findById(projectID).orElseThrow(() -> new NotFound(responseMessages.get("404")));
         projectRepository.deactivateProject(projectID);
     }
 
@@ -100,7 +105,7 @@ public class ProjectService extends Task {
         String[][] results = projectRepository.getProjectLeaderboard(projectID);
 
         if (results.length == 0) {
-            throw new BadRequest("No tasks have been completed.");
+            throw new BadRequest(responseMessages.get("noTasks"));
         }
 
         List<ProjectLeaderboardDTO> leaderboard = Arrays.stream(results)
@@ -121,7 +126,7 @@ public class ProjectService extends Task {
 
     public Project updateProject(Integer projectID, Project project) {
         Project existingProject = projectRepository.findById(projectID)
-                .orElseThrow(() -> new NotFound("Project not found"));
+                .orElseThrow(() -> new NotFound(responseMessages.get("404")));
         existingProject.setProjectName(project.getProjectName());
         existingProject.setProjectDescription(project.getProjectDescription());
         existingProject.setUpdatedAt(new Date());

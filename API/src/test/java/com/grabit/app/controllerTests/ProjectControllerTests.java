@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -106,22 +107,6 @@ public class ProjectControllerTests {
     }
 
     @Test
-    public void testGetProjectTasks() {
-        User testUser = new User();
-        List<Task> tasks = List.of(new Task());
-
-        when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
-        when(projectService.isProjectCollaborator(eq(testUser.getUserID()), eq(1))).thenReturn(true);
-        when(projectService.getProjectTasksByProjectID(1)).thenReturn(tasks);
-
-        ResponseEntity<List<Task>> response = projectController.getProjectTasks(1, authentication);
-
-        verify(projectService, times(1)).getProjectTasksByProjectID(1);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(tasks);
-    }
-
-    @Test
     public void testGetProjectCollaborators() {
         User testUser = new User();
         List<ProjectCollaborator> collaborators = List.of(new ProjectCollaborator());
@@ -155,7 +140,7 @@ public class ProjectControllerTests {
         User testUser = new User();
         testUser.setUserID(1);
         Integer projectID = 1;
-        TaskDTO taskDTO = new TaskDTO("Task 1", "Task description", LocalDateTime.now(), "In Progress", "5 points", LocalDateTime.now().plusDays(1));
+        TaskDTO taskDTO = new TaskDTO(1, "Task 1", "Task description", Timestamp.valueOf(LocalDateTime.now()), (byte) 1, (byte) 1, LocalDateTime.now());
         List<TaskDTO> tasks = List.of(taskDTO);
 
         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
