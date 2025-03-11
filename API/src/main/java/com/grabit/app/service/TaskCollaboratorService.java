@@ -177,5 +177,4 @@ public class TaskCollaboratorService {
         taskCollaboratorRepository.updateActiveStatus(taskCollaborator.getTaskCollaboratorID());
         return taskCollaborator;
     }
-
 }
