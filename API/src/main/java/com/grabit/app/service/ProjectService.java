@@ -79,8 +79,9 @@ public class ProjectService extends Task {
                 Roles.PROJECT_LEAD.getRole());
     }
 
-    public List<ProjectAndRoleDTO> getAllProjects(User user) {
-        return projectRepository.getProjectsByUserID(user.getUserID());
+    public List<ProjectAndRoleDTO> getAllProjects(User user, Boolean active) {
+
+        return projectRepository.getProjectsByUserID(user.getUserID(), active);
     }
 
     public Project getProjectByID(Integer projectID) {
@@ -97,7 +98,7 @@ public class ProjectService extends Task {
         return taskRepository.findByProjectID(projectID);
     }
 
-    public List<TaskDTO> getProjectTasksByProjectIDAndUserID(Integer projectID, Integer userId) {
+    public List<Task> getProjectTasksByProjectIDAndUserID(Integer projectID, Integer userId) {
         return taskRepository.findByProjectIDAndUserID(projectID, userId);
     }
 

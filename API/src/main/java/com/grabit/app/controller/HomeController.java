@@ -1,6 +1,5 @@
 package com.grabit.app.controller;
 
-import com.grabit.app.dto.TokenDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class HomeController {
 
     @GetMapping
-    public ResponseEntity<TokenDTO> home(HttpServletRequest request, Authentication principal) {
-        if (principal == null ) {
+    public ResponseEntity<String> home(HttpServletRequest request, Authentication principal) {
+        if (principal == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         OidcUser user = (OidcUser) principal.getPrincipal();
-        TokenDTO token = new TokenDTO(user.getIdToken().getTokenValue());
-        return ResponseEntity.ok(token);
+        return ResponseEntity.ok("{ token:" + user.getIdToken().getTokenValue() + "}");
     }
 }

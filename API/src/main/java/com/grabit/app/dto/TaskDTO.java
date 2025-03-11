@@ -1,47 +1,24 @@
 package com.grabit.app.dto;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.grabit.app.model.Task;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Setter
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor 
 public class TaskDTO {
     private Integer taskID;
     private String taskName;
     private String taskDescription;
-    private Timestamp taskCreatedAt;
+    private LocalDateTime taskCreatedAt;
     private Byte taskPointID;
     private Byte taskStatusID;
     private LocalDateTime taskReviewRequestedAt;
-
-    public TaskDTO(Task task) {
-        this.taskID = task.getTaskID();
-        this.taskName = task.getTaskName();
-        this.taskDescription = task.getTaskDescription();
-        this.taskCreatedAt = Timestamp.valueOf(task.getTaskCreatedAt());
-        this.taskPointID = task.getTaskPoint().getTaskPointID();
-        this.taskStatusID = task.getTaskStatus().getTaskStatusID();
-        this.taskReviewRequestedAt = task.getTaskReviewRequestedAt();
-    }
-
-    public static List<TaskDTO> getTasks(List<Task> tasks) {
-
-        List<TaskDTO> taskDTOs = new ArrayList<>();
-
-        for (Task task : tasks) {
-            taskDTOs.add(new TaskDTO(task));
-        }
-        return taskDTOs;
-    }
 
 }

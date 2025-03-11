@@ -5,6 +5,8 @@ import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -21,6 +23,7 @@ import java.io.IOException;
 
 import java.util.*;
 import org.springframework.security.oauth2.jwt.JwtDecoders;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -75,8 +78,8 @@ public class AuthFilter implements Filter {
 
             filterChain.doFilter(servletRequest, servletResponse);
 
-        } catch (Exception e) {
-            sendHttpResponse(httpResponse, "Token is invalid.", HttpStatus.UNAUTHORIZED);
+        } catch ( JwtException | IllegalArgumentException | AuthenticationException e) {
+            sendHttpResponse(httpResponse, e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
 

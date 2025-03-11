@@ -36,9 +36,8 @@ public class TaskController {
 
     @GetMapping("/{taskID}")
     public ResponseEntity<TaskDTO> getTaskByID(@PathVariable Integer taskID, Authentication authentication) {
-        Task task = taskService.getTaskById(taskID, userService.getAuthenticatedUser(authentication));
-        TaskDTO newDTO = new TaskDTO(task);
-        return ResponseEntity.ok(newDTO);
+        TaskDTO task = taskService.getTaskById(taskID, userService.getAuthenticatedUser(authentication));
+        return ResponseEntity.ok(task);
     }
 
     @DeleteMapping("/{taskID}")
@@ -74,10 +73,10 @@ public class TaskController {
                 taskService.updateTaskStatus(taskID, taskStatusID, userService.getAuthenticatedUser(authentication)));
     }
 
-    @PostMapping("/{taskID}/project/{projectID}")
-    public ResponseEntity<Task> grabTask(@PathVariable Integer taskID, @PathVariable Integer projectID,
+    @PostMapping("/grab/{taskID}")
+    public ResponseEntity<Task> grabTask(@PathVariable Integer taskID,
             Authentication authentication) {
-        Task grabbedTask = taskService.grabTask(taskID, projectID, userService.getAuthenticatedUser(authentication));
+        Task grabbedTask = taskService.grabTask(taskID, userService.getAuthenticatedUser(authentication));
         return ResponseEntity.accepted().body(grabbedTask);
     }
 

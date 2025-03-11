@@ -22,6 +22,7 @@ import com.grabit.app.service.UserService;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -51,9 +52,11 @@ public class ProjectController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProjectAndRoleDTO>> getAllProjects(Authentication authentication) {
+    public ResponseEntity<List<ProjectAndRoleDTO>> getAllProjects(
+            @RequestParam(value = "isActive", required = false, defaultValue = "true") Boolean active,
+            Authentication authentication) {
         List<ProjectAndRoleDTO> allUserProjects = projectService
-                .getAllProjects(userService.getAuthenticatedUser(authentication));
+                .getAllProjects(userService.getAuthenticatedUser(authentication), active);
 
         return ResponseEntity.ok(allUserProjects);
     }
@@ -92,9 +95,14 @@ public class ProjectController {
             throw new BadRequest(responseMessages.get("invalidCollaborator"));
         }
 
-        List<Task> projectTasksByProjectID = projectService.getProjectTasksByProjectID(projectID);
-        List<TaskDTO> dtos = TaskDTO.getTasks(projectTasksByProjectID);
-        return ResponseEntity.ok(dtos);
+        List<TaskDTO> tasks = projectService.getProjectTasksByProjectID(projectID).stream()
+                .map(task -> new TaskDTO(task.getTaskID(), task.getTaskName(), task.getTaskDescription(),
+                        task.getTaskCreatedAt(), task.getTaskPoint().getTaskPointID(),
+                        task.getTaskStatus().getTaskStatusID(),
+                        task.getTaskReviewRequestedAt()))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(tasks);
     }
 
     @GetMapping("/{projectID}/my-tasks")
@@ -104,8 +112,16 @@ public class ProjectController {
 
         if (!projectService.isProjectCollaborator(userID, projectID)) {
             throw new BadRequest(responseMessages.get("invalidCollaborator"));
+
         }
-        return ResponseEntity.ok(projectService.getProjectTasksByProjectIDAndUserID(projectID, userID));
+        List<TaskDTO> tasks = projectService.getProjectTasksByProjectIDAndUserID(projectID, userID).stream()
+                .map(task -> new TaskDTO(task.getTaskID(), task.getTaskName(), task.getTaskDescription(),
+                        task.getTaskCreatedAt(), task.getTaskPoint().getTaskPointID(),
+                        task.getTaskStatus().getTaskStatusID(),
+                        task.getTaskReviewRequestedAt()))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(tasks);
     }
 
     @GetMapping("/{projectID}/collaborators")

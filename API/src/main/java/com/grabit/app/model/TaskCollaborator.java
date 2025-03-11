@@ -9,11 +9,14 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(name = "TaskCollaborators", schema = "grabit")
 public class TaskCollaborator {
     @Id

@@ -16,9 +16,8 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     @Query(value = "SELECT * FROM Tasks task WHERE ProjectID = :projectID", nativeQuery = true)
     List<Task> findByProjectID(Integer projectID);
 
-    @Query(value = "SELECT task.TaskID, task.TaskName,task.TaskDescription,task.TaskCreatedAt,task.TaskStatusID,task.TaskPointID,task.TaskReviewRequestedAt FROM Tasks task join ProjectCollaborators pc on task.ProjectID=pc.ProjectID WHERE task.ProjectID = :projectID AND pc.UserID = :userID", nativeQuery = true)
-
-    List<TaskDTO> findByProjectIDAndUserID(Integer projectID, Integer userID);
+    @Query(value = "SELECT * FROM Tasks task join ProjectCollaborators pc on task.ProjectID=pc.ProjectID WHERE task.ProjectID = :projectID AND pc.UserID = :userID", nativeQuery = true)
+    List<Task> findByProjectIDAndUserID(Integer projectID, Integer userID);
 
     @Query(value = "SELECT task FROM Task task WHERE task.taskStatus.taskStatusID = :taskStatusID")
     List<Task> findByTaskStatusID(Integer taskStatusID);
@@ -35,4 +34,5 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
 
     @Query(value = "SELECT * FROM Tasks task WHERE TaskPointID = :taskPointID", nativeQuery = true)
     List<Task> findByTaskPointID(Integer taskPointID);
+
 }

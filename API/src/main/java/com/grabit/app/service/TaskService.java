@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.grabit.app.dto.TaskDTO;
 import com.grabit.app.enums.Roles;
 import com.grabit.app.enums.Status;
 import com.grabit.app.exceptions.BadRequest;
@@ -35,10 +36,14 @@ public class TaskService {
         this.projectCollaboratorRepository = projectCollaboratorRepository;
     }
 
-    public Task getTaskById(Integer taskID, User user) {
+    public TaskDTO getTaskById(Integer taskID, User user) {
 
         Task task = taskRepository.findById(taskID)
                 .orElseThrow(() -> new NotFound("Task not found"));
+
+        TaskDTO taskDTO = new TaskDTO(task.getTaskID(), task.getTaskName(), task.getTaskDescription(),
+                task.getTaskCreatedAt(), task.getTaskPoint().getTaskPointID(), task.getTaskStatus().getTaskStatusID(),
+                task.getTaskReviewRequestedAt());
 
         boolean allowed = taskRepository.existsTaskByUserIDAndTaskID(taskID, user.getUserID());
 
@@ -49,7 +54,7 @@ public class TaskService {
             throw new BadRequest("Cannot access task because you are not a project collaborator.");
         }
 
-        return task;
+        return taskDTO;
     }
 
     public void createTask(Task task, User user) {
@@ -61,21 +66,18 @@ public class TaskService {
             throw new BadRequest("User is not a lead of this project.");
         }
 
-        if (!taskPointRepository.existsById((int) task.getTaskPoint().getTaskPointID())) {
-            throw new NotFound("Task point not found.");
+        if (!taskPointRepository.existsByTaskPointID(task.getTaskPoint().getTaskPointID())) {
+            throw new BadRequest("Task point not found.");
         }
-
-        TaskStatus taskStatus = taskStatusRepository.findById((int) Status.AVAILABLE.getStatus())
-                .orElseThrow(() -> new NotFound("Task status not found."));
 
         if (task.getTaskDeadline() != null && task.getTaskDeadline().isBefore(LocalDate.now())) {
             throw new BadRequest("Task deadline cannot be in the past.");
         }
-        task.setTaskStatus(taskStatus);
-        task.setActive(true);
+        task.setTaskStatus(new TaskStatus((byte) 1, "Available"));
         taskRepository.save(task);
     }
 
+    // is Allowed needs to be changed
     public Task updateTaskStatus(int taskID, byte taskStatusID, User user) {
 
         Task task = taskRepository.findById(taskID)
@@ -173,32 +175,27 @@ public class TaskService {
 
     public List<TaskCollaborator> getTaskCollaborators(Integer taskID, User user) {
 
-
         Task task = taskRepository.findById(taskID)
                 .orElseThrow(() -> new NotFound("Task not found."));
 
-
-        ProjectCollaborator collaborator = projectCollaboratorRepository.findByProjectIDAndUserID(task.getProject().getProjectID(), user.getUserID());
-        if(collaborator == null) {
+        ProjectCollaborator collaborator = projectCollaboratorRepository
+                .findByProjectIDAndUserID(task.getProject().getProjectID(), user.getUserID());
+        if (collaborator == null) {
             throw new NotFound("Collaborator not found.");
         }
         return taskCollaboratorRepository.findByTaskID(taskID);
     }
 
     @Transactional
-    public Task grabTask(Integer taskID, int projectID, User user) {
+    public Task grabTask(Integer taskID, User user) {
 
         Task task = taskRepository.findById(taskID).orElseThrow(() -> new NotFound("Task not found."));
         if (task.getTaskStatus().getTaskStatusID() != Status.AVAILABLE.getStatus()) {
             throw new BadRequest("Task is not available to be grabbed.");
         }
 
-        if (task.getProject().getProjectID() != projectID) {
-            throw new BadRequest("Task is not available in this project.");
-        }
-
         boolean allowed = projectCollaboratorRepository.existsByUserIDAndProjectIDAndRoleID(user.getUserID(),
-                projectID,
+                task.getProject().getProjectID(),
                 Roles.PROJECT_MEMBER.getRole());
 
         if (!allowed) {
