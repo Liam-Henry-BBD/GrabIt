@@ -12,7 +12,6 @@ import org.mockito.MockitoAnnotations;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-
 class UserServiceTests {
 
     @Mock
@@ -47,5 +46,4 @@ class UserServiceTests {
 
         verify(userRepository, Mockito.never()).save(Mockito.any(User.class));
     }
-
 }

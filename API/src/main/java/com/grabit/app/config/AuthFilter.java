@@ -23,7 +23,6 @@ import java.util.*;
 import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.stereotype.Controller;
 
-
 @Controller
 @WebFilter("/*")
 public class AuthFilter implements Filter {
@@ -65,14 +64,12 @@ public class AuthFilter implements Filter {
             String emailSplit = email.split("@")[0];
             userService.saveOrUpdateUser(emailSplit);
 
-
             OidcIdToken idToken = createOidcIdToken(jwt);
             OidcUserInfo userInfo = createOidcUserInfo(jwt);
             List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
             OidcUser oidcUser = new DefaultOidcUser(authorities , idToken, userInfo);
 
             OAuth2AuthenticationToken authentication = new OAuth2AuthenticationToken(oidcUser, authorities, "google");
-
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -109,5 +106,4 @@ public class AuthFilter implements Filter {
 
         return new OidcUserInfo(claims);
     }
-
 }

@@ -38,7 +38,7 @@ public class ProjectController {
         this.responseMessages = new HashMap<>();
         this.responseMessages.put("created", "Your project has been created successfully");
         this.responseMessages.put("invalidCollaborator", "You are not a collaborator on this project");
-        this.responseMessages.put("InvalidRole", "You are not a leader on this project");
+        this.responseMessages.put("invalidRole", "You are not a leader on this project");
     }
 
     @PostMapping
@@ -123,7 +123,7 @@ public class ProjectController {
             Authentication authentication) {
         if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),
                 projectID)) {
-            throw new BadRequest(responseMessages.get("InvalidCollaborator"));
+            throw new BadRequest(responseMessages.get("invalidCollaborator"));
         }
 
         return ResponseEntity.ok(projectService.getProjectLeaderboardByProjectID(projectID));
@@ -136,7 +136,7 @@ public class ProjectController {
                 projectID);
 
         if (!isCollaborator) {
-            throw new BadRequest(responseMessages.get("InvalidRole"));
+            throw new BadRequest(responseMessages.get("invalidRole"));
         }
 
         Project updatedProject = projectService.updateProject(projectID, project);

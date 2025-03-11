@@ -46,7 +46,6 @@ public class ProjectService extends Task {
         this.responseMessages = new HashMap<>();
         this.responseMessages.put("404", "Project not found");
         this.responseMessages.put("noTasks", "No tasks have been completed");
-
     }
 
     @Transactional
