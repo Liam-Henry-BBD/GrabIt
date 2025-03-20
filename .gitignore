@@ -4,7 +4,8 @@ API/target/
 !API/.mvn/wrapper/maven-wrapper.jar
 !API/**/src/main/**/target/
 !API/**/src/test/**/target/
-
+front-end/.vscode/
+front-end/node_modules
 ### IntelliJ IDEA ###
 .idea
 *.iws
