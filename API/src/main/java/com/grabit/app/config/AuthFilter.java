@@ -1,5 +1,6 @@
 package com.grabit.app.config;
 
+import com.grabit.app.model.Auth2User;
 import com.grabit.app.service.UserService;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
@@ -65,17 +66,12 @@ public class AuthFilter implements Filter {
             Map<String, Object> claims = jwt.getClaims();
             String email = (String) claims.get("email");
             String emailSplit = email.split("@")[0];
-            userService.saveOrUpdateUser(emailSplit);
 
-            OidcIdToken idToken = createOidcIdToken(jwt);
-            OidcUserInfo userInfo = createOidcUserInfo(jwt);
             List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
-            OidcUser oidcUser = new DefaultOidcUser(authorities , idToken, userInfo);
-
-            OAuth2AuthenticationToken authentication = new OAuth2AuthenticationToken(oidcUser, authorities, "google");
+            Auth2User user = new Auth2User(emailSplit, (String) claims.get("sub"));
+            OAuth2AuthenticationToken authentication = new OAuth2AuthenticationToken(user, authorities, "google");
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
             filterChain.doFilter(servletRequest, servletResponse);
 
         } catch ( JwtException | IllegalArgumentException | AuthenticationException e) {
@@ -93,20 +89,4 @@ public class AuthFilter implements Filter {
         httpResponse.getWriter().write(String.valueOf(obj));
     }
 
-    private OidcIdToken createOidcIdToken(Jwt jwt) {
-        Map<String, Object> claims = new HashMap<>(jwt.getClaims());
-
-        return new OidcIdToken(
-                jwt.getTokenValue(),
-                jwt.getIssuedAt(),
-                jwt.getExpiresAt(),
-                claims
-        );
-    }
-
-    private OidcUserInfo createOidcUserInfo(Jwt jwt) {
-        Map<String, Object> claims = new HashMap<>(jwt.getClaims());
-
-        return new OidcUserInfo(claims);
-    }
 }

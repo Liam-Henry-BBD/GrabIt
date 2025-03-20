@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import com.grabit.app.exceptions.NotFound;
+import com.grabit.app.model.Auth2User;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -38,8 +39,8 @@ public class UserService extends DefaultOAuth2UserService {
     }
 
     public User getAuthenticatedUser(Authentication authentication) {
-        OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
-        String username = oidcUser.getClaims().get("email").toString().split("@")[0];
+        Auth2User user = (Auth2User) authentication.getPrincipal();
+        String username = user.getUsername();
         return userRepository.findByGitHubID(username);
     }
 

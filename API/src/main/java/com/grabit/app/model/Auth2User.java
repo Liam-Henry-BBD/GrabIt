@@ -19,19 +19,18 @@ import java.util.Map;
 public class Auth2User implements OAuth2User{
 
     private String id;
-    private String login;
+    private String username;
 
-    public Auth2User(String responseBody) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-
-        JsonNode node = mapper.readTree(responseBody);
-        this.login = node.get("login").asText();
+    public Auth2User(String emailSplit, String sub) {
+        this.id = sub;
+        this.username = emailSplit;
     }
+
 
     @Override
     public Map<String, Object> getAttributes() {
         return Map.of(
-                "login", login
+                "username", username
         );
     }
 
@@ -42,6 +41,6 @@ public class Auth2User implements OAuth2User{
 
     @Override
     public String getName() {
-        return login;
+        return username;
     }
 }
