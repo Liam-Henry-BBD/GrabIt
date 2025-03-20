@@ -79,8 +79,8 @@ public class ProjectService extends Task {
     }
 
     public List<ProjectAndRoleDTO> getAllProjects(User user, Boolean active) {
-
-        return projectRepository.getProjectsByUserID(user.getUserID(), active);
+        int filter = active ? 1 : 0;
+        return projectRepository.getProjectsByUserID(user.getUserID(), filter);
     }
 
     public Project getProjectByID(Integer projectID) {

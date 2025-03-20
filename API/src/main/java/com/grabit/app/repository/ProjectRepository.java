@@ -54,7 +54,7 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
             AND 
                 p.isActive = :isActive;
             """, nativeQuery = true)
-    List<ProjectAndRoleDTO>  getProjectsByUserID(@Param("userID") Integer userID,Boolean isActive);
+    List<ProjectAndRoleDTO>  getProjectsByUserID(@Param("userID") Integer userID, int isActive);
 
     @Modifying
     @Query(value = "UPDATE Project SET isActive = false WHERE projectID = :projectID")
