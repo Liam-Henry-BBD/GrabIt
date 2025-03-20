@@ -39,6 +39,14 @@ public class ProjectController {
         this.responseMessages.put("created", "Your project has been created successfully");
         this.responseMessages.put("invalidCollaborator", "You are not a collaborator on this project");
         this.responseMessages.put("invalidRole", "You are not a leader on this project");
+        this.responseMessages.put("inactiveProject", "This project is no longer active");
+    }
+
+    private void validateProjectIsActive(Integer projectID) {
+        Project project = projectService.getProjectByID(projectID);
+        if (project == null || !project.isActive()) {
+            throw new BadRequest(responseMessages.get("inactiveProject"));
+        }
     }
 
     @PostMapping
@@ -63,6 +71,7 @@ public class ProjectController {
     @GetMapping("/{projectID}")
     public ResponseEntity<Project> getProjectByID(@PathVariable Integer projectID,
             Authentication authentication) {
+                validateProjectIsActive(projectID);
         if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),
                 projectID)) {
             throw new BadRequest(responseMessages.get("invalidCollaborator"));
@@ -81,6 +90,7 @@ public class ProjectController {
         if (!isCollaborator) {
             throw new BadRequest(responseMessages.get("invalidRole"));
         }
+                validateProjectIsActive(projectID);
 
         projectService.closeProject(projectID);
         return ResponseEntity.noContent().build();
@@ -93,6 +103,7 @@ public class ProjectController {
                 projectID)) {
             throw new BadRequest(responseMessages.get("invalidCollaborator"));
         }
+      validateProjectIsActive(projectID);
 
         List<TaskDTO> tasks = projectService.getProjectTasksByProjectID(projectID).stream()
                 .map(task -> new TaskDTO(task.getTaskID(), task.getTaskName(), task.getTaskDescription(),
@@ -113,6 +124,7 @@ public class ProjectController {
             throw new BadRequest(responseMessages.get("invalidCollaborator"));
 
         }
+                validateProjectIsActive(projectID);
         List<TaskDTO> tasks = projectService.getProjectTasksByProjectIDAndUserID(projectID, userID).stream()
                 .map(task -> new TaskDTO(task.getTaskID(), task.getTaskName(), task.getTaskDescription(),
                         task.getTaskCreatedAt(), task.getTaskPoint().getTaskPointID(),
@@ -130,6 +142,7 @@ public class ProjectController {
                 projectID)) {
             throw new BadRequest(responseMessages.get("invalidCollaborator"));
         }
+                validateProjectIsActive(projectID);
 
         return ResponseEntity.ok(projectService.getProjectCollaboratorsByProjectID(projectID));
     }
@@ -142,6 +155,7 @@ public class ProjectController {
                 projectID)) {
             throw new BadRequest(responseMessages.get("invalidCollaborator"));
         }
+                validateProjectIsActive(projectID);
 
         return ResponseEntity.ok(projectService.getProjectLeaderboardByProjectID(projectID));
     }
@@ -155,6 +169,7 @@ public class ProjectController {
         if (!isCollaborator) {
             throw new BadRequest(responseMessages.get("invalidRole"));
         }
+                validateProjectIsActive(projectID);
 
         Project updatedProject = projectService.updateProject(projectID, project);
         return ResponseEntity.ok(updatedProject);

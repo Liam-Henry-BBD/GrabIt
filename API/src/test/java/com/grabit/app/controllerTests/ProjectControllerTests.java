@@ -1,276 +1,172 @@
-// package com.grabit.app.controllerTests;
+package com.grabit.app.controllerTests;
 
-// import com.grabit.app.controller.ProjectController;
-// import com.grabit.app.dto.*;
-// import com.grabit.app.exceptions.BadRequest;
-// import com.grabit.app.model.*;
-// import com.grabit.app.service.ProjectService;
-// import com.grabit.app.service.UserService;
+import com.grabit.app.controller.ProjectController;
+import com.grabit.app.dto.*;
+import com.grabit.app.exceptions.BadRequest;
+import com.grabit.app.model.Project;
+import com.grabit.app.model.ProjectCollaborator;
+import com.grabit.app.model.User;
+import com.grabit.app.service.ProjectService;
+import com.grabit.app.service.UserService;
 
-// import org.junit.jupiter.api.BeforeEach;
-// import org.junit.jupiter.api.Disabled;
-// import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-// import org.mockito.*;
-// import org.springframework.http.HttpStatus;
-// import org.springframework.http.ResponseEntity;
-// import org.springframework.security.core.Authentication;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-// import java.sql.Timestamp;
-// import java.time.LocalDateTime;
-// import java.util.List;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 
-// import static org.junit.jupiter.api.Assertions.assertThrows;
-// import static org.mockito.ArgumentMatchers.*;
-// import static org.mockito.Mockito.*;
-// import static org.assertj.core.api.Assertions.assertThat;
+import java.util.Arrays;
+import java.util.List;
 
-// @Disabled
-// public class ProjectControllerTests {
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-//     @Mock
-//     private ProjectService projectService;
+@ExtendWith(MockitoExtension.class)
+class ProjectControllerTest {
 
-//     @Mock
-//     private UserService userService;
+    @Mock
+    private ProjectService projectService;
 
-//     @InjectMocks
-//     private ProjectController projectController;
+    @Mock
+    private UserService userService;
 
-//     private Authentication authentication;
+    @Mock
+    private Authentication authentication;
 
-//     @BeforeEach
-//     public void setUp() {
-//         MockitoAnnotations.openMocks(this);
-//         authentication = mock(Authentication.class);
-//     }
+    @InjectMocks
+    private ProjectController projectController;
 
-//     @Test
-//     public void testCreateProject() {
-//         ProjectCreationDTO request = new ProjectCreationDTO("Project A", "Description");
-//         User testUser = new User();
+    private User user;
+    private Project project;
 
-//         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
+    @BeforeEach
+    void setUp() {
+        user = new User();
+        user.setUserID(1);
 
-//         ResponseEntity<CreateResponseDTO> response = projectController.createProject(request, authentication);
+        project = new Project();
+        project.setActive(true);
+    }
 
-//         verify(projectService, times(1)).createProject(any(ProjectCreationDTO.class), eq(testUser));
-//         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-//         assertThat(response.getBody().getMessage()).isEqualTo("Your project has been created successfully");
-//     }
+    @Test
+    void createProject_Success() {
+        ProjectCreationDTO request = new ProjectCreationDTO("Project A", "Description...");
+        when(userService.getAuthenticatedUser(authentication)).thenReturn(user);
 
-//     @Test
-//     public void testGetAllProjects() {
-//         User testUser = new User();
+        ResponseEntity<CreateResponseDTO> response = projectController.createProject(request, authentication);
 
-//         List<ProjectAndRoleDTO> projects = List.of(new ProjectAndRoleDTO(1, "project", "blah blah", 2, (byte) 1));
+        assertEquals(201, response.getStatusCodeValue());
+        assertEquals("Your project has been created successfully", response.getBody().getMessage());
+    }
 
-//         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
-//         when(projectService.getAllProjects(testUser)).thenReturn(projects);
+    @Test
+    void getAllProjects_Success() {
+        when(userService.getAuthenticatedUser(authentication)).thenReturn(user);
+        when(projectService.getAllProjects(user, true)).thenReturn(List.of());
 
-//         ResponseEntity<List<ProjectAndRoleDTO>> response = projectController.getAllProjects(authentication);
+        ResponseEntity<List<ProjectAndRoleDTO>> response = projectController.getAllProjects(true, authentication);
 
-//         verify(projectService, times(1)).getAllProjects(testUser);
-//         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-//         assertThat(response.getBody()).isEqualTo(projects);
-//     }
+        assertEquals(200, response.getStatusCodeValue());
+        assertNotNull(response.getBody());
+    }
 
-//     @Test
-//     public void testGetProjectByID() {
-//         User testUser = new User();
-//         testUser.setUserID(1);
-//         Project project = new Project();
+    @Test
+    void getProjectByID_ValidCollaborator() {
+        when(projectService.getProjectByID(1)).thenReturn(project);
+        when(userService.getAuthenticatedUser(authentication)).thenReturn(user);
+        when(projectService.isProjectCollaborator(1, 1)).thenReturn(true);
 
-//         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
-//         when(projectService.isProjectCollaborator(eq(testUser.getUserID()), eq(1))).thenReturn(true);
-//         when(projectService.getProjectByID(1)).thenReturn(project);
+        ResponseEntity<Project> response = projectController.getProjectByID(1, authentication);
 
-//         ResponseEntity<Project> response = projectController.getProjectByID(1, authentication);
+        assertEquals(200, response.getStatusCodeValue());
+        assertNotNull(response.getBody());
+    }
 
-//         verify(projectService, times(1)).isProjectCollaborator(eq(testUser.getUserID()), eq(1));
-//         verify(projectService, times(1)).getProjectByID(1);
-//         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-//         assertThat(response.getBody()).isEqualTo(project);
-//     }
+    @Test
+    void getProjectByID_InvalidCollaborator_ThrowsException() {
+        when(projectService.getProjectByID(1)).thenReturn(project);
+        when(userService.getAuthenticatedUser(authentication)).thenReturn(user);
+        when(projectService.isProjectCollaborator(1, 1)).thenReturn(false);
 
-//     @Test
-//     public void testCloseProject() {
-//         User testUser = new User();
-//         Project project = new Project();
+        assertThrows(BadRequest.class, () -> projectController.getProjectByID(1, authentication));
+    }
 
-//         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
-//         when(projectService.isProjectLead(eq(testUser), eq(1))).thenReturn(true);
-//         when(projectService.getProjectByID(1)).thenReturn(project);
-
-//         ResponseEntity<Project> response = projectController.closeProject(1, authentication);
-
-//         verify(projectService, times(1)).closeProject(1);
-//         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-//     }
-
-//     @Test
-//     public void testGetProjectCollaborators() {
-//         User testUser = new User();
-//         List<ProjectCollaborator> collaborators = List.of(new ProjectCollaborator());
-
-//         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
-//         when(projectService.isProjectCollaborator(eq(testUser.getUserID()), eq(1))).thenReturn(true);
-//         when(projectService.getProjectCollaboratorsByProjectID(1)).thenReturn(collaborators);
-
-//         ResponseEntity<List<ProjectCollaborator>> response = projectController.getProjectCollaborators(1, authentication);
-
-//         verify(projectService, times(1)).getProjectCollaboratorsByProjectID(1);
-//         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-//         assertThat(response.getBody()).isEqualTo(collaborators);
-//     }
-
-//     @Test
-//     public void testGetProjectLeaderboard() {
-//         User testUser = new User();
-
-//         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
-//         when(projectService.isProjectCollaborator(eq(testUser.getUserID()), eq(1))).thenReturn(true);
-
-//         ResponseEntity<List<ProjectLeaderboardDTO>> response = projectController.getProjectLeaderboard(1, authentication);
-
-//         verify(projectService, times(1)).getProjectLeaderboardByProjectID(1);
-//         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-//     }
-
-//     @Test
-//     public void testGetMyProjectTasks() {
-//         User testUser = new User();
-//         testUser.setUserID(1);
-//         Integer projectID = 1;
-//         TaskDTO taskDTO = new TaskDTO(1, "Task 1", "Task description", Timestamp.valueOf(LocalDateTime.now()), (byte) 1, (byte) 1, LocalDateTime.now());
-//         List<TaskDTO> tasks = List.of(taskDTO);
-
-//         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
-//         when(projectService.isProjectCollaborator(testUser.getUserID(), projectID)).thenReturn(true);
-//         when(projectService.getProjectTasksByProjectIDAndUserID(projectID, testUser.getUserID())).thenReturn(tasks);
-
-//         ResponseEntity<List<TaskDTO>> response = projectController.getMyProjectTasks(projectID, authentication);
-
-//         verify(projectService, times(1)).isProjectCollaborator(testUser.getUserID(), projectID);
-//         verify(projectService, times(1)).getProjectTasksByProjectIDAndUserID(projectID, testUser.getUserID());
-//         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-//         assertThat(response.getBody()).isEqualTo(tasks);
-//     }
-
-//     @Test
-//     public void testUpdateProject() {
-//         User testUser = new User();
-//         Project updatedProject = new Project();
-
-//         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
-//         when(projectService.isProjectLead(eq(testUser), eq(1))).thenReturn(true);
-//         when(projectService.updateProject(eq(1), any(Project.class))).thenReturn(updatedProject);
-
-//         ResponseEntity<Project> response = projectController.updateProject(1, updatedProject, authentication);
-
-//         verify(projectService, times(1)).updateProject(eq(1), any(Project.class));
-//         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-//         assertThat(response.getBody()).isEqualTo(updatedProject);
-//     }
-
-//     @Test
-//     public void testGetProjectByID_BadRequest() {
-//         User testUser = new User();
-//         testUser.setUserID(1);
-
-//         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
-//         when(projectService.isProjectCollaborator(eq(testUser.getUserID()), eq(1))).thenReturn(false);
-
-//         Exception exception = assertThrows(BadRequest.class, () -> {
-//             projectController.getProjectByID(1, authentication);
-//         });
-
-//         assertThat(exception.getMessage()).contains("400 BAD_REQUEST \"You are not a collaborator on this project\"");
-//     }
-
-//     @Test
-//     public void testCloseProject_BadRequest() {
-//         User testUser = new User();
-
-//         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
-//         when(projectService.isProjectLead(eq(testUser), eq(2))).thenReturn(false);
-
-//         Exception exception = assertThrows(BadRequest.class, () -> {
-//             projectController.closeProject(1, authentication);
-//         });
-
-//         assertThat(exception.getMessage()).contains("400 BAD_REQUEST \"You are not a leader on this project\"");
-//     }
-
-//     @Test
-//     public void testGetProjectTasks_BadRequest() {
-//         User testUser = new User();
-
-//         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
-//         when(projectService.isProjectCollaborator(eq(testUser.getUserID()), eq(1))).thenReturn(false);
-
-//         Exception exception = assertThrows(BadRequest.class, () -> {
-//             projectController.getProjectTasks(1, authentication);
-//         });
-
-//         assertThat(exception.getMessage()).contains("400 BAD_REQUEST \"You are not a collaborator on this project\"");
-//     }
-
-//     @Test
-//     public void testGetProjectCollaborators_BadRequest() {
-//         User testUser = new User();
-
-//         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
-//         when(projectService.isProjectCollaborator(eq(testUser.getUserID()), eq(1))).thenReturn(false);
-
-//         Exception exception = assertThrows(BadRequest.class, () -> {
-//             projectController.getProjectCollaborators(1, authentication);
-//         });
-
-//         assertThat(exception.getMessage()).contains("400 BAD_REQUEST \"You are not a collaborator on this project\"");
-//     }
-
-//     @Test
-//     public void testGetMyProjectTasks_BadRequest() {
-//         User testUser = new User();
-//         testUser.setUserID(1);
-//         Integer projectID = 1;
-
-//         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
-//         when(projectService.isProjectCollaborator(testUser.getUserID(), projectID)).thenReturn(false);
-
-//         Exception exception = assertThrows(BadRequest.class, () -> {
-//             projectController.getMyProjectTasks(projectID, authentication);
-//         });
-
-//         assertThat(exception.getMessage()).contains("400 BAD_REQUEST \"You are not a collaborator on this project\"");
-//     }
-
-//     @Test
-//     public void testGetProjectLeaderboard_BadRequest() {
-//         User testUser = new User();
-
-//         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
-//         when(projectService.isProjectCollaborator(eq(testUser.getUserID()), eq(1))).thenReturn(false);
-
-//         Exception exception = assertThrows(BadRequest.class, () -> {
-//             projectController.getProjectLeaderboard(1, authentication);
-//         });
-
-//         assertThat(exception.getMessage()).contains("400 BAD_REQUEST \"You are not a collaborator on this project\"");
-//     }
-
-//     @Test
-//     public void testUpdateProject_BadRequest() {
-//         User testUser = new User();
-
-//         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
-//         when(projectService.isProjectLead(eq(testUser), eq(1))).thenReturn(false);
-
-//         Exception exception = assertThrows(BadRequest.class, () -> {
-//             projectController.updateProject(1, new Project(), authentication);
-//         });
-
-//         assertThat(exception.getMessage()).contains("400 BAD_REQUEST \"You are not a leader on this project\"");
-//     }
-// }
+    @Test
+    void closeProject_AsProjectLead() {
+        when(projectService.getProjectByID(1)).thenReturn(project);
+        when(userService.getAuthenticatedUser(authentication)).thenReturn(user);
+        when(projectService.isProjectLead(user, 1)).thenReturn(true);
+
+        ResponseEntity<Project> response = projectController.closeProject(1, authentication);
+
+        assertEquals(204, response.getStatusCodeValue());
+    }
+
+    @Test
+    void closeProject_NotProjectLead_ThrowsException() {
+        when(userService.getAuthenticatedUser(authentication)).thenReturn(user);
+        when(projectService.isProjectLead(user, 1)).thenReturn(false);
+
+        assertThrows(BadRequest.class, () -> projectController.closeProject(1, authentication));
+    }
+
+    @Test
+    void getProjectTasks_Success() {
+        when(projectService.getProjectByID(1)).thenReturn(project);
+        when(userService.getAuthenticatedUser(authentication)).thenReturn(user);
+        when(projectService.isProjectCollaborator(1, 1)).thenReturn(true);
+        when(projectService.getProjectTasksByProjectID(1)).thenReturn(List.of());
+
+        ResponseEntity<List<TaskDTO>> response = projectController.getProjectTasks(1, authentication);
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertNotNull(response.getBody());
+    }
+
+    @Test
+    void getProjectTasks_InvalidCollaborator_ThrowsException() {
+        when(userService.getAuthenticatedUser(authentication)).thenReturn(user);
+        when(projectService.isProjectCollaborator(1, 1)).thenReturn(false);
+
+        assertThrows(BadRequest.class, () -> projectController.getProjectTasks(1, authentication));
+    }
+
+    @Test
+    void getProjectCollaborators_Success() {
+        when(projectService.getProjectByID(1)).thenReturn(project);
+        when(userService.getAuthenticatedUser(authentication)).thenReturn(user);
+        when(projectService.isProjectCollaborator(1, 1)).thenReturn(true);
+        when(projectService.getProjectCollaboratorsByProjectID(1)).thenReturn(Arrays.asList(new ProjectCollaborator()));
+
+        ResponseEntity<List<ProjectCollaborator>> response = projectController.getProjectCollaborators(1, authentication);
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertNotNull(response.getBody());
+    }
+
+    @Test
+    void updateProject_AsProjectLead() {
+        when(projectService.getProjectByID(1)).thenReturn(project);
+        when(userService.getAuthenticatedUser(authentication)).thenReturn(user);
+        when(projectService.isProjectLead(user, 1)).thenReturn(true);
+        when(projectService.updateProject(eq(1), any(Project.class))).thenReturn(project);
+
+        ResponseEntity<Project> response = projectController.updateProject(1, project, authentication);
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertNotNull(response.getBody());
+    }
+
+    @Test
+    void updateProject_NotProjectLead_ThrowsException() {
+        when(userService.getAuthenticatedUser(authentication)).thenReturn(user);
+        when(projectService.isProjectLead(user, 1)).thenReturn(false);
+
+        assertThrows(BadRequest.class, () -> projectController.updateProject(1, project, authentication));
+    }
+}
