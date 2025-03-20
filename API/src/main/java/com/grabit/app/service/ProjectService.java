@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.grabit.app.dto.ProjectAndRoleDTO;
 import com.grabit.app.dto.ProjectCreationDTO;
 import com.grabit.app.dto.ProjectLeaderboardDTO;
-import com.grabit.app.dto.TaskDTO;
 import com.grabit.app.enums.Roles;
 import com.grabit.app.model.Project;
 import com.grabit.app.model.ProjectCollaborator;

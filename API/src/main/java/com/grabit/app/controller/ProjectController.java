@@ -3,7 +3,6 @@ package com.grabit.app.controller;
 import com.grabit.app.dto.ProjectLeaderboardDTO;
 import com.grabit.app.exceptions.BadRequest;
 import com.grabit.app.model.ProjectCollaborator;
-import com.grabit.app.model.Task;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
