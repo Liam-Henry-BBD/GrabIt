@@ -28,10 +28,8 @@ import org.springframework.stereotype.Controller;
 public class AuthFilter implements Filter {
     private JwtDecoder jwtDecoder;
 
-    private final UserService userService;
 
-    public AuthFilter(UserService userService) {
-        this.userService = userService;
+    public AuthFilter() {
         this.jwtDecoder = JwtDecoders.fromIssuerLocation("https://accounts.google.com");
     }
 
