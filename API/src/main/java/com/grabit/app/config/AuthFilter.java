@@ -1,7 +1,7 @@
 package com.grabit.app.config;
 
 import com.grabit.app.model.Auth2User;
-import com.grabit.app.service.UserService;
+
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;

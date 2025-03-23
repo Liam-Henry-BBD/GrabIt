@@ -59,7 +59,7 @@ class TaskControllerTest {
 
         ResponseEntity<TaskDTO> response = taskController.getTaskByID(1, authentication);
 
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(200, response.getStatusCode().value());
         assertNotNull(response.getBody());
     }
 
@@ -69,7 +69,7 @@ class TaskControllerTest {
 
         ResponseEntity<Void> response = taskController.deleteTask(1, authentication);
 
-        assertEquals(202, response.getStatusCodeValue());
+        assertEquals(202, response.getStatusCode().value());
         verify(taskService, times(1)).deleteTask(1, user);
     }
 
@@ -79,7 +79,7 @@ class TaskControllerTest {
 
         ResponseEntity<CreateResponseDTO> response = taskController.createTask(task, authentication);
 
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(200, response.getStatusCode().value());
         assertEquals("Task created successfully", response.getBody().getMessage());
     }
 
@@ -90,7 +90,7 @@ class TaskControllerTest {
 
         ResponseEntity<Task> response = taskController.updateTask(1, task, authentication);
 
-        assertEquals(202, response.getStatusCodeValue());
+        assertEquals(202, response.getStatusCode().value());
         assertNotNull(response.getBody());
     }
 
@@ -101,7 +101,7 @@ class TaskControllerTest {
 
         ResponseEntity<List<TaskCollaborator>> response = taskController.getCollaboratorByTaskID(1, authentication);
 
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(200, response.getStatusCode().value());
         assertNotNull(response.getBody());
     }
 
@@ -112,7 +112,7 @@ class TaskControllerTest {
 
         ResponseEntity<Task> response = taskController.updateTaskStatus(1, (byte) 2, authentication);
 
-        assertEquals(202, response.getStatusCodeValue());
+        assertEquals(202, response.getStatusCode().value());
         assertNotNull(response.getBody());
     }
 
@@ -123,7 +123,7 @@ class TaskControllerTest {
 
         ResponseEntity<Task> response = taskController.grabTask(1, authentication);
 
-        assertEquals(202, response.getStatusCodeValue());
+        assertEquals(202, response.getStatusCode().value());
         assertNotNull(response.getBody());
     }
 }

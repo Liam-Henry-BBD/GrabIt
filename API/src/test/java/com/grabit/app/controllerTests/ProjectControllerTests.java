@@ -60,7 +60,7 @@ class ProjectControllerTest {
 
         ResponseEntity<CreateResponseDTO> response = projectController.createProject(request, authentication);
 
-        assertEquals(201, response.getStatusCodeValue());
+        assertEquals(201, response.getStatusCode().value());
         assertEquals("Your project has been created successfully", response.getBody().getMessage());
     }
 
@@ -71,7 +71,7 @@ class ProjectControllerTest {
 
         ResponseEntity<List<ProjectAndRoleDTO>> response = projectController.getAllProjects(true, authentication);
 
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(200, response.getStatusCode().value());
         assertNotNull(response.getBody());
     }
 
@@ -83,7 +83,7 @@ class ProjectControllerTest {
 
         ResponseEntity<Project> response = projectController.getProjectByID(1, authentication);
 
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(200, response.getStatusCode().value());
         assertNotNull(response.getBody());
     }
 
@@ -104,7 +104,7 @@ class ProjectControllerTest {
 
         ResponseEntity<Project> response = projectController.closeProject(1, authentication);
 
-        assertEquals(204, response.getStatusCodeValue());
+        assertEquals(204, response.getStatusCode().value());
     }
 
     @Test
@@ -124,7 +124,7 @@ class ProjectControllerTest {
 
         ResponseEntity<List<TaskDTO>> response = projectController.getProjectTasks(1, authentication);
 
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(200, response.getStatusCode().value());
         assertNotNull(response.getBody());
     }
 
@@ -145,7 +145,7 @@ class ProjectControllerTest {
 
         ResponseEntity<List<ProjectCollaborator>> response = projectController.getProjectCollaborators(1, authentication);
 
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(200, response.getStatusCode().value());
         assertNotNull(response.getBody());
     }
 
@@ -158,7 +158,7 @@ class ProjectControllerTest {
 
         ResponseEntity<Project> response = projectController.updateProject(1, project, authentication);
 
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(200, response.getStatusCode().value());
         assertNotNull(response.getBody());
     }
 
