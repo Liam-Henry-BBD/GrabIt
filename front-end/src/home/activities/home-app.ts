@@ -1,6 +1,5 @@
 import { html, css, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import { LeaderboardSidebar } from './leaderboard';
 
 @customElement('home-app')
 export class DashboardComponent extends LitElement {
