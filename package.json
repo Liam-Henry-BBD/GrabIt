@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@vaadin/router": "^2.0.0"
+  }
+}

@@ -6,8 +6,4 @@ API/target/
 !API/**/src/test/**/target/
 front-end/.vscode/
 front-end/node_modules
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
+node_modules

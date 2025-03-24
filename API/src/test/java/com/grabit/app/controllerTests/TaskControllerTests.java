@@ -2,7 +2,6 @@ package com.grabit.app.controllerTests;
 
 import com.grabit.app.controller.TaskController;
 import com.grabit.app.dto.CreateResponseDTO;
-import com.grabit.app.dto.TaskDTO;
 import com.grabit.app.model.Task;
 import com.grabit.app.model.TaskCollaborator;
 import com.grabit.app.model.User;
