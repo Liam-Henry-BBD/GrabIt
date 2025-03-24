@@ -3,164 +3,133 @@ import { customElement, state } from 'lit/decorators.js';
 
 @customElement('home-app')
 export class DashboardComponent extends LitElement {
-	@state() private data = {
-		available: [
-			{
-				id: 'project-1',
-				title: 'E-commerce Platform',
-				description: 'Build a modern e-commerce platform with React and Node.js',
-				progress: 0,
-				priority: 'High',
-				assignees: ['alex', 'jamie'],
-				dueDate: '2023-12-15'
-			},
-			{
-				id: 'project-2',
-				title: 'Mobile App Redesign',
-				description: 'Redesign the mobile app interface for better user experience',
-				progress: 0,
-				priority: 'Medium',
-				assignees: ['taylor'],
-				dueDate: '2023-12-20'
-			}
-		],
-		grabbed: [
-			{
-				id: 'project-3',
-				title: 'API Integration',
-				description: 'Integrate payment gateway APIs into the platform',
-				progress: 25,
-				priority: 'High',
-				assignees: ['alex', 'casey'],
-				dueDate: '2023-12-10'
-			}
-		],
-		inReview: [
-			{
-				id: 'project-4',
-				title: 'User Authentication',
-				description: 'Implement secure user authentication and authorization',
-				progress: 60,
-				priority: 'High',
-				assignees: ['jamie'],
-				dueDate: '2023-12-05'
-			}
-		],
-		complete: [
-			{
-				id: 'project-5',
-				title: 'Landing Page',
-				description: 'Design and develop the company landing page',
-				progress: 100,
-				priority: 'Medium',
-				assignees: ['taylor', 'casey'],
-				dueDate: '2023-11-30'
-			}
-		]
-	};
-
-	private formatDate(dateString: string) {
-		const date = new Date(dateString);
-		return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+	connectedCallback() {
+		super.connectedCallback();
+		this.apiRequest(this.urls.getProjects, 'GET', (data: any) => this.setProjectOrganiser(data));
 	}
 
-	private getPriorityColor(priority: string) {
-		switch (priority) {
-			case 'High':
-				return '#d32f2f'; // Red
-			case 'Medium':
-				return '#f57c00'; // Orange
-			case 'Low':
-				return '#388e3c'; // Green
-			default:
-				return '#616161'; // Gray
+	@state() private data: any;
+	@state() private currentProject: any;
+	@state() private projectTasks: any;
+	@state() private projectOrganiser: any = { owned: [], collaborating: [] };
+	@state() private tasks: any;
+	@state() private urls = {
+		getProjects: 'http://localhost:8081/api/projects',
+		getProjectTasks: (projectID: any) => `http://localhost:8081/api/projects/${projectID}/tasks`,
+		getProjectDetails: (projectID: any) => `http://localhost:8081/api/projects/${projectID}`
+	};
+
+	async apiRequest(url: string, method: string, callback: Function) {
+		try {
+			const token =
+				'eyJhbGciOiJSUzI1NiIsImtpZCI6ImVlMTkzZDQ2NDdhYjRhMzU4NWFhOWIyYjNiNDg0YTg3YWE2OGJiNDIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI1NTkzNDQyMjc5ODQtdTEzbzRyNWwzOGw4cHVkN3FvbXFpaWxxZDNibzczdWwuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI1NTkzNDQyMjc5ODQtdTEzbzRyNWwzOGw4cHVkN3FvbXFpaWxxZDNibzczdWwuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDY1OTc3MDI2NTEyNzYzNjQ5MzYiLCJoZCI6InVtdXppLm9yZyIsImVtYWlsIjoibGlhbS5oZW5yeUB1bXV6aS5vcmciLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXRfaGFzaCI6IjdtWUV4REh0RFItQ09hblRFaDlHc3ciLCJub25jZSI6IjV5akwxUzRQUGdQTUl6NW84T0RaMnhKd2tXRXl6MFVfRlpkZXlwOTA0WmsiLCJuYW1lIjoiTGlhbSBIZW5yeSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NLMzB6djNzSXhQNlJ2dkJXMS1NZEVrSWlITVdENUp5Q2xyb0c2WGxGSk92M1k0TkVBPXM5Ni1jIiwiZ2l2ZW5fbmFtZSI6IkxpYW0iLCJmYW1pbHlfbmFtZSI6IkhlbnJ5IiwiaWF0IjoxNzQyODIzOTYwLCJleHAiOjE3NDI4Mjc1NjB9.Kuro3jep7Zoms7aTfOClRH7xpVThYq_EnLiA36V0de3szU1E7pwhvp1ynMnh0kkE6TxoyTPzF8VEcHfd7SOLluuWvKhxvBP4uX1Ufs4sk5spUDRNH67y-oqQNvHIp4mBRK3h9389OeD37VsGIvaWkFBIE1RVyvCoBt5I4Gr6JXayatFl4qYGWo2SEGRuLK_dfdIlyq8l_Um7LC79wZjDEGBA7y56MuIOh_7N5cS0Wx3xGuHwjuh-QM1ICqXifnD0hTPksLKWLGv_Sac33GkKAzHw-09L1Q7WYlWWKfC4Tlfk_SM9gbV0HJEKQm6kReg_fnWs7ZC2yS9ADQnP_eBoZQ';
+			const response = await fetch(url, {
+				method,
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`
+				}
+			});
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			const data = await response.json();
+			if (callback) callback(data);
+		} catch (error) {
+			console.error('Error fetching data: ', error);
 		}
+	}
+
+	setProjectOrganiser(response: any) {
+		this.data = response;
+		console.log(this.data);
+		this.projectOrganiser.owned = this.data.filter((project: any) => project.collaboratorRole == 1);
+		this.projectOrganiser.collaborating = this.data.filter((project: any) => project.collaboratorRole == 2);
+	}
+
+	setProjectTasks(response: any) {
+		this.projectTasks = response;
+		this.mapTasksToColumns(this.projectTasks);
+	}
+
+	setProjectDetails(response: any) {
+		this.currentProject = response;
+	}
+
+	mapTasksToColumns(projectTasks: any) {
+		console.log(projectTasks);
+		const formatTask = (task: any) => {
+			return {
+				id: task.taskID,
+				title: task.taskName,
+				description: task.taskDescription,
+				priority: task.taskPointID,
+				reviewRequestedAt: task.reviewRequestedAt,
+				createAt: task.createdAt,
+				dueDate: task.dueDate
+			};
+		};
+		this.tasks = {
+			available: projectTasks.filter((task: any) => task.taskStatusID == 1).map(formatTask),
+			grabbed: projectTasks.filter((task: any) => task.taskStatusID == 2).map(formatTask),
+			inReview: projectTasks.filter((task: any) => task.taskStatusID == 3).map(formatTask),
+			complete: projectTasks.filter((task: any) => task.taskStatusID == 4).map(formatTask)
+		};
+	}
+
+	private formatDate(dateString: string) {
+		if (!dateString) return 'Not set';
+		const date = new Date(dateString);
+		return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 	}
 
 	render() {
 		return html`
 			<section class="dashboard">
 				<header class="header">
-					<figure class="logo">
-						<img src="src/home/activities/white_logo.png" alt="Logo" />
-					</figure>
+					<img id="logo" src="src/home/activities/white_logo.png" alt="Logo" />
 					<input type="search" placeholder="Search tasks..." />
-					<figure class="header-icon">
-						<img src="src/home/activities/icon2.png" alt="Logo" />
-					</figure>
+					<img id="profile-icon" src="src/home/activities/icon2.png" alt="Logo" />
 				</header>
-	
+
 				<nav class="sidebar">
 					<input type="search" placeholder="Find a project..." class="sidebar-search" />
 					<button class="new-project">+ New Project</button>
-					<h2>Your Projects</h2>
-					<ul>
-						<li class="project-item">
-							<span class="project-icon">📁</span>
-							E-commerce Platform
-						</li>
-						<li class="project-item">
-							<span class="project-icon">📁</span>
-							Mobile App Redesign
-						</li>
-					</ul>
-					<h2>Starred</h2>
-					<ul>
-						<li class="project-item">
-							<span class="project-icon">⭐</span>
-							Your Projects
-						</li>
-					</ul>
-					<h2>Collaborating</h2>
-					<ul>
-						<li class="project-item">
-							<span class="project-icon">👥</span>
-							API Documentation <span class="team-label">techteam</span>
-						</li>
-						<li class="project-item">
-							<span class="project-icon">👥</span>
-							Design System <span class="team-label">designteam</span>
-						</li>
-						<li class="project-item">
-							<span class="project-icon">👥</span>
-							Product Roadmap <span class="team-label">techteam</span>
-						</li>
-						<li class="project-item">
-							<span class="project-icon">👥</span>
-							Analytics Platform <span class="team-label">datateam</span>
-						</li>
-					</ul>
-					<h2>Teams</h2>
-					<ul>
-						<li class="team-item">
-							<span class="team-icon">DE</span>
-							Design Team <span class="team-count">12</span>
-						</li>
-						<li class="team-item">
-							<span class="team-icon">DE</span>
-							Development <span class="team-count">8</span>
-						</li>
-					</ul>
-					<aside class="user-info">
-						<p>John Doe</p>
-						<p>Pro Plan</p>
-					</aside>
+
+					${this.data &&
+					Object.keys(this.projectOrganiser).map((group: any) => {
+						return html`<h2>${group}</h2>
+							<ul>
+								${this.projectOrganiser[group].map(
+									(project: any) => html`
+										<li
+											class="project-item"
+											@click=${() => {
+												this.apiRequest(this.urls.getProjectDetails(project.projectID), 'GET', (data: any) => this.setProjectDetails(data));
+												return this.apiRequest(this.urls.getProjectTasks(project.projectID), 'GET', (data: any) => this.setProjectTasks(data));
+											}}
+										>
+											<span class="project-icon">📁</span>
+											${project.projectName}
+										</li>
+									`
+								)}
+							</ul>`;
+					})}
 				</nav>
-	
+
 				<main>
-					<h1>E-commerce Platform</h1>
-					<p>Build a modern e-commerce platform with React and Node.js. This project aims to create a fully functional online store with product listings, shopping cart, checkout process, and admin dashboard.</p>
-					
+					<h1>${this.currentProject ? this.currentProject.projectName : 'Create or select a project'}</h1>
+					<p>${this.currentProject ? this.currentProject.projectDescription : 'Your current open projects details will be avaliable here'}</p>
+
 					<article>
 						<button class="new-project-body">+ New Task</button>
 						<button class="new-collaborator">+ Collaborators</button>
 						<a href="leaderboard.">
 							<button class="leaderboard-button">Leaderboard</button>
 						</a>
-
-
 					</article>
-					
+
 					<section class="collaborators">
 						<span>Collaborators:</span>
 						<section class="collaborator-icons">
@@ -170,362 +139,324 @@ export class DashboardComponent extends LitElement {
 							<img src="src/home/activities/icon.png" alt="Collaborator 4" />
 						</section>
 					</section>
-	
+
 					<section class="tab-content">
-						${this.data
+						${this.tasks
 							? html`
 									<section class="columns">
-									<article class="column">
-										<h2>Available <span class="task-count">${this.data.available.length}</span></h2>
-										${this.data.available.map(
-											project => html`
-												<article class="project-card">
-													<h3>${project.title}</h3>
-													<p>${project.description}</p>
-													<p class="due-date">Due ${this.formatDate(project.dueDate)}</p>
-													<section class="points">${project.priority === 'High' ? 10 : project.priority === 'Medium' ? 5 : 2} pts</section>
-												</article>
-											`
-										)}
-									</article>
-	
-									<article class="column">
-										<h2>Grabbed <span class="task-count">${this.data.grabbed.length}</span></h2>
-										${this.data.grabbed.map(
-											project => html`
-												<article class="project-card">
-													<h3>${project.title}</h3>
-													<p>${project.description}</p>
-													<p class="due-date">Due ${this.formatDate(project.dueDate)}</p>
-													<section class="points">${project.priority === 'High' ? 15 : project.priority === 'Medium' ? 10 : 5} pts</section>
-												</article>
-											`
-										)}
-									</article>
-	
-									<article class="column">
-										<h2>In Review <span class="task-count">${this.data.inReview.length}</span></h2>
-										${this.data.inReview.map(
-											project => html`
-												<article class="project-card">
-													<h3>${project.title}</h3>
-													<p>${project.description}</p>
-													<p class="due-date">Due ${this.formatDate(project.dueDate)}</p>
-													<section class="points">${project.priority === 'High' ? 10 : project.priority === 'Medium' ? 5 : 2} pts</section>
-												</article>
-											`
-										)}
-									</article>
-	
-									<article class="column">
-										<h2>Complete <span class="task-count">${this.data.complete.length}</span></h2>
-										${this.data.complete.map(
-											project => html`
-												<article class="project-card">
-													<h3>${project.title}</h3>
-													<p>${project.description}</p>
-													<p class="due-date">Due ${this.formatDate(project.dueDate)}</p>
-													<section class="points">${project.priority === 'High' ? 5 : project.priority === 'Medium' ? 3 : 1} pts</section>
-												</article>
-											`
-										)}
-									</article>
+										${Object.keys(this.tasks).map((columnName: any) => {
+											return html`<article class="column">
+												<h2>${columnName} <span class="task-count">${this.tasks[columnName].length}</span></h2>
+												${this.tasks[columnName].map(
+													(project: any) => html`
+														<article class="project-card">
+															<h3>${project.title}</h3>
+															<p class="task-description">${project.description}</p>
+															<p class="due-date">Due date: ${this.formatDate(project.dueDate)}</p>
+															<section class="points">${project.priority} pts</section>
+														</article>
+													`
+												)}
+											</article>`;
+										})}
 									</section>
 								`
-							: ''}
+							: html`<p class="no-tasks">No Tasks have been created yet</p>`}
 					</section>
 				</main>
 			</section>
 		`;
 	}
 
-	private _onTabClick(tabName: string) {
-		console.log(`Selected Tab: ${tabName}`);
-	}
-
 	static styles = css`
-	.dashboard {
-		font-family: 'Arial', sans-serif;
-		background-color: #1e1e1e;
-		color: #fff;
-		display: flex;
-		min-height: 100vh; 
-		padding: 2.5rem;
-		overflow: hidden; 
-	}
+		.dashboard {
+			font-family: 'Arial', sans-serif;
+			background-color: #1e1e1e;
+			color: #fff;
+			display: flex;
+			min-height: 100vh;
+			width: 100vw;
+			overflow: hidden;
+		}
 
-	.header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		background-color: #1e1e1e;
-		box-shadow: 0 4px 10px rgba(0, 0, 0, 1);
-		width: 78rem; 
-		max-width: 100%;
-		position: fixed; 
-		top: 0;
-		right: 0; 
-		height: 5rem; 
-		z-index: 1000;
-	}
+		.header {
+			display: flex;
+			justify-content: space-evenly;
+			align-items: center;
+			background-color: #1e1e1e;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 1);
+			width: 100vw;
+			max-width: 100%;
+			position: fixed;
+			top: 0;
+			right: 0;
+			height: 5rem;
+			z-index: 1000;
+			overflow: hidden;
+		}
 
-	.logo {
-		display: flex;
-		align-items: center;
-	}
+		#logo {
+			height: 3rem;
+			margin-left: 3rem;
+			margin-right: auto;
+		}
+		#profile-icon {
+			margin-right: 3rem;
+			margin-left: auto;
+			height: 3rem;
+		}
+		.header input {
+			padding: 0.5rem;
+			border-radius: 1rem;
+			background-color: #555;
+			color: #fff;
+			border: none;
+			width: 30rem;
+			right: 0;
+			margin-left: 1rem;
+		}
 
-	.logo img {
-		height: 9rem;
-		margin-right: 10px;
-	}
+		.header-icon img {
+			width: 10%;
+			height: auto;
+			right: 0;
+			margin-left: 30rem;
+		}
 
-	.logo span {
-		font-size: 20px;
-		font-weight: bold;
-	}
+		.sidebar {
+			width: 17rem;
+			background-color: #1e1e1e;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 1);
+			padding: 10px;
+			position: fixed;
+			top: 5rem; /* Adjust to be at the top */
+			left: 0;
+			height: 100vh; /* Adjust height to cover the full height */
+			overflow-y: hidden; /* Remove vertical scrollbar */
+		}
 
-	.header input {
-		padding: 0.5rem;
-		border-radius: 1rem;
-		background-color: #555;
-		color: #fff;
-		border: none;
-		width: 30rem;
-		right: 0;
-		margin-left: 1rem;
-	}
+		.sidebar-search {
+			width: 90%;
+			padding: 0.5rem;
+			border-radius: 0.5rem;
+			background-color: #555;
+			color: #fff;
+			border: none;
+			margin-bottom: 20px;
+			margin-left: 0.5rem;
+		}
 
-	.header-icon img {
-		width: 10%; 
-		height: auto;  
-		right: 0;
-		margin-left: 30rem;
-	}
+		.new-project {
+			background-color: #f9a03f;
+			color: white;
+			padding: 0.5rem;
+			border-radius: 0.5rem;
+			cursor: pointer;
+			border: none;
+			width: 90%;
+			margin-bottom: 20px;
+			margin-left: 0.5rem;
+		}
 
-	.sidebar {
-		width: 17rem;
-		background-color: #1e1e1e;
-		box-shadow: 0 4px 10px rgba(0, 0, 0, 1);
-		padding: 10px;
-		position: fixed;
-		top: 0; /* Adjust to be at the top */
-		left: 0;
-		height: 100vh; /* Adjust height to cover the full height */
-		overflow-y: hidden; /* Remove vertical scrollbar */
-	}
+		.new-project-body {
+			background-color: #f9a03f;
+			color: white;
+			padding: 0.5rem;
+			border-radius: 0.5rem;
+			cursor: pointer;
+			border: none;
+			width: 15%;
+			margin-bottom: 20px;
+		}
 
-	.sidebar-search {
-		width: 90%;
-		padding: 0.5rem;
-		border-radius: 0.5rem;
-		background-color: #555;
-		color: #fff;
-		border: none;
-		margin-bottom: 20px;
-		margin-left: 0.5rem;
-	}
+		.new-collaborator {
+			background-color: #f5f4f3;
+			color: black;
+			padding: 0.5rem;
+			border-radius: 0.5rem;
+			cursor: pointer;
+			border: none;
+			width: 15%;
+			margin-bottom: 20px;
+		}
 
-	.new-project {
-		background-color: #f9a03f;
-		color: white;
-		padding: 0.5rem;
-		border-radius: 0.5rem;
-		cursor: pointer;
-		border: none;
-		width: 90%;
-		margin-bottom: 20px;
-		margin-left: 0.5rem;
-	}
+		.new-project:hover {
+			background-color: #d88a2d;
+		}
 
-	.new-project-body {
-		background-color: #f9a03f;
-		color: white;
-		padding: 0.5rem;
-		border-radius: 0.5rem;
-		cursor: pointer;
-		border: none;
-		width: 15%;
-		margin-bottom: 20px;
-	}
+		.sidebar h2 {
+			font-size: 1.2em;
+			color: #f9a03f;
+			margin-bottom: 10px;
+		}
 
-	.new-collaborator {
-		background-color: #f5f4f3;
-		color: black;
-		padding: 0.5rem;
-		border-radius: 0.5rem;
-		cursor: pointer;
-		border: none;
-		width: 15%;
-		margin-bottom: 20px;
-	}
+		.sidebar ul {
+			list-style-type: none;
+			padding: 0;
+			margin: 0 0 20px 0;
+		}
 
-	.new-project:hover {
-		background-color: #d88a2d;
-	}
+		.project-item,
+		.team-item {
+			display: flex;
+			align-items: center;
+			padding: 8px 0;
+			color: #ccc;
+			cursor: pointer;
+		}
 
-	.sidebar h2 {
-		font-size: 1.2em;
-		color: #f9a03f;
-		margin-bottom: 10px;
-	}
+		.project-item:hover,
+		.team-item:hover {
+			color: #fff;
+		}
 
-	.sidebar ul {
-		list-style-type: none;
-		padding: 0;
-		margin: 0 0 20px 0;
-	}
+		.project-icon,
+		.team-icon {
+			margin-right: 10px;
+		}
 
-	.project-item,
-	.team-item {
-		display: flex;
-		align-items: center;
-		padding: 8px 0;
-		color: #ccc;
-		cursor: pointer;
-	}
+		.team-label {
+			background-color: #333;
+			color: #fff;
+			padding: 2px 5px;
+			border-radius: 5px;
+			font-size: 0.8em;
+			margin-left: auto;
+		}
 
-	.project-item:hover,
-	.team-item:hover {
-		color: #fff;
-	}
+		.team-count {
+			background-color: #333;
+			color: #fff;
+			padding: 2px 5px;
+			border-radius: 5px;
+			font-size: 0.8em;
+			margin-left: auto;
+		}
 
-	.project-icon,
-	.team-icon {
-		margin-right: 10px;
-	}
+		.user-info {
+			margin-top: 20px;
+			border-top: 1px solid #ccc;
+			padding-top: 10px;
+			color: #ccc;
+		}
 
-	.team-label {
-		background-color: #333;
-		color: #fff;
-		padding: 2px 5px;
-		border-radius: 5px;
-		font-size: 0.8em;
-		margin-left: auto;
-	}
+		main {
+			margin-top: 5rem; /* Adjust to be below the header */
+			padding-left: 270px; /* Adjust to be beside the sidebar */
+			flex: 1;
+			overflow-y: auto;
+		}
 
-	.team-count {
-		background-color: #333;
-		color: #fff;
-		padding: 2px 5px;
-		border-radius: 5px;
-		font-size: 0.8em;
-		margin-left: auto;
-	}
+		h1 {
+			text-align: left;
+			margin-top: 20px;
+			color: #f9a03f;
+		}
 
-	.user-info {
-		margin-top: 20px;
-		border-top: 1px solid #ccc;
-		padding-top: 10px;
-		color: #ccc;
-	}
+		.collaborators {
+			display: flex;
+			align-items: center;
+			margin-top: 10px;
+		}
 
-	main {
-		margin-top: 5rem; /* Adjust to be below the header */
-		padding-left: 270px; /* Adjust to be beside the sidebar */
-		flex: 1;
-		overflow-y: auto;
-	}
+		.collaborators span {
+			margin-right: 10px;
+		}
 
-	h1 {
-		text-align: left;
-		margin-top: 20px;
-		color: #f9a03f;
-	}
+		.collaborator-icons img {
+			height: 30px;
+			margin-right: 5px;
+		}
 
-	.collaborators {
-		display: flex;
-		align-items: center;
-		margin-top: 10px;
-	}
+		.columns {
+			display: flex;
+			gap: 20px;
+			margin-top: 30px;
+		}
+		.column {
+			flex: 1;
+		}
+		.column h2 {
+			text-align: middle;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			color: #fff;
+			background-color: rgb(80 137 145 / 0.1);
+			padding: 0.5rem;
+		}
 
-	.collaborators span {
-		margin-right: 10px;
-	}
+		.task-count {
+			background-color: #555;
+			color: #fff;
+			padding: 5px 10px;
+			border-radius: 50%;
+			font-size: 0.8em;
+		}
 
-	.collaborator-icons img {
-		height: 30px;
-		margin-right: 5px;
-	}
+		.project-card {
+			background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
+			padding: 20px;
+			border-radius: 8px;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5); /* Softer shadow */
+			margin-bottom: 20px;
+			position: relative;
+			border: 1px solid rgba(255, 255, 255, 0.2); /* Border to match the design */
+			max-width: 90%;
+		}
 
-	.columns {
-		display: flex;
-		gap: 20px;
-		margin-top: 30px;
-	}
+		.project-card h3 {
+			font-size: 18px;
+			margin: 0;
+			color: #fff;
+		}
 
-	.column h2 {
-		text-align: middle;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		color: #fff;
-		background-color: rgb(80 137 145 / 0.1);
-		padding: 0.5rem;
-	}
+		.project-card p {
+			margin: 10px 0;
+			color: #ccc;
+		}
+		.task-description {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		.due-date {
+			font-size: 14px;
+			color: #ccc;
+			margin-top: 10px;
+			right: 0;
+		}
 
-	.task-count {
-		background-color: #555;
-		color: #fff;
-		padding: 5px 10px;
-		border-radius: 50%;
-		font-size: 0.8em;
-	}
+		.points {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			background-color: #f9a03f;
+			color: #0d0d0d;
+			padding: 5px 10px;
+			border-radius: 10%;
+			font-size: 0.8em;
+		}
 
-	.project-card {
-		background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
-		padding: 20px;
-		border-radius: 8px;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5); /* Softer shadow */
-		margin-bottom: 20px;
-		position: relative;
-		border: 1px solid rgba(255, 255, 255, 0.2); /* Border to match the design */
-	}
+		p {
+			padding: 1rem;
+			max-width: 40rem;
+			font-family: Georgia, Times, 'Times New Roman', serif;
+			font-size: 1.2rem;
+		}
+		.no-tasks {
+			place-self: center;
+		}
 
-	.project-card h3 {
-		font-size: 18px;
-		margin: 0;
-		color: #fff;
-	}
-
-	.project-card p {
-		margin: 10px 0;
-		color: #ccc;
-	}
-
-	.due-date {
-		font-size: 14px;
-		color: #ccc;
-		margin-top: 10px;
-		right: 0;
-	}
-
-	.points {
-		position: absolute;
-		top: 10px;
-		right: 10px;
-		background-color: #f9a03f;
-		color: #0d0d0d;
-		padding: 5px 10px;
-		border-radius: 10%;
-		font-size: 0.8em;
-	}
-
-	p {
-		padding: 1rem;
-		max-width: 40rem;
-		font-family: Georgia, Times, 'Times New Roman', serif;
-		font-size: 1.2rem;
-	}
-
-	.leaderboard-button {
-		background-color: #f9a03f;
-		color: white;
-		padding: 0.5rem;
-		border-radius: 0.5rem;
-		cursor: pointer;
-		border: none;
-		width: 10%;
-		margin-left: 40rem;
-	}
-`;
+		.leaderboard-button {
+			background-color: #f9a03f;
+			color: white;
+			padding: 0.5rem;
+			border-radius: 0.5rem;
+			cursor: pointer;
+			border: none;
+			width: 10%;
+			margin-left: 40rem;
+		}
+	`;
 }
