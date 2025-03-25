@@ -1,4 +1,6 @@
-import './src/lit-app';
+import { Router } from '@vaadin/router';
+import { routes } from './src/base/main.router';
 
-const appRoot = document.createElement('lit-app');
-document.body.appendChild(appRoot);
+export const router = new Router(document.querySelector('#outlet')); 
+
+router.setRoutes(routes); 

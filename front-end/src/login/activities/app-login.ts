@@ -2,14 +2,6 @@ import { CtLit, html, property, customElement, css } from '@conectate/ct-lit';
 
 @customElement('app-login')
 export class AppLogin extends CtLit {
-	@property({ type: Boolean }) isLoading = false;
-
-	handleGoogleAuth() {
-		this.isLoading = true;
-		setTimeout(() => {
-			this.isLoading = false;
-		}, 1500);
-	}
 
 	static styles = css`
 		:host {
@@ -62,6 +54,8 @@ export class AppLogin extends CtLit {
 			display: flex;
 			align-items: center;
 			justify-content: center;
+			cursor: pointer;
+			text-decoration: none;
 			background-color: #242423;
 			color: white;
 			padding: 0.75rem 1rem;

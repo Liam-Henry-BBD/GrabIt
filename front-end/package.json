@@ -11,6 +11,7 @@
     "dependencies": {
         "@conectate/ct-lit": "^4.0.0",
         "@conectate/ct-router": "^4.0.0",
+        "@vaadin/router": "^2.0.0",
         "lit": "^3.2.1"
     },
     "devDependencies": {
