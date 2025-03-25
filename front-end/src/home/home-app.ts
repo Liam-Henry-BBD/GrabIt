@@ -1,6 +1,7 @@
 import { html, css, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import "../auth/activities/auth-router";
+import '../components/header';
+import '../auth/activities/auth-router';
 
 @customElement('home-app')
 export class DashboardComponent extends LitElement {
@@ -11,9 +12,9 @@ export class DashboardComponent extends LitElement {
 
 	@state() private data: any;
 	@state() private currentProject: any;
-	@state() private projectTasks: any;
 	@state() private projectOrganiser: any = { owned: [], collaborating: [] };
-	@state() private tasks: any;
+	@state() private tasks: any = { available: [], grabbed: [], inReview: [], complete: [] };
+	@state() private currentProjectRole: any = null;
 	@state() private urls = {
 		getProjects: 'http://localhost:8081/api/projects',
 		getProjectTasks: (projectID: any) => `http://localhost:8081/api/projects/${projectID}/tasks`,
@@ -22,7 +23,7 @@ export class DashboardComponent extends LitElement {
 
 	async apiRequest(url: string, method: string, callback: Function) {
 		try {
-			const token = localStorage.getItem("token");
+			const token = localStorage.getItem('token');
 			const response = await fetch(url, {
 				method,
 				headers: {
@@ -47,6 +48,7 @@ export class DashboardComponent extends LitElement {
 					class="project-item"
 					@click=${() => {
 						this.apiRequest(this.urls.getProjectDetails(project.projectID), 'GET', (data: any) => (this.currentProject = data));
+						this.currentProjectRole = project.collaboratorRole;
 						return this.apiRequest(this.urls.getProjectTasks(project.projectID), 'GET', (data: any) => this.createTaskComponents(data));
 					}}
 				>
@@ -56,37 +58,41 @@ export class DashboardComponent extends LitElement {
 			`;
 		};
 		this.data = response;
-		this.projectOrganiser.owned = this.data.filter((project: any) => project.collaboratorRole == 1).map(createProjectComponent);
-		this.projectOrganiser.collaborating = this.data.filter((project: any) => project.collaboratorRole == 2).map(createProjectComponent);
-	}
-
-	private createTaskComponents(response: any) {
-		const formatTask = (task: any) => {
-			return html`
-				<article class="project-card">
-					<h3>${task.taskName}</h3>
-					<p class="task-description">${task.description}</p>
-					<p class="due-date">Due date: ${this.formatDate(task.dueDate)}</p>
-					<section class="points">${task.taskPointID} pts</section>
-				</article>
-			`;
+		this.projectOrganiser = {
+			owned: this.data.filter((project: any) => project.collaboratorRole == 1).map(createProjectComponent),
+			collaborating: this.data.filter((project: any) => project.collaboratorRole == 2).map(createProjectComponent)
 		};
-		['avaiable', 'grabbed', 'inReview', 'complete'].map(
-			(columnName, idx) => (this.tasks[columnName] = response.filter((task: any) => task.taskStatusID == idx + 1).map(formatTask))
+	}
+	private createTaskComponents(response: any) {
+		const formatTask = (task: any, status: String) => {
+			return html` <article class="project-card">
+				<h3>${task.taskName}</h3>
+				<p class="task-description">${task.description}</p>
+				<p class="due-date">Due date: ${this.formatDate(task.dueDate)}</p>
+				<section class="points">${task.taskPointID} pts</section>
+				${status == 'available' && this.currentProjectRole == 2
+					? html`<button class="card-btn">Grab Task</button>`
+					: status == 'grabbed' && this.currentProjectRole == 2
+						? html`<button class="card-btn">request review</button>`
+						: status == 'inReview' && this.currentProjectRole == 2
+							? html`<button class="card-btn">cancel reveiw</button>`
+							: html``}
+			</article>`;
+		};
+		['available', 'grabbed', 'inReview', 'complete'].map(
+			(columnName, idx) => (this.tasks[columnName] = response.filter((task: any) => task.taskStatusID == idx + 1).map((task: any) => formatTask(task, columnName)))
 		);
 	}
 
 	private createBoardComponent() {
-		return html`
-			<section class="columns">
-				${Object.keys(this.tasks).map((columnName: any) => {
-					return html`<article class="column">
-						<h2>${columnName} <span class="task-count">${this.tasks[columnName].length}</span></h2>
-						${this.tasks[columnName]}
-					</article>`;
-				})}
-			</section>
-		`;
+		return html` <section class="columns">
+			${Object.keys(this.tasks).map((columnName: any) => {
+				return html`<article class="column">
+					<h2>${columnName} <span class="task-count">${this.tasks[columnName].length}</span></h2>
+					<section class="card-container">${this.tasks[columnName]}</section>
+				</article>`;
+			})}
+		</section>`;
 	}
 
 	private formatDate(dateString: string) {
@@ -97,50 +103,50 @@ export class DashboardComponent extends LitElement {
 
 	render() {
 		return html`
-		<auth-router>
-			<section class="dashboard">
-				<header-app>
+			<auth-router>
+				<header-app> </header-app>
+				<section class="dashboard">
+					<nav class="sidebar">
+						<!-- Search and New Project Button Section -->
+						<section class="sidebar-header">
+							<input type="search" placeholder="Find a project..." class="sidebar-search" />
+							<button class="new-project">+ New Project</button>
+						</section>
+						<hr class="separator" />
 
-				</header-app>
+						<!-- Project Groups -->
+						${this.data &&
+						Object.keys(this.projectOrganiser).map((group: any) => {
+							return html`
+								<h2>${group}</h2>
+								<ul>
+									${this.projectOrganiser[group]}
+								</ul>
+							`;
+						})}
+					</nav>
 
-			<nav class="sidebar">
-				<input type="search" placeholder="Find a project..." class="sidebar-search" />
-				<button class="new-project">+ New Project</button>
+					<main>
+						<h1>${this.currentProject ? this.currentProject.projectName : 'Create or select a project'}</h1>
+						<p>${this.currentProject ? this.currentProject.projectDescription : 'Your current open projects details will be available here'}</p>
 
-				${this.data &&
-				Object.keys(this.projectOrganiser).map((group: any) => {
-					return html`<h2>${group}</h2>
-						<ul>
-							${this.projectOrganiser[group]}
-						</ul>`;
-				})}
-			</nav>
+						<article>
+							<section class="article-buttons">
+								<div>
+									<button class="new-project-body">+ New Task</button>
+									${this.currentProjectRole == 1 ? html`<button class="new-collaborator">Update Project</button>` : html``}
+								</div>
+								<button class="leaderboard-button">Leaderboard</button>
+							</section>
+						</article>
 
-			<main>
-				<h1>${this.currentProject ? this.currentProject.projectName : 'Create or select a project'}</h1>
-				<p>${this.currentProject ? this.currentProject.projectDescription : 'Your current open projects details will be avaliable here'}</p>
-
-				<article>
-					<button class="new-project-body">+ New Task</button>
-					<button class="new-collaborator">+ Collaborators</button>
-					<a href="leaderboard.">
-						<button class="leaderboard-button">Leaderboard</button>
-					</a>
-				</article>
-
-				<section class="collaborators">
-					<span>Collaborators:</span>
-					<section class="collaborator-icons">
-						<img src="src/home/home_images/icon.png" alt="Collaborator 1" />
-						<img src="src/home/home_images/icon.png" alt="Collaborator 2" />
-						<img src="src/home/home_images/icon.png" alt="Collaborator 3" />
-						<img src="src/home/home_images/icon.png" alt="Collaborator 4" />
-					</section>
+						<section class="tab-content">
+							${this.tasks.available || this.tasks.grabbed || this.tasks.inReview || this.tasks.complete
+								? this.createBoardComponent()
+								: html`<p class="no-tasks">No Tasks have been created yet</p>`}
+						</section>
+					</main>
 				</section>
-
-				<section class="tab-content">${!this.tasks ? html`<p class="no-tasks">No Tasks have been created yet</p>` : this.createBoardComponent()}</section>
-			</main>
-			</section>
 			</auth-router>
 		`;
 	}
@@ -151,288 +157,332 @@ export class DashboardComponent extends LitElement {
 			background-color: #1e1e1e;
 			color: #fff;
 			display: flex;
-			min-height: 100vh;
-			width: 100vw;
-			overflow: hidden;
-		}
-
-		.header {
-			display: flex;
-			justify-content: space-evenly;
-			align-items: center;
-			background-color: #1e1e1e;
-			box-shadow: 0 4px 10px rgba(0, 0, 0, 1);
-			width: 100vw;
-			max-width: 100%;
-			position: fixed;
-			top: 0;
-			right: 0;
-			height: 5rem;
-			z-index: 1000;
-			overflow: hidden;
-		}
-
-		#logo {
-			height: 3rem;
-			margin-left: 3rem;
-			margin-right: auto;
-		}
-		#profile-icon {
-			margin-right: 3rem;
-			margin-left: auto;
-			height: 3rem;
-		}
-		.header input {
-			padding: 0.5rem;
-			border-radius: 1rem;
-			background-color: #555;
-			color: #fff;
-			border: none;
-			width: 30rem;
-			right: 0;
-			margin-left: 1rem;
-		}
-
-		.header-icon img {
-			width: 10%;
-			height: auto;
-			right: 0;
-			margin-left: 30rem;
-		}
-
-		.sidebar {
-			width: 17rem;
-			background-color: #1e1e1e;
-			box-shadow: 0 4px 10px rgba(0, 0, 0, 1);
-			padding: 10px;
-			position: fixed;
-			top: 5rem;
-			left: 0;
 			height: 100vh;
-			overflow-y: hidden;
+			width: 100%;
+			overflow: hidden;
 		}
 
+		.dashboard {
+			margin-top: 5rem; /* Adjust for header spacing */
+			height: calc(100vh - 5rem);
+			width: 100vw;
+			overflow: hidden;
+			display: flex;
+		}
+
+		/* Sidebar Styling */
+		.sidebar {
+			display: flex;
+			flex-direction: column;
+			background-color: #2c2c2c;
+			width: 17rem;
+			padding: 1rem;
+			height: 100vh;
+			border-right: 1px solid rgba(255, 255, 255, 0.1);
+			transition: transform 0.3s ease-in-out;
+			overflow-y: auto;
+			box-sizing: border-box;
+		}
+
+		/* Sidebar Headings */
+		.sidebar h2 {
+			place-self: center;
+			text-align: center;
+			font-size: 1.3rem;
+			font-weight: bold;
+			margin-bottom: 1rem;
+			color: #ffffff;
+		}
+
+		/* Sidebar Header */
+		.sidebar-header {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+		}
+
+		/* Search Input */
 		.sidebar-search {
-			width: 90%;
-			padding: 0.5rem;
-			border-radius: 0.5rem;
-			background-color: #555;
+			width: 100%;
+			padding: 0.75rem;
+			font-size: 1rem;
+			border: none;
+			border-radius: 5px;
+			background-color: transparent;
+			border: 1px solid rgba(80, 137, 145, 0.2);
 			color: #fff;
-			border: none;
-			margin-bottom: 20px;
-			margin-left: 0.5rem;
+			margin-bottom: 0.75rem;
 		}
-
+		/* New Project Button */
 		.new-project {
-			background-color: #f9a03f;
-			color: white;
-			padding: 0.5rem;
-			border-radius: 0.5rem;
-			cursor: pointer;
+			width: 100%;
+			padding: 0.75rem;
+			font-size: 1rem;
+			font-weight: bold;
 			border: none;
-			width: 90%;
-			margin-bottom: 20px;
-			margin-left: 0.5rem;
-		}
-
-		.new-project-body {
-			background-color: #f9a03f;
-			color: white;
-			padding: 0.5rem;
-			border-radius: 0.5rem;
+			border-radius: 5px;
+			background-color: #ff9800; /* Corrected color */
+			color: #ffffff;
 			cursor: pointer;
-			border: none;
-			width: 15%;
-			margin-bottom: 20px;
-		}
-
-		.new-collaborator {
-			background-color: #f5f4f3;
-			color: black;
-			padding: 0.5rem;
-			border-radius: 0.5rem;
-			cursor: pointer;
-			border: none;
-			width: 15%;
-			margin-bottom: 20px;
+			transition: background-color 0.2s ease-in-out;
+			margin-bottom: 1rem; /* Added margin for separation */
 		}
 
 		.new-project:hover {
-			background-color: #d88a2d;
+			background-color: #e68900;
 		}
 
-		.sidebar h2 {
-			font-size: 1.2em;
-			color: #f9a03f;
-			margin-bottom: 10px;
+		/* Separator */
+		.separator {
+			width: 100%;
+			height: 1px;
+			background: rgba(255, 255, 255, 0.2);
+			margin: 1rem 0;
+			border: none;
 		}
 
-		.sidebar ul {
+		/* Project List */
+		ul {
 			list-style-type: none;
 			padding: 0;
-			margin: 0 0 20px 0;
+			margin: 0;
 		}
 
-		.project-item,
-		.team-item {
+		/* Project Items */
+		.project-item {
 			display: flex;
 			align-items: center;
-			padding: 8px 0;
-			color: #ccc;
+			gap: 0.75rem;
+			padding: 0.75rem;
+			font-size: 1.1rem;
+			font-weight: 500;
+			border-radius: 5px;
 			cursor: pointer;
+			transition: background-color 0.2s;
+			color: #ffffff;
+			margin-bottom: 0.5rem; /* Spacing between list items */
 		}
 
-		.project-item:hover,
-		.team-item:hover {
-			color: #fff;
+		.project-item:hover {
+			background-color: rgba(255, 255, 255, 0.1);
 		}
 
-		.project-icon {
-			margin-right: 10px;
+		/* Project Icons */
+		.project-item .project-icon {
+			font-size: 1.2rem;
+		}
+		/* Sidebar Collapsible on Smaller Screens */
+		@media (max-width: 1024px) {
+			.sidebar {
+				position: absolute;
+				transform: translateX(-100%);
+				transition: transform 0.3s ease-in-out;
+			}
+
+			.sidebar.open {
+				transform: translateX(0);
+			}
 		}
 
-		.team-label {
-			background-color: #333;
-			color: #fff;
-			padding: 2px 5px;
-			border-radius: 5px;
-			font-size: 0.8em;
-			margin-left: auto;
-		}
-
-		.team-count {
-			background-color: #333;
-			color: #fff;
-			padding: 2px 5px;
-			border-radius: 5px;
-			font-size: 0.8em;
-			margin-left: auto;
-		}
-
-		.user-info {
-			margin-top: 20px;
-			border-top: 1px solid #ccc;
-			padding-top: 10px;
-			color: #ccc;
-		}
-
+		/* --- */
+		/* Main Section Styling */
 		main {
-			margin-top: 5rem; /* Adjust to be below the header */
-			padding-left: 270px; /* Adjust to be beside the sidebar */
 			flex: 1;
-			overflow-y: auto;
+			padding: 2rem 1rem; /* Added padding to the content */
+			background-color: #2e2e2e; /* Lighter background for the content area */
+			color: #ffffff; /* Default text color */
+			overflow-y: hidden;
+			box-sizing: border-box;
 		}
 
+		/* Main Section Header */
 		h1 {
-			text-align: left;
-			margin-top: 20px;
-			color: #f9a03f;
+			font-size: 2rem;
+			color: #ff9800; /* Primary color for the header */
+			margin-bottom: 1rem;
 		}
 
-		.collaborators {
-			display: flex;
-			align-items: center;
-			margin-top: 10px;
+		/* Paragraph Styling */
+		p {
+			font-size: 1.2rem;
+			color: #b3b3b3; /* Muted text color */
+			margin-bottom: 2rem;
 		}
 
-		.collaborators span {
-			margin-right: 10px;
-		}
-
-		.collaborator-icons img {
-			height: 30px;
-			margin-right: 5px;
-		}
-
+		/* Task Board Columns */
 		.columns {
 			display: flex;
-			gap: 20px;
-			margin-top: 30px;
+			gap: 1rem;
+			margin-bottom: 2rem;
 		}
+
 		.column {
 			flex: 1;
+			/* Light background for each task column */
+			padding: 1rem;
+			border-radius: 5px;
+			height: 28rem; /* Set a consistent height (you can adjust the value) */
+			overflow: hidden; /* Enable scrolling if content exceeds the column height */
 		}
+
+		/* Optional: Add a max-height to prevent the column from growing too tall */
+		.column {
+			max-height: 80vh; /* Optional: set a max-height based on viewport height */
+		}
+
 		.column h2 {
-			text-align: middle;
+			font-size: 1.3rem;
+			font-weight: bold;
+			color: #ffffff; /* Text color for the column headers */
+			place-self: center;
+			background-color: #2c2c2c; /* Darker background for the column headers */
+			width: 100%;
+			height: 2rem;
+			padding: 0.3rem;
+			text-align: center;
+			border: 1px solid rgba(80, 137, 145, 0.2);
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			color: #fff;
-			background-color: rgb(80 137 145 / 0.1);
-			padding: 0.5rem;
+			padding: 0 1rem;
+		}
+		.column h2 > span {
+			background-color: #508991;
+			width: 1.5rem;
+			height: 1.5rem;
+			place-content: center;
+			border-radius: 50%; /* Primary color for the task count */
+		}
+		.column .task-count {
+			font-size: 1.1rem;
+			color: #b3b3b3; /* Light color for the task count */
+		}
+		.column > section {
+			height: 100%;
+			width: 100%;
+			overflow-y: auto;
+			/* background-color: #3a3a3a; */
+			-ms-overflow-style: none; /* For Internet Explorer 10+ */
+			scrollbar-width: none; /* For Firefox */
 		}
 
-		.task-count {
-			background-color: #555;
-			color: #fff;
-			padding: 5px 10px;
-			border-radius: 50%;
-			font-size: 0.8em;
+		.column .cards-container::-webkit-scrollbar {
+			display: none; /* Hide scrollbar for Webkit browsers (Chrome, Safari, Edge) */
+		}
+		/* No Tasks Message */
+		.no-tasks {
+			color: #cccccc; /* Very light color for the "No tasks" message */
+			font-size: 1.1rem;
+			text-align: center;
 		}
 
+		/* Task Card Styles */
 		.project-card {
-			background-color: rgba(255, 255, 255, 0.1);
-			padding: 20px;
-			border-radius: 8px;
-			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-			margin-bottom: 20px;
-			position: relative;
-			border: 1px solid rgba(255, 255, 255, 0.2);
-			max-width: 90%;
+			background-color: #1e1e1e; /* Darker background for task cards */
+			color: #ffffff; /* Default text color */
+			padding: 1rem;
+			border-radius: 5px;
+			height:12rem;
+			margin-bottom: 1rem;
+			border: 1px solid rgba(80, 137, 145, 0.2);
+			box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
 		}
 
 		.project-card h3 {
-			font-size: 18px;
-			margin: 0;
-			color: #fff;
+			font-size: 1.4rem;
+			color: #ff9800; /* Primary color for the task title */
+			margin-bottom: 0.5rem;
 		}
 
-		.project-card p {
-			margin: 10px 0;
-			color: #ccc;
-		}
-		.task-description {
-			white-space: nowrap;
-			overflow: hidden;
-			text-overflow: ellipsis;
-		}
-		.due-date {
-			font-size: 14px;
-			color: #ccc;
-			margin-top: 10px;
-			right: 0;
+		.task-description,
+		.due-date,
+		.points {
+			font-size: 1rem;
+			color: #b3b3b3; /* Muted color for the description and due date */
 		}
 
 		.points {
-			position: absolute;
-			top: 10px;
-			right: 10px;
-			background-color: #f9a03f;
-			color: #0d0d0d;
-			padding: 5px 10px;
-			border-radius: 10%;
-			font-size: 0.8em;
+			font-weight: bold;
+			color: #ff9800; /* Primary color for task points */
 		}
 
-		p {
-			padding: 1rem;
-			max-width: 40rem;
-			font-family: Georgia, Times, 'Times New Roman', serif;
-			font-size: 1.2rem;
-		}
-		.no-tasks {
-			place-self: center;
+		/* New Project, Collaborators, and Leaderboard Button Placement */
+		.article-buttons {
+			display: flex;
+			gap: 1rem;
+			margin-bottom: 2rem; /* Space below the buttons */
+			justify-content: space-between; /* Distribute buttons between left and right */
+			align-items: center; /* Vertically center the buttons */
 		}
 
+		/* Button Styles for Main Section */
+		.new-project-body,
+		.new-collaborator,
 		.leaderboard-button {
-			background-color: #f9a03f;
-			color: white;
-			padding: 0.5rem;
-			border-radius: 0.5rem;
-			cursor: pointer;
+			padding: 1rem 2rem;
+			font-size: 1rem;
+			font-weight: bold;
 			border: none;
-			width: 10%;
-			margin-left: 40rem;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.2s;
+		}
+
+		/* New Task Button */
+		.new-project-body {
+			background-color: #ff9800; /* Primary button color */
+			color: #ffffff;
+		}
+
+		.new-project-body:hover {
+			background-color: #e68900; /* Hover effect */
+		}
+
+		/* Collaborator Button */
+		.new-collaborator {
+			background-color: #2c2c2c; /* Secondary button color */
+			color: #ffffff;
+		}
+
+		.new-collaborator:hover {
+			background-color: #444444; /* Hover effect */
+		}
+
+		/* Leaderboard Button */
+		.leaderboard-button {
+			background-color: #508991; /* Accent color for the leaderboard button */
+			color: #ffffff;
+		}
+
+		.leaderboard-button:hover {
+			background-color: #388e3c; /* Hover effect */
+		}
+		@media (max-width: 1024px) {
+			main {
+				overflow-y: auto;
+			}
+			.columns {
+				flex-direction: column;
+				gap: 1rem;
+			}
+			.column > section {
+				height: 100%;
+				width: 100%;
+				overflow-y: hidden;
+				overflow-x: auto;
+				display: flex;
+				gap: 1rem;
+				flex-direction: row;
+			}
+			.project-card {
+				background-color: #1e1e1e; /* Darker background for task cards */
+				color: #ffffff; /* Default text color */
+				padding: 1rem;
+				border-radius: 5px;
+				margin-bottom: 1rem;
+				min-width: 12rem;
+				box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+			}
 		}
 	`;
 }
