@@ -5,12 +5,11 @@ import { customElement, state } from 'lit/decorators.js';
 export class DashboardComponent extends LitElement {
 	connectedCallback() {
 		super.connectedCallback();
-		this.apiRequest(this.urls.getProjects, 'GET', (data: any) => this.setProjectOrganiser(data));
+		this.apiRequest(this.urls.getProjects, 'GET', (data: any) => this.createProjectGroupByRoleComponent(data));
 	}
 
 	@state() private data: any;
 	@state() private currentProject: any;
-	@state() private projectTasks: any;
 	@state() private projectOrganiser: any = { owned: [], collaborating: [] };
 	@state() private tasks: any;
 	@state() private urls = {
@@ -40,41 +39,53 @@ export class DashboardComponent extends LitElement {
 		}
 	}
 
-	setProjectOrganiser(response: any) {
+	private createProjectGroupByRoleComponent(response: any) {
+		const createProjectComponent = (project: any) => {
+			return html`
+				<li
+					class="project-item"
+					@click=${() => {
+						this.apiRequest(this.urls.getProjectDetails(project.projectID), 'GET', (data: any) => (this.currentProject = data));
+						return this.apiRequest(this.urls.getProjectTasks(project.projectID), 'GET', (data: any) => this.createTaskComponents(data));
+					}}
+				>
+					<span class="project-icon">📁</span>
+					${project.projectName}
+				</li>
+			`;
+		};
 		this.data = response;
-		console.log(this.data);
-		this.projectOrganiser.owned = this.data.filter((project: any) => project.collaboratorRole == 1);
-		this.projectOrganiser.collaborating = this.data.filter((project: any) => project.collaboratorRole == 2);
+		this.projectOrganiser.owned = this.data.filter((project: any) => project.collaboratorRole == 1).map(createProjectComponent);
+		this.projectOrganiser.collaborating = this.data.filter((project: any) => project.collaboratorRole == 2).map(createProjectComponent);
 	}
 
-	setProjectTasks(response: any) {
-		this.projectTasks = response;
-		this.mapTasksToColumns(this.projectTasks);
-	}
-
-	setProjectDetails(response: any) {
-		this.currentProject = response;
-	}
-
-	mapTasksToColumns(projectTasks: any) {
-		console.log(projectTasks);
+	private createTaskComponents(response: any) {
 		const formatTask = (task: any) => {
-			return {
-				id: task.taskID,
-				title: task.taskName,
-				description: task.taskDescription,
-				priority: task.taskPointID,
-				reviewRequestedAt: task.reviewRequestedAt,
-				createAt: task.createdAt,
-				dueDate: task.dueDate
-			};
+			return html`
+				<article class="project-card">
+					<h3>${task.taskName}</h3>
+					<p class="task-description">${task.description}</p>
+					<p class="due-date">Due date: ${this.formatDate(task.dueDate)}</p>
+					<section class="points">${task.taskPointID} pts</section>
+				</article>
+			`;
 		};
-		this.tasks = {
-			available: projectTasks.filter((task: any) => task.taskStatusID == 1).map(formatTask),
-			grabbed: projectTasks.filter((task: any) => task.taskStatusID == 2).map(formatTask),
-			inReview: projectTasks.filter((task: any) => task.taskStatusID == 3).map(formatTask),
-			complete: projectTasks.filter((task: any) => task.taskStatusID == 4).map(formatTask)
-		};
+		['avaiable', 'grabbed', 'inReview', 'complete'].map(
+			(columnName, idx) => (this.tasks[columnName] = response.filter((task: any) => task.taskStatusID == idx + 1).map(formatTask))
+		);
+	}
+
+	private createBoardComponent() {
+		return html`
+			<section class="columns">
+				${Object.keys(this.tasks).map((columnName: any) => {
+					return html`<article class="column">
+						<h2>${columnName} <span class="task-count">${this.tasks[columnName].length}</span></h2>
+						${this.tasks[columnName]}
+					</article>`;
+				})}
+			</section>
+		`;
 	}
 
 	private formatDate(dateString: string) {
@@ -85,91 +96,54 @@ export class DashboardComponent extends LitElement {
 
 	render() {
 		return html`
-			<section class="dashboard">
-				<header class="header">
-					<img id="logo" src="src/home/activities/white_logo.png" alt="Logo" />
-					<input type="search" placeholder="Search tasks..." />
-					<img id="profile-icon" src="src/home/activities/icon2.png" alt="Logo" />
-				</header>
+			<header class="header">
+				<img id="logo" src="src/home/activities/white_logo.png" alt="Logo" />
+				<input type="search" placeholder="Search tasks..." />
+				<img id="profile-icon" src="src/home/activities/icon2.png" alt="Logo" />
+			</header>
 
-				<nav class="sidebar">
-					<input type="search" placeholder="Find a project..." class="sidebar-search" />
-					<button class="new-project">+ New Project</button>
+			<nav class="sidebar">
+				<input type="search" placeholder="Find a project..." class="sidebar-search" />
+				<button class="new-project">+ New Project</button>
 
-					${this.data &&
-					Object.keys(this.projectOrganiser).map((group: any) => {
-						return html`<h2>${group}</h2>
-							<ul>
-								${this.projectOrganiser[group].map(
-									(project: any) => html`
-										<li
-											class="project-item"
-											@click=${() => {
-												this.apiRequest(this.urls.getProjectDetails(project.projectID), 'GET', (data: any) => this.setProjectDetails(data));
-												return this.apiRequest(this.urls.getProjectTasks(project.projectID), 'GET', (data: any) => this.setProjectTasks(data));
-											}}
-										>
-											<span class="project-icon">📁</span>
-											${project.projectName}
-										</li>
-									`
-								)}
-							</ul>`;
-					})}
-				</nav>
+				${this.data &&
+				Object.keys(this.projectOrganiser).map((group: any) => {
+					return html`<h2>${group}</h2>
+						<ul>
+							${this.projectOrganiser[group]}
+						</ul>`;
+				})}
+			</nav>
 
-				<main>
-					<h1>${this.currentProject ? this.currentProject.projectName : 'Create or select a project'}</h1>
-					<p>${this.currentProject ? this.currentProject.projectDescription : 'Your current open projects details will be avaliable here'}</p>
+			<main>
+				<h1>${this.currentProject ? this.currentProject.projectName : 'Create or select a project'}</h1>
+				<p>${this.currentProject ? this.currentProject.projectDescription : 'Your current open projects details will be avaliable here'}</p>
 
-					<article>
-						<button class="new-project-body">+ New Task</button>
-						<button class="new-collaborator">+ Collaborators</button>
-						<a href="leaderboard.">
-							<button class="leaderboard-button">Leaderboard</button>
-						</a>
-					</article>
+				<article>
+					<button class="new-project-body">+ New Task</button>
+					<button class="new-collaborator">+ Collaborators</button>
+					<a href="leaderboard.">
+						<button class="leaderboard-button">Leaderboard</button>
+					</a>
+				</article>
 
-					<section class="collaborators">
-						<span>Collaborators:</span>
-						<section class="collaborator-icons">
-							<img src="src/home/activities/icon.png" alt="Collaborator 1" />
-							<img src="src/home/activities/icon.png" alt="Collaborator 2" />
-							<img src="src/home/activities/icon.png" alt="Collaborator 3" />
-							<img src="src/home/activities/icon.png" alt="Collaborator 4" />
-						</section>
+				<section class="collaborators">
+					<span>Collaborators:</span>
+					<section class="collaborator-icons">
+						<img src="src/home/activities/icon.png" alt="Collaborator 1" />
+						<img src="src/home/activities/icon.png" alt="Collaborator 2" />
+						<img src="src/home/activities/icon.png" alt="Collaborator 3" />
+						<img src="src/home/activities/icon.png" alt="Collaborator 4" />
 					</section>
+				</section>
 
-					<section class="tab-content">
-						${this.tasks
-							? html`
-									<section class="columns">
-										${Object.keys(this.tasks).map((columnName: any) => {
-											return html`<article class="column">
-												<h2>${columnName} <span class="task-count">${this.tasks[columnName].length}</span></h2>
-												${this.tasks[columnName].map(
-													(project: any) => html`
-														<article class="project-card">
-															<h3>${project.title}</h3>
-															<p class="task-description">${project.description}</p>
-															<p class="due-date">Due date: ${this.formatDate(project.dueDate)}</p>
-															<section class="points">${project.priority} pts</section>
-														</article>
-													`
-												)}
-											</article>`;
-										})}
-									</section>
-								`
-							: html`<p class="no-tasks">No Tasks have been created yet</p>`}
-					</section>
-				</main>
-			</section>
+				<section class="tab-content">${!this.tasks ? html`<p class="no-tasks">No Tasks have been created yet</p>` : this.createBoardComponent()}</section>
+			</main>
 		`;
 	}
 
 	static styles = css`
-		.dashboard {
+		:host {
 			font-family: 'Arial', sans-serif;
 			background-color: #1e1e1e;
 			color: #fff;
@@ -229,10 +203,10 @@ export class DashboardComponent extends LitElement {
 			box-shadow: 0 4px 10px rgba(0, 0, 0, 1);
 			padding: 10px;
 			position: fixed;
-			top: 5rem; /* Adjust to be at the top */
+			top: 5rem;
 			left: 0;
-			height: 100vh; /* Adjust height to cover the full height */
-			overflow-y: hidden; /* Remove vertical scrollbar */
+			height: 100vh;
+			overflow-y: hidden;
 		}
 
 		.sidebar-search {
@@ -310,27 +284,8 @@ export class DashboardComponent extends LitElement {
 			color: #fff;
 		}
 
-		.project-icon,
-		.team-icon {
+		.project-icon {
 			margin-right: 10px;
-		}
-
-		.team-label {
-			background-color: #333;
-			color: #fff;
-			padding: 2px 5px;
-			border-radius: 5px;
-			font-size: 0.8em;
-			margin-left: auto;
-		}
-
-		.team-count {
-			background-color: #333;
-			color: #fff;
-			padding: 2px 5px;
-			border-radius: 5px;
-			font-size: 0.8em;
-			margin-left: auto;
 		}
 
 		.user-info {
@@ -395,13 +350,13 @@ export class DashboardComponent extends LitElement {
 		}
 
 		.project-card {
-			background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
+			background-color: rgba(255, 255, 255, 0.1);
 			padding: 20px;
 			border-radius: 8px;
-			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5); /* Softer shadow */
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 			margin-bottom: 20px;
 			position: relative;
-			border: 1px solid rgba(255, 255, 255, 0.2); /* Border to match the design */
+			border: 1px solid rgba(255, 255, 255, 0.2);
 			max-width: 90%;
 		}
 
