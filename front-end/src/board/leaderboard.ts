@@ -69,7 +69,7 @@ export class Leaderboard extends CtLit {
 		return html`<auth-router>
 			<main class="leaderboard__container">
 				<header-app> </header-app>
-
+				<button @click=${() => (window.location.href = '/')}>back to Project</button>
 				<h1>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -92,8 +92,8 @@ export class Leaderboard extends CtLit {
 					</svg>
 					Leaderboard
 				</h1>
-				<h2><em>Project name:</em> ${this.projectDetails.projectName}</h2>
-				<p><em>Project description:</em> ${this.projectDetails.projectDescription}</p>
+				<h2>Project name: <em>${this.projectDetails.projectName}</em></h2>
+				<p>Project description: <em>${this.projectDetails.projectDescription}</em></p>
 
 				<section class="leaderboard">${this.listOfUserPositionCard}</section>
 			</main>
