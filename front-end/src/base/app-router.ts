@@ -20,7 +20,7 @@ export class AppRouter extends CtLit {
 		{
 			path: '/',
 			element: html`<home-app></home-app>`,
-			from: () => import('../home/activities/home-app'),
+			from: () => import('../home/home-app'),
 			auth: false,
 			title: () => `Page 1 • Example.com`
 		},

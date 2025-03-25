@@ -97,9 +97,9 @@ export class DashboardComponent extends LitElement {
 	render() {
 		return html`
 			<header class="header">
-				<img id="logo" src="src/home/activities/white_logo.png" alt="Logo" />
+				<img id="logo" src="src/home/home_images/white_logo.png" alt="Logo" />
 				<input type="search" placeholder="Search tasks..." />
-				<img id="profile-icon" src="src/home/activities/icon2.png" alt="Logo" />
+				<img id="profile-icon" src="src/home/home_images/icon2.png" alt="Logo" />
 			</header>
 
 			<nav class="sidebar">
@@ -130,10 +130,10 @@ export class DashboardComponent extends LitElement {
 				<section class="collaborators">
 					<span>Collaborators:</span>
 					<section class="collaborator-icons">
-						<img src="src/home/activities/icon.png" alt="Collaborator 1" />
-						<img src="src/home/activities/icon.png" alt="Collaborator 2" />
-						<img src="src/home/activities/icon.png" alt="Collaborator 3" />
-						<img src="src/home/activities/icon.png" alt="Collaborator 4" />
+						<img src="src/home/home_images/icon.png" alt="Collaborator 1" />
+						<img src="src/home/home_images/icon.png" alt="Collaborator 2" />
+						<img src="src/home/home_images/icon.png" alt="Collaborator 3" />
+						<img src="src/home/home_images/icon.png" alt="Collaborator 4" />
 					</section>
 				</section>
 
