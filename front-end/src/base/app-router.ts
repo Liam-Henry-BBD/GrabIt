@@ -16,7 +16,7 @@ export class AppRouter extends CtLit {
 
 	static pages: Page[] = [
 		{
-			path: '/',
+			path: '/home',
 			element: html`<home-app></home-app>`,
 			from: () => import('../home/home-app'),
 			auth: false,
@@ -70,7 +70,15 @@ export class AppRouter extends CtLit {
 			from:  () => import("../components/tutorials-page"),
 			auth: false,
 			title: () => `• tutorial-page.com`
-		}
+		},
+
+		{ 
+			path: '/',
+			element: html`<landing-app></landing-app>`,
+			from: () => import('../landing/activities/landing-app'),
+			auth: false,
+			title: () => `* Landing`
+		},
 	];
 
 	render() {
