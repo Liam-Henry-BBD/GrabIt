@@ -38,6 +38,7 @@ export class AppLogin extends CtLit {
 			border: 1px solid rgba(80, 137, 145, 1);
 			box-shadow: 0 4px 8px rgba(0, 0, 0, 1);
 			margin-bottom: 10rem;
+			border-radius: 0.55rem;
 		}
 
 		.card-title {

@@ -145,12 +145,15 @@ export class LandingApp extends CtLit{
                 text-align: center;
             }
 
-            .hero .cta-button {
+            .get-started {
                 background-color: #F9A03F;
-                border-radius: 0.7rem;
-                margin-top: 1rem;
-                font-weight: 400;
-                font-family: 'Poppins', sans-serif;
+                color: #242423;
+                border: none;
+                padding: 0.5rem 1rem;
+                font-size: 1rem;
+                font-weight: 500;
+                cursor: pointer;
+                border-radius: 0.5rem;
 
             }
 
@@ -394,125 +397,118 @@ export class LandingApp extends CtLit{
 
     render() {
         return html`
-            <!DOCTYPE html>
-            <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>GrabIt</title>
-                    <link rel="stylesheet" href="./css/main.css">
-                    <script src="./main.js"></script>
-                </head>
-                <body>
-                    <header>
-                        <nav>
-                            <img src="/src/home/home_images/GI_logo-white.png" alt="Logo">
-                            <ul>
-                                <li><a href="#features">Features</a></li>
-                                <li><a href="#workflow">Workflow</a></li>
-                                <li><a href="#points">Dashboard</a></li>
-                                <li><a href="#contact">Contact</a></li>
-                            </ul>
-                            <ul class="auth-links">
-                                <li><button class="sign-up">Sign Up</button></li>
-                                <li><button class="sign-in">Sign In</button></li>
-                            </ul>
-                        </nav>
-                    </header>
-        
-                    <section class="hero">
-                        <section>
-                            <h1>Boost team productivity with seamless task management and progress tracking</h1>
-                            <p>Join the most effective platform in managing projects</p>
-                            <a href="#" class="cta-button">Get Started</a>
-                        </section>
-                    </section>
-        
-                    <main>
-                        <section id="features" class="features">
-                            <h2>Key Features</h2>
-                            <div class="feature-grid">
-                                <article class="feature-card">
-                                    <h3>Task Management</h3>
-                                    <p>Create, assign, and track tasks with ease. Monitor progress in real-time.</p>
-                                </article>
-        
-                                <article class="feature-card">
-                                    <h3>Point System</h3>
-                                    <p>Gamified approach with points based on task difficulty. Keep team members engaged.</p>
-                                </article>
-        
-                                <article class="feature-card">
-                                    <h3>Team Leaderboard</h3>
-                                    <p>Track performance with individual and team scores. Foster healthy competition.</p>
-                                </article>
-        
-                                <article class="feature-card">
-                                    <h3>GitHub Authentication</h3>
-                                    <p>Seamless authentication through GitHub. Quick and secure access.</p>
-                                </article>
-        
-                                <figure class="features-image">
-                                    <img src="./src/home/home_images/777.jpg" alt="Features Image" class="features-image">
-                                </figure>
-                            </div>
-                        </section>
-        
-                        <section id="workflow" class="workflow">
-                            <h2>Workflow</h2>
-                            <section class="workflow-steps">
-                                <section class="step active">
-                                    <div class="step-icon">🔧</div>
-                                    <h3>1. Project Setup</h3>
-                                    <p>Team leads create projects and invite members</p>
-                                </section>
-        
-                                <section class="step">
-                                    <div class="step-icon">📝</div>
-                                    <h3>2. Task Creation</h3>
-                                    <p>Add tasks with descriptions and deadlines</p>
-                                </section>
-        
-                                <section class="step">
-                                    <div class="step-icon">🎯</div>
-                                    <h3>3. Task Assignment</h3>
-                                    <p>Team members grab available tasks</p>
-                                </section>
-        
-                                <section class="step">
-                                    <div class="step-icon">📊</div>
-                                    <h3>4. Track Progress</h3>
-                                    <p>Monitor completion and review tasks</p>
-                                </section>
-                            </section>
-                        </section>
-        
-                        <section id="Dashboard" class="Dashboard">
-                            <h2>Dashboard</h2>
-                            <img src="/src/home/home_images/dash.png" alt="Dashboard Image" class="dashboard-image">
-                        </section>
-                    </main>
-        
-                    <footer>
-                        <section class="footer-content">
-                            <section class="footer-section">
-                                <h3>GrabIt</h3>
-                                <p>Gamified task management for modern teams</p>
-                            </section>
-                            <section class="footer-section">
-                                <h3>Contact</h3>
-                                <p>Email: nullidentifiers@grabit.co.za</p>
-                                <p>Phone: 011 484 7548</p>
-                            </section>
-                        </section>
-                        <section class="footer-bottom">
-                            <p>&copy; 2025 GrabIt. All rights reserved.</p>
-                        </section>
-                    </footer>
-                </body>
-            </html>
-            `;
+            <header>
+            <nav>
+                <img src="/src/home/home_images/GI_logo-white.png" alt="Logo">
+                <ul>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#workflow">Workflow</a></li>
+                <li><a href="#points">Dashboard</a></li>
+                <li><a href="#contact">Contact</a></li>
+                </ul>
+                <ul class="auth-links">
+                <li><button class="sign-up">Sign Up</button></li>
+                <li><button class="sign-in" @click="${this.navigateToLogin}">Sign In</button></li>
+                </ul>
+            </nav>
+            </header>
+
+            <section class="hero">
+            <section>
+                <h1>Boost team productivity with seamless task management and progress tracking</h1>
+                <p>Join the most effective platform in managing projects</p>
+                <li><button class="get-started" @click="${this.navigateToLogin}">Get Started</button></li>
+            </section>
+            </section>
+
+            <main>
+            <section id="features" class="features">
+                <h2>Key Features</h2>
+                <div class="feature-grid">
+                <article class="feature-card">
+                    <h3>Task Management</h3>
+                    <p>Create, assign, and track tasks with ease. Monitor progress in real-time.</p>
+                </article>
+
+                <article class="feature-card">
+                    <h3>Point System</h3>
+                    <p>Gamified approach with points based on task difficulty. Keep team members engaged.</p>
+                </article>
+
+                <article class="feature-card">
+                    <h3>Team Leaderboard</h3>
+                    <p>Track performance with individual and team scores. Foster healthy competition.</p>
+                </article>
+
+                <article class="feature-card">
+                    <h3>GitHub Authentication</h3>
+                    <p>Seamless authentication through GitHub. Quick and secure access.</p>
+                </article>
+
+                <figure class="features-image">
+                    <img src="./src/home/home_images/777.jpg" alt="Features Image" class="features-image">
+                </figure>
+                </div>
+            </section>
+
+            <section id="workflow" class="workflow">
+                <h2>Workflow</h2>
+                <section class="workflow-steps">
+                <section class="step active">
+                    <div class="step-icon">🔧</div>
+                    <h3>1. Project Setup</h3>
+                    <p>Team leads create projects and invite members</p>
+                </section>
+
+                <section class="step">
+                    <div class="step-icon">📝</div>
+                    <h3>2. Task Creation</h3>
+                    <p>Add tasks with descriptions and deadlines</p>
+                </section>
+
+                <section class="step">
+                    <div class="step-icon">🎯</div>
+                    <h3>3. Task Assignment</h3>
+                    <p>Team members grab available tasks</p>
+                </section>
+
+                <section class="step">
+                    <div class="step-icon">📊</div>
+                    <h3>4. Track Progress</h3>
+                    <p>Monitor completion and review tasks</p>
+                </section>
+                </section>
+            </section>
+
+            <section id="Dashboard" class="Dashboard">
+                <h2>Dashboard</h2>
+                <img src="/src/home/home_images/dash.png" alt="Dashboard Image" class="dashboard-image">
+            </section>
+            </main>
+
+            <footer>
+            <section class="footer-content">
+                <section class="footer-section">
+                <h3>GrabIt</h3>
+                <p>Gamified task management for modern teams</p>
+                </section>
+                <section class="footer-section">
+                <h3>Contact</h3>
+                <p>Email: nullidentifiers@grabit.co.za</p>
+                <p>Phone: 011 484 7548</p>
+                </section>
+            </section>
+            <section class="footer-bottom">
+                <p>&copy; 2025 GrabIt. All rights reserved.</p>
+            </section>
+            </footer>
+        `;
         }
 
-    }
+        private navigateToLogin() {
+        window.location.href = 'http://localhost:3004/login';
+        }
+        }
+
+    
             
