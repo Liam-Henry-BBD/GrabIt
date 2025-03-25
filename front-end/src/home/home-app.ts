@@ -10,6 +10,7 @@ export class DashboardComponent extends LitElement {
 
 	@state() private data: any;
 	@state() private currentProject: any;
+	@state() private projectTasks: any;
 	@state() private projectOrganiser: any = { owned: [], collaborating: [] };
 	@state() private tasks: any;
 	@state() private urls = {
@@ -20,8 +21,7 @@ export class DashboardComponent extends LitElement {
 
 	async apiRequest(url: string, method: string, callback: Function) {
 		try {
-			const token =
-				'eyJhbGciOiJSUzI1NiIsImtpZCI6ImVlMTkzZDQ2NDdhYjRhMzU4NWFhOWIyYjNiNDg0YTg3YWE2OGJiNDIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI1NTkzNDQyMjc5ODQtdTEzbzRyNWwzOGw4cHVkN3FvbXFpaWxxZDNibzczdWwuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI1NTkzNDQyMjc5ODQtdTEzbzRyNWwzOGw4cHVkN3FvbXFpaWxxZDNibzczdWwuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDY1OTc3MDI2NTEyNzYzNjQ5MzYiLCJoZCI6InVtdXppLm9yZyIsImVtYWlsIjoibGlhbS5oZW5yeUB1bXV6aS5vcmciLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXRfaGFzaCI6IjdtWUV4REh0RFItQ09hblRFaDlHc3ciLCJub25jZSI6IjV5akwxUzRQUGdQTUl6NW84T0RaMnhKd2tXRXl6MFVfRlpkZXlwOTA0WmsiLCJuYW1lIjoiTGlhbSBIZW5yeSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NLMzB6djNzSXhQNlJ2dkJXMS1NZEVrSWlITVdENUp5Q2xyb0c2WGxGSk92M1k0TkVBPXM5Ni1jIiwiZ2l2ZW5fbmFtZSI6IkxpYW0iLCJmYW1pbHlfbmFtZSI6IkhlbnJ5IiwiaWF0IjoxNzQyODIzOTYwLCJleHAiOjE3NDI4Mjc1NjB9.Kuro3jep7Zoms7aTfOClRH7xpVThYq_EnLiA36V0de3szU1E7pwhvp1ynMnh0kkE6TxoyTPzF8VEcHfd7SOLluuWvKhxvBP4uX1Ufs4sk5spUDRNH67y-oqQNvHIp4mBRK3h9389OeD37VsGIvaWkFBIE1RVyvCoBt5I4Gr6JXayatFl4qYGWo2SEGRuLK_dfdIlyq8l_Um7LC79wZjDEGBA7y56MuIOh_7N5cS0Wx3xGuHwjuh-QM1ICqXifnD0hTPksLKWLGv_Sac33GkKAzHw-09L1Q7WYlWWKfC4Tlfk_SM9gbV0HJEKQm6kReg_fnWs7ZC2yS9ADQnP_eBoZQ';
+			const token = localStorage.getItem("token");
 			const response = await fetch(url, {
 				method,
 				headers: {
@@ -96,11 +96,11 @@ export class DashboardComponent extends LitElement {
 
 	render() {
 		return html`
-			<header class="header">
-				<img id="logo" src="src/home/home_images/white_logo.png" alt="Logo" />
-				<input type="search" placeholder="Search tasks..." />
-				<img id="profile-icon" src="src/home/home_images/icon2.png" alt="Logo" />
-			</header>
+		<auth-router>
+			<section class="dashboard">
+				<header-app>
+
+				</header-app>
 
 			<nav class="sidebar">
 				<input type="search" placeholder="Find a project..." class="sidebar-search" />
@@ -286,6 +286,24 @@ export class DashboardComponent extends LitElement {
 
 		.project-icon {
 			margin-right: 10px;
+		}
+
+		.team-label {
+			background-color: #333;
+			color: #fff;
+			padding: 2px 5px;
+			border-radius: 5px;
+			font-size: 0.8em;
+			margin-left: auto;
+		}
+
+		.team-count {
+			background-color: #333;
+			color: #fff;
+			padding: 2px 5px;
+			border-radius: 5px;
+			font-size: 0.8em;
+			margin-left: auto;
 		}
 
 		.user-info {

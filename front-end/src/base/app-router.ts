@@ -1,9 +1,8 @@
 import { CtLit, html, customElement, css } from '@conectate/ct-lit';
 import { Page } from '@conectate/ct-router';
 import '@conectate/ct-router';
-/**
- * @see https://www.npmjs.com/package/@conectate/ct-router
- */
+
+
 @customElement('app-router')
 export class AppRouter extends CtLit {
 	static styles = [
@@ -13,16 +12,15 @@ export class AppRouter extends CtLit {
 			}
 		`
 	];
-	/** You can add more pages and behaviors
-	 * @see https://www.npmjs.com/package/@conectate/ct-router
-	 */
+
+
 	static pages: Page[] = [
 		{
 			path: '/',
 			element: html`<home-app></home-app>`,
 			from: () => import('../home/home-app'),
 			auth: false,
-			title: () => `Page 1 • Example.com`
+			title: () => `Dashboard`
 		},
 		// {
 		//     path: '/404',
@@ -36,6 +34,21 @@ export class AppRouter extends CtLit {
 			element: html`<app-login></app-login>`,
 			from: () => import('../login/activities/app-login'),
 			auth: false,
+			title: () => `Login`
+		},
+		{
+			path: '/projects',
+			element: html`<projects-app></projects-app>`,
+			from: () => import('../home/activities/projects/activities/projects-app'),
+			auth: false,
+			title: () => `Login`
+		},
+		{
+			path: '/redirect',
+			element: html`<redirect-app></redirect-app>`,
+			from: () => import('../redirect/activities/redirect-app'),
+			auth: false,
+			title: () => `Login`
 			title: () => `• login.com`
 		},
 		{
@@ -44,6 +57,7 @@ export class AppRouter extends CtLit {
 			from: () => import('../components/create-project'),
 			auth: false,
 			title: () => `• create-project.com`
+			title: () => `create-project`
 		},
 		{
 			path: '/project/:id',
