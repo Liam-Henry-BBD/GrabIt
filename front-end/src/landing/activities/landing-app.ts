@@ -6,17 +6,17 @@ export class LandingApp extends CtLit{
     static styles = css`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-            body {
-                font-family: 'Poppins', sans-serif;
-                line-height: 1.6;
-                background-color: white;
-            }
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            background-color: white;
+        }
 
 
             /* this is the actual header */
@@ -31,13 +31,13 @@ export class LandingApp extends CtLit{
                 top: 0;
                 left: 0;
                 right: 0;
-                height: 4rem;
+                height: 5rem;
                 z-index:1000;
             }
 
             img {
-                height: 7rem;
-                width: 7rem;
+                height: 9rem;
+                width: 9rem;
                 position: absolute;
                 bottom: 1;
                 left: 1rem;
@@ -48,13 +48,13 @@ export class LandingApp extends CtLit{
             nav ul {
                 display: flex;
                 list-style: none;
-                gap: 3rem;
+                gap: 4rem;
             }
 
             nav a {
                 color: white;
                 font-weight: 500;
-                font-size: .85rem;
+                font-size: 1.2rem;
                 text-decoration: none;
             }
 
@@ -66,7 +66,7 @@ export class LandingApp extends CtLit{
             .auth-links {
                 display: flex;
                 color: wheat;
-                gap: 1rem;
+                gap: 1.2rem;
                 left: 10rem;
             }
 
@@ -75,7 +75,7 @@ export class LandingApp extends CtLit{
                 color: #F7F0F0;
                 border: none;
                 padding: 0.5rem 1rem;
-                font-size: .85rem;
+                font-size: 1em;
                 font-weight: 500;
                 cursor: pointer;
             }
@@ -85,11 +85,11 @@ export class LandingApp extends CtLit{
             }
 
             .auth-links .sign-in {
-                background-color: #508991;
+                background-color: #F9A03F;
                 color: #242423;
                 border: none;
                 padding: 0.5rem 1rem;
-                font-size: .85rem;
+                font-size: 1rem;
                 font-weight: 500;
                 cursor: pointer;
                 border-radius: 0.5rem;
@@ -111,7 +111,6 @@ export class LandingApp extends CtLit{
                 align-items: center;
                 padding: 8rem 1rem 6rem;
                 background: linear-gradient(to bottom, white, #242423);
-                /* main colour */
                 height: 100vh;
                 padding-inline: 10%;
                 box-shadow: 0 2px 10px rgb(47, 46, 46);
@@ -127,10 +126,10 @@ export class LandingApp extends CtLit{
             }
 
             .hero h1 {
-                font-size: 4rem;
+                font-size: 5rem;
                 font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
                 color: #242423;
-                letter-spacing: 0.85px;
+                letter-spacing: 0.9px;
                 line-height: 1.1;
                 margin-top: 1.5rem;
                 align-items: center;
@@ -138,8 +137,9 @@ export class LandingApp extends CtLit{
             }
 
             .hero p {
-                font-size: 1rem;
+                font-size: 1.3rem;
                 font-weight: 500;
+                font-family: 'Poppins', sans-serif;
                 color: #242423;
                 margin-top: 1rem;
                 text-align: center;
@@ -147,28 +147,28 @@ export class LandingApp extends CtLit{
 
             .hero .cta-button {
                 background-color: #F9A03F;
-                border-radius: 1rem;
+                border-radius: 0.7rem;
                 margin-top: 1rem;
+                font-weight: 400;
+                font-family: 'Poppins', sans-serif;
 
             }
 
             /* ---------------------------------------- */
 
             .features h2 {
-                font-size: 1.8rem;
+                font-size: 3rem;
+                font-weight: bold;
                 margin-bottom: 1rem;
-                margin-top: -3rem;
-                margin-right: 50rem;
+                text-align: center;
+                color: #242423;
+
             }
 
             .features {
-                padding: 6rem 10%;
+                padding: 4rem;
                 background: linear-gradient(to bottom, white, white); 
-                height: 110vh;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
+                height: 90vh;
                 grid-template-columns: repeat(2, 2fr); 
                 margin-bottom: 3rem ;
             }
@@ -176,15 +176,15 @@ export class LandingApp extends CtLit{
             .feature-grid {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-                gap: 2.5rem;
+                gap: 2rem;
                 margin-top: 1rem;
                 margin-left: 28rem;
             }
 
             .feature-card {
-                padding: 1.5rem;
-                border: 1px solid #508991;
-                transition: transform 0.2s ease;
+                padding: 1rem;
+                border: 0.2rem solid #508991;
+                width: 15rem;
                 
             }
 
@@ -203,6 +203,7 @@ export class LandingApp extends CtLit{
                 align-items: center; 
                 margin: 0; 
             }
+
             .features-image img {
                 width: 100%; 
                 height: 25rem;
@@ -214,13 +215,29 @@ export class LandingApp extends CtLit{
                 z-index: 1; 
                 mask-image: radial-gradient(circle, white 70%, transparent 100%);
             }
+            
+            @media (max-width: 1024px) {
+            .features-image img {
+                display: none;
+            }
+        }
+
+            @media (max-width: 768px) {
+                .features {
+                    padding: 4rem 5%;
+                }
+
+                .feature-grid {
+                    grid-template-columns: 1fr 1fr; /* On smaller screens, make it 2 columns */
+                }
+            }
 
             /* ---------------------------------------- */
 
             .workflow {
                 padding: 6rem 10%;
                 background: linear-gradient(to bottom, white, white);
-                height: 110vh; 
+                height: 80vh; 
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
@@ -228,8 +245,8 @@ export class LandingApp extends CtLit{
             }
 
             .workflow h2 {
-                font-size: 2rem;
-                margin-bottom: 3rem;
+                font-size: 3rem;
+                margin-bottom: 8rem;
                 text-align: center;
                 color: #333;
                 font-weight: bold;
@@ -239,7 +256,7 @@ export class LandingApp extends CtLit{
                 display: grid;
                 grid-template-columns: repeat(4, 1fr); 
                 gap: 3rem;
-                margin-top: 1.5rem;
+                margin-bottom: 7rem;
                 max-width: 1000px;
             }
 
@@ -309,7 +326,7 @@ export class LandingApp extends CtLit{
             }
 
             .Dashboard h2 {
-                font-size: 2rem;
+                font-size: 4rem;
                 margin-bottom: 35rem;
                 text-align: center;
                 color: #333;
@@ -321,9 +338,9 @@ export class LandingApp extends CtLit{
             .Dashboard img {
                 height: 30rem;
                 width: 60rem;
-                margin-top: 5rem;
+                margin-top: 8rem;
                 margin-bottom: 5rem;
-                margin-left: 13%;
+                margin-left: 18%;
                 align-items: center;
                 display: flex;
                 justify-content: center;
@@ -389,7 +406,7 @@ export class LandingApp extends CtLit{
                 <body>
                     <header>
                         <nav>
-                            <img src="./imgs/GI_logo-white.png" alt="Logo">
+                            <img src="/src/home/home_images/GI_logo-white.png" alt="Logo">
                             <ul>
                                 <li><a href="#features">Features</a></li>
                                 <li><a href="#workflow">Workflow</a></li>
@@ -436,7 +453,7 @@ export class LandingApp extends CtLit{
                                 </article>
         
                                 <figure class="features-image">
-                                    <img src="./imgs/777.jpg" alt="Features Image" class="features-image">
+                                    <img src="./src/home/home_images/777.jpg" alt="Features Image" class="features-image">
                                 </figure>
                             </div>
                         </section>
@@ -472,7 +489,7 @@ export class LandingApp extends CtLit{
         
                         <section id="Dashboard" class="Dashboard">
                             <h2>Dashboard</h2>
-                            <img src="./imgs/dash.png" alt="Dashboard Image" class="dashboard-image">
+                            <img src="/src/home/home_images/dash.png" alt="Dashboard Image" class="dashboard-image">
                         </section>
                     </main>
         
@@ -489,7 +506,7 @@ export class LandingApp extends CtLit{
                             </section>
                         </section>
                         <section class="footer-bottom">
-                            <p>&copy; 2024 GrabIt. All rights reserved.</p>
+                            <p>&copy; 2025 GrabIt. All rights reserved.</p>
                         </section>
                     </footer>
                 </body>

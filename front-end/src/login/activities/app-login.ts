@@ -23,87 +23,85 @@ export class AppLogin extends CtLit {
 			background-color: #242423;
 			padding: 1rem;
 		}
-		.logo {
-			display: flex;
-			align-items: center;
-			gap: 0.5rem;
-			margin-bottom: 2rem;
-		}
-		.logo span {
-			font-size: 2rem;
-			font-weight: bold;
-			color: #f7f0f0;
-		}
-		.card {
-			max-width: 400px;
-			width: 100%;
-			background-color: #242423;
-			border: 1px solid rgba(80, 137, 145, 0.2);
-			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-		}
-		.card-header {
+
+		img {
 			text-align: center;
-			padding: 1rem;
+			height: 15rem;
+			width: 15rem;
+			z-index: 1000;
 		}
+
+		.card {
+			width: 40rem;
+			height: 20rem;
+			background-color: #242423;
+			border: 1px solid rgba(80, 137, 145, 1);
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 1);
+			margin-bottom: 10rem;
+		}
+
 		.card-title {
-			font-size: 1.5rem;
+			text-align: center;
+			font-size: 2.5rem;
 			color: #f7f0f0;
-			font-weight: bold;
+			font-weight: 500;
 		}
+		
 		.card-description {
-			color: rgba(247, 240, 240, 0.7);
+			color: #f7f0f0;
+			text-align: center;
+			font-size: 1.3rem;
 		}
+
 		.card-content {
 			padding: 2rem;
 		}
+
 		.button {
-			width: 100%;
-			padding: 0.75rem;
-			background-color: #242423;
-			color: #f7f0f0;
-			border: 1px solid rgba(80, 137, 145, 0.3);
+			text-decoration: none;
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			cursor: pointer;
+			background-color: #242423;
+			color: white;
+			padding: 0.75rem 1rem;
+			border-radius: 0.55rem;
+			border: 1px solid rgba(80, 137, 145, 1);
 		}
+
 		.button:hover {
-			background-color: rgba(80, 137, 145, 0.1);
+			background-color: #508991;
+			color: #242423;
 		}
+		
 		.button svg {
 			margin-right: 0.5rem;
-			width: 1.25rem;
-			height: 1.25rem;
+			width: 1.28rem;
+			height: 1.28rem;
 		}
 		.terms {
-			font-size: 0.75rem;
+			text-decoration: none;
+			font-size: 0.85rem;
 			text-align: center;
 			color: rgba(247, 240, 240, 0.7);
 		}
 		.terms a {
 			text-decoration: underline;
 			transition: color 0.2s ease-in-out;
+			color: #508991;
 		}
 		.terms a:hover {
 			color: #f9a03f;
 		}
+
 	`;
 
 	render() {
 		return html`
-			<div class="logo">
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" width="32" height="32" style="color: #f9a03f;">
-					<path
-						d="M12 0C5.372 0 0 5.372 0 12c0 5.303 3.438 9.8 8.207 11.388.6.112.803-.26.803-.578v-2.25c-3.338.73-4.04-1.611-4.04-1.611-.544-1.379-1.33-1.744-1.33-1.744-1.086-.742.082-.726.082-.726 1.2.084 1.832 1.234 1.832 1.234 1.064 1.82 2.8 1.29 3.496.987.107-.772.416-1.29.757-1.59-2.666-.304-5.468-1.334-5.468-5.933 0-1.313.468-2.384 1.236-3.223-.124-.304-.535-1.525.115-3.176 0 0 1.008-.322 3.303 1.253 1.86-.514 3.79-.514 5.65 0 2.295-1.576 3.303-1.253 3.303-1.253.651 1.65.239 2.872.115 3.176.769.839 1.236 1.91 1.236 3.223 0 4.613-2.802 5.629-5.476 5.933.428.369.826 1.099.826 2.221v3.293c0 .317.203.693.812.578 4.77-1.588 8.208-6.085 8.208-11.388 0-6.628-5.372-12-12-12z"
-						fill="#f9a03f"
-					/>
-				</svg>
-				<span>Grabit</span>
-			</div>
-
+			<img src="/src/home/home_images/GI_logo-white.png" alt="logo" />
 			<article class="card">
 				<div class="card-header">
-					<h2 class="card-title">Welcome to Grabit</h2>
+					<h2 class="card-title">Welcome</h2>
 					<p class="card-description">Sign in with your Google account to continue</p>
 				</div>
 				<article class="card-content">

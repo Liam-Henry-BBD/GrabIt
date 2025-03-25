@@ -18,10 +18,7 @@ export class LitApp extends CtLit {
 
 	render() {
 		return html`
-		  <main>
-			<!-- <header>GrabIt</header> -->
-			<app-router></app-router>
-		  </main>
+		 
 			<main>
 				 <app-router></app-router>
 			</main>
