@@ -27,19 +27,13 @@ export class Leaderboard extends CtLit {
 			getLeaderboard(this.projectID).then(data => {
 				this.listOfUserPositionCard = this.createPositionCardComponents(data);
 			});
-			sendRequest(`/projects/${this.projectID}`).then(data => {
-				this.projectDetails = data;
-			});
+			sendRequest(`/projects/${this.projectID}`).then(data => (this.projectDetails = data));
 		}
 	}
 
 	createPositionCardComponents(listOfColaboratorsWithScores: any[]) {
-		const listOfColaboratorsWithNoScore: any = sendRequest(`/projects/${this.projectID}/collaborators`).then(data => {
-			return data.filter((user: any) => !listOfColaboratorsWithScores.find((userWithScore: any) => userWithScore.githubID === user.githubID));
-		});
 		const firstPlaceScore = listOfColaboratorsWithScores[0].totalScore;
-		return listOfColaboratorsWithScores.map((user, index) => {
-			console.log('user: ', user);
+		return listOfColaboratorsWithScores.map(user => {
 			const progressValue = (user.totalScore / firstPlaceScore) * 100;
 			return html`
 				<article class="leaderboard__user">
@@ -60,7 +54,7 @@ export class Leaderboard extends CtLit {
 							<path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"></path>
 							<circle cx="12" cy="8" r="6"></circle>
 						</svg>
-						<span class="user_name">${user.githubID}</span>
+						<span class="user_name"><em>${user.githubID}</em></span>
 					</h3>
 					<div>
 						<p>Score: ${user.totalScore}</p>
@@ -98,8 +92,8 @@ export class Leaderboard extends CtLit {
 					</svg>
 					Leaderboard
 				</h1>
-				<h2>Project name: ${this.projectDetails.projectName}</h2>
-				<p>${this.projectDetails.projectDescription}</p>
+				<h2><em>Project name:</em> ${this.projectDetails.projectName}</h2>
+				<p><em>Project description:</em> ${this.projectDetails.projectDescription}</p>
 
 				<section class="leaderboard">${this.listOfUserPositionCard}</section>
 			</main>
