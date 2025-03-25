@@ -1,5 +1,6 @@
 import { html, css, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
+import "../auth/activities/auth-router";
 
 @customElement('home-app')
 export class DashboardComponent extends LitElement {
@@ -139,6 +140,8 @@ export class DashboardComponent extends LitElement {
 
 				<section class="tab-content">${!this.tasks ? html`<p class="no-tasks">No Tasks have been created yet</p>` : this.createBoardComponent()}</section>
 			</main>
+			</section>
+			</auth-router>
 		`;
 	}
 

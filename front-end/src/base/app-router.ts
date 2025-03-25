@@ -49,14 +49,12 @@ export class AppRouter extends CtLit {
 			from: () => import('../redirect/activities/redirect-app'),
 			auth: false,
 			title: () => `Login`
-			title: () => `• login.com`
 		},
 		{
 			path: '/create-project',
 			element: html`<create-project></create-project>`,
 			from: () => import('../components/create-project'),
 			auth: false,
-			title: () => `• create-project.com`
 			title: () => `create-project`
 		},
 		{
