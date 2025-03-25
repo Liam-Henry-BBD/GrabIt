@@ -1,6 +1,5 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import { Router } from '@vaadin/router';
 
 @customElement('create-project')
 export class CreateProject extends LitElement {
@@ -18,7 +17,6 @@ export class CreateProject extends LitElement {
 			padding: 20px;
 			font-family: sans-serif;
 			background-color: #242423;
-			color: #f7f0f0;
 			border-radius: 10px;
 		}
 
@@ -125,7 +123,7 @@ export class CreateProject extends LitElement {
 		this.description = '';
 		this.collaborators = [];
 		const projectId = Date.now().toString();
-		Router.go(`/project/${projectId}`);
+		window.location.href = `/project/${projectId}`;
 	}
 
 	handleAddCollaborator() {
