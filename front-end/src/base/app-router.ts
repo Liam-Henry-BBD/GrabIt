@@ -36,21 +36,28 @@ export class AppRouter extends CtLit {
 			element: html`<app-login></app-login>`,
 			from: () => import('../login/activities/app-login'),
 			auth: false,
-			title: () => `Login • Example.com`
+			title: () => `• login.com`
 		},
 		{
 			path: '/create-project',
 			element: html`<create-project></create-project>`,
 			from: () => import('../components/create-project'),
 			auth: false,
-			title: () => `create-project • Example.com`
+			title: () => `• create-project.com`
 		},
 		{
 			path: '/project/:id',
 			element: html`<project-description></project-description>`,
 			from: () => import('../components/project-description'),
 			auth: false,
-			title: () => `created-project • Example.com`
+			title: () => `• created-project.com`
+		},
+		{
+			path: '/tutorials',
+			element: html`<tutorials-page></tutorials-page>`,
+			from:  () => import("../components/tutorials-page"),
+			auth: false,
+			title: () => `• tutorial-page.com`
 		}
 	];
 

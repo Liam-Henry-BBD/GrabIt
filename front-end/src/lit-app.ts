@@ -1,5 +1,5 @@
 import { CtLit, customElement, html, css } from '@conectate/ct-lit';
-import { initRouter } from './base/app-router';
+import './base/app-router';
 
 @customElement('lit-app')
 export class LitApp extends CtLit {
@@ -14,15 +14,10 @@ export class LitApp extends CtLit {
 		}
 	`;
 
-	firstUpdated() {
-		const outlet = this.shadowRoot!.getElementById('router-outlet') as HTMLElement;
-		initRouter(outlet);
-	}
-
 	render() {
 		return html`
 			<main>
-				<div id="router-outlet"></div>
+				 <app-router></app-router>
 			</main>
 		`;
 	}
