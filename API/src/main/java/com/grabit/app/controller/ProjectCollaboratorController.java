@@ -41,7 +41,7 @@ public class ProjectCollaboratorController {
 
         projectCollaboratorService.addProjectCollaborator(projectCollaborator,
                 userService.getAuthenticatedUser(authentication));
-        CreateResponseDTO responseDTO = new CreateResponseDTO("Successfully added collaborator", 201);
+        CreateResponseDTO responseDTO = new CreateResponseDTO("Successfully added collaborator", 201, null);
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 }

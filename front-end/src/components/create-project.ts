@@ -9,6 +9,11 @@ export class CreateProject extends LitElement {
 	@state() collaborators: string[] = [];
 	@state() projects: any[] = [];
 
+	private urls = {
+		getProjects: 'http://localhost:8081/api/projects',
+		createProject: 'http://localhost:8081/api/projects'
+	};
+
 	static styles = css`
 		:host {
 			display: block;
@@ -55,24 +60,6 @@ export class CreateProject extends LitElement {
 			background-color: #508991;
 		}
 
-		div button {
-			background-color: #f9a03f;
-			color: #f7f0f0;
-			cursor: pointer;
-			width: 40px;
-			height: 40px;
-			font-size: 15px;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			border: none;
-			border-radius: 50%;
-		}
-
-		div button:hover {
-			background-color: #508991;
-		}
-
 		.collaborator-container {
 			display: flex;
 			width: calc(100% - 2px);
@@ -89,16 +76,48 @@ export class CreateProject extends LitElement {
 			margin-top: 10px;
 			padding: 10px;
 		}
-
-		.collaborator-item {
-			padding: 5px 10px;
-			border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-		}
-
-		.collaborator-item:last-child {
-			border-bottom: none;
-		}
 	`;
+
+	connectedCallback() {
+		super.connectedCallback();
+		this.apiRequest(this.urls.getProjects, 'GET')
+			.then(data => {
+				this.projects = data;
+			})
+			.catch(error => {
+				console.error('Error fetching projects:', error);
+			});
+	}
+
+	async apiRequest(url: string, method: string, body?: any) {
+		try {
+			const token = localStorage.getItem('token');
+			if (!token) throw new Error('No authentication token found.');
+
+			const options: RequestInit = {
+				method,
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`
+				}
+			};
+			if (body) options.body = JSON.stringify(body);
+
+			const response = await fetch(url, {
+				method,
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`
+				},
+				...options
+			});
+			if (!response.ok) throw new Error(`Network response was not ok. Status: ${response.status}`);
+			return await response.json();
+		} catch (error) {
+			console.error('Error during API request:', error);
+			throw error;
+		}
+	}
 
 	handleInput(e: Event) {
 		const target = e.target as HTMLInputElement;
@@ -106,24 +125,24 @@ export class CreateProject extends LitElement {
 		(this[name] as string) = target.value;
 	}
 
-	handleSubmit(e: Event) {
+	async handleSubmit(e: Event) {
 		e.preventDefault();
 		if (!this.name || !this.description) return;
+
 		const project = {
-			id: Date.now().toString(),
-			name: this.name,
-			description: this.description,
-			collaborators: this.collaborators,
-			createdAt: new Date().toLocaleString(),
-			updatedAt: new Date().toLocaleString(),
-			tasks: []
+			projectName: this.name,
+			projectDescription: this.description,
+			collaborators: this.collaborators
 		};
-		this.projects = [...this.projects, project];
-		this.name = '';
-		this.description = '';
-		this.collaborators = [];
-		const projectId = Date.now().toString();
-		window.location.href = `/project/${projectId}`;
+
+		this.apiRequest(this.urls.createProject, 'POST', project)
+
+			.then(newProject => {
+				window.location.href = `/project/${newProject.projectId}`;
+			})
+			.catch(error => {
+				console.error('Error creating project:', error);
+			});
 	}
 
 	handleAddCollaborator() {
@@ -135,7 +154,7 @@ export class CreateProject extends LitElement {
 
 	renderCollaboratorList() {
 		if (!this.collaborators.length) return '';
-		return html` <div class="collaborator-list">${this.collaborators.map(collaborator => html` <div class="collaborator-item">${collaborator}</div> `)}</div> `;
+		return html` <div class="collaborator-list">${this.collaborators.map(collaborator => html`<div>${collaborator}</div>`)}</div> `;
 	}
 
 	render() {
@@ -143,12 +162,12 @@ export class CreateProject extends LitElement {
 			<h1>Create New Project</h1>
 			<form @submit=${this.handleSubmit}>
 				<h2>Project Name</h2>
-				<input type="text" name="name" .value=${this.name} @input=${this.handleInput} placeholder="Write the project name here" required />
+				<input type="text" name="name" .value=${this.name} @input=${this.handleInput} placeholder="Write your project name here" required />
 				<h2>Project Description</h2>
-				<textarea name="description" .value=${this.description} @input=${this.handleInput} placeholder="Write the project description here" required></textarea>
+				<textarea name="description" .value=${this.description} @input=${this.handleInput} placeholder="Write your project description here" required></textarea>
 				<h2>Add Collaborators</h2>
 				<div class="collaborator-container">
-					<input type="email" name="collaboratorEmail" .value=${this.collaboratorEmail} @input=${this.handleInput} placeholder="Enter collaborator email" />
+					<input type="email" name="collaboratorEmail" .value=${this.collaboratorEmail} @input=${this.handleInput} placeholder="Enter the collaborator's email" />
 					<button type="button" @click=${this.handleAddCollaborator}>+</button>
 				</div>
 				${this.renderCollaboratorList()}

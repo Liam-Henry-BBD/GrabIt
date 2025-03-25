@@ -25,7 +25,7 @@ public class TaskCollaboratorController {
     @PostMapping
     public ResponseEntity<CreateResponseDTO> createTaskCollaborator(@RequestBody TaskCollaborator taskCollaborator, Authentication authentication) {
         taskCollaboratorService.addTaskCollaborator(taskCollaborator, userService.getAuthenticatedUser(authentication));
-        CreateResponseDTO responseDTO = new CreateResponseDTO("Successfully added task collaborator", 201);
+        CreateResponseDTO responseDTO = new CreateResponseDTO("Successfully added task collaborator", 201, null);
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 
