@@ -6,8 +6,9 @@ import { Project, Task, User } from "../../utils/types";
 import { projectAppStyles } from "./project-app.styles";
 import { filterTasks } from "../../utils/app";
 import { getUser } from "../../services/user.service";
-import { grabTask, requestTaskReview } from "../../services/task.service";
+import { completeTask, grabTask, rejectTaskReview, requestTaskReview } from "../../services/task.service";
 
+import "../components/cards/review-card";
 
 @customElement("project-app")
 export class ProjectApp extends CtLit {
@@ -88,8 +89,18 @@ export class ProjectApp extends CtLit {
         }
     }
 
-    async completeTask() {
+    async handleCancelReview(taskID: number) {
+        const requestReview = await rejectTaskReview(taskID) as Task;
+        if (requestReview != null) {
+           window.location.reload()
+        }
+    }
 
+    async handleCompleteTask(taskID: number) {
+        const requestReview = await completeTask(taskID) as Task;
+        if (requestReview != null) {
+           window.location.reload()
+        }   
     }
 
 
@@ -145,7 +156,15 @@ export class ProjectApp extends CtLit {
                         ${
                             this.tasks.filter(task => task.taskStatusID == 3).map(task => {
                                 const allowedToComplete = (this.project.collaboratorRole == 1);
-                                return html`<project-card .visible=${allowedToComplete} .handleTaskAction=${this.handleGrabTask} .task=${task} .action=${"Complete"}></project-card>`;
+                                const allowedToCancel = task.userID == this.currentUser.userID || this.project.collaboratorRole == 1;
+                                return html`<review-card 
+                                    .handleCancelAction=${this.handleCancelReview} 
+                                    .cancel=${allowedToCancel} 
+                                    .visible=${allowedToComplete} 
+                                    .handleTaskAction=${this.handleCompleteTask} 
+                                    .task=${task} 
+                                    .action=${"Complete"}>
+                                </review-card>`;
                             })
                         }
                     </article>

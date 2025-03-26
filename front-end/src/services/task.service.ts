@@ -22,7 +22,7 @@ export const requestTaskReview = async (taskID: number) => {
     }
 }
 
-export const rejectTaskReview = async (taskID: string) => {
+export const rejectTaskReview = async (taskID: number) => {
     try {
         const response = await sendRequest(`/tasks/${taskID}/status/2`, {
             method: "PUT"
@@ -33,7 +33,7 @@ export const rejectTaskReview = async (taskID: string) => {
     }
 }
 
-export const completeTask = async (taskID: string) => {
+export const completeTask = async (taskID: number) => {
     try {
         const response = await sendRequest(`/tasks/${taskID}/status/4`, {
             method: "PUT"
