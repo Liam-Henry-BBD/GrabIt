@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
+import { Router } from '@vaadin/router';
 
 @customElement('create-project')
 export class CreateProject extends LitElement {
@@ -152,6 +153,10 @@ export class CreateProject extends LitElement {
 		}
 	}
 
+	cancel() {
+		Router.go('/');
+	}
+
 	renderCollaboratorList() {
 		if (!this.collaborators.length) return '';
 		return html` <div class="collaborator-list">${this.collaborators.map(collaborator => html`<div>${collaborator}</div>`)}</div> `;
@@ -172,6 +177,7 @@ export class CreateProject extends LitElement {
 				</div>
 				${this.renderCollaboratorList()}
 				<button type="submit">Create Project</button>
+				<button class="cancel-btn" @click="${this.cancel}">Cancel</button>
 			</form>
 		`;
 	}

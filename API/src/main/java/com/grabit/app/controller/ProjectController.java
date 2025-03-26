@@ -47,7 +47,9 @@ public class ProjectController {
             Authentication authentication) {
         User user = userService.getAuthenticatedUser(authentication);
         Project newProject = projectService.createProject(request, user);
-        return new ResponseEntity<>(new CreateResponseDTO(responseMessages.get("created"), 201, newProject != null ? newProject.getProjectID() : null), 
+        return new ResponseEntity<>(
+                new CreateResponseDTO(responseMessages.get("created"), 201,
+                        newProject != null ? newProject.getProjectID() : null),
                 HttpStatus.CREATED);
     }
 
