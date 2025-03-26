@@ -7,9 +7,7 @@ import { homeStyles } from './home.styles';
 
 @customElement('home-app')
 export class DashboardComponent extends LitElement {
-
 	static styles = homeStyles;
-
 
 	connectedCallback() {
 		super.connectedCallback();
@@ -48,19 +46,17 @@ export class DashboardComponent extends LitElement {
 	}
 
 	private createProjectGroupByRoleComponent(response: any) {
-		const createProjectComponent = (project: any) => {	
+		const createProjectComponent = (project: any) => {
 			return html`
-				<li
-					class="project-item"
-				>
+				<li class="project-item">
 					<span class="project-icon">📁</span>
-					<a  href=${"/home/" + project.projectID}>${project.projectName}</a>
+					<a href=${'/home/' + project.projectID}>${project.projectName}</a>
 				</li>
 			`;
 		};
 		this.data = response;
 		this.projectOrganiser = {
-			"my projects": this.data.filter((project: any) => project.collaboratorRole == 1).map(createProjectComponent),
+			'my projects': this.data.filter((project: any) => project.collaboratorRole == 1).map(createProjectComponent),
 			collaborating: this.data.filter((project: any) => project.collaboratorRole == 2).map(createProjectComponent)
 		};
 	}
@@ -85,7 +81,6 @@ export class DashboardComponent extends LitElement {
 		);
 	}
 
-
 	private formatDate(dateString: string) {
 		if (!dateString) return 'Not set';
 		const date = new Date(dateString);
@@ -101,7 +96,7 @@ export class DashboardComponent extends LitElement {
 						<!-- Search and New Project Button Section -->
 						<section class="sidebar-header">
 							<input type="search" placeholder="Find a project..." class="sidebar-search" />
-							<button class="new-project">+ New Project</button>
+							<a href="http://localhost:8000/create-project" class="new-project">+ New Project</a>
 						</section>
 						<hr class="separator" />
 
@@ -109,7 +104,24 @@ export class DashboardComponent extends LitElement {
 						${this.data &&
 						Object.keys(this.projectOrganiser).map((group: any) => {
 							return html`
-								<h2 class="project-header" ><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder-plus mr-2 h-4 w-4 text-[#F7F0F0]/70"><path d="M12 10v6"></path><path d="M9 13h6"></path><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"></path></svg>${group}</h2>
+								<h2 class="project-header">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="24"
+										height="24"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										class="lucide lucide-folder-plus mr-2 h-4 w-4 text-[#F7F0F0]/70"
+									>
+										<path d="M12 10v6"></path>
+										<path d="M9 13h6"></path>
+										<path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"></path></svg
+									>${group}
+								</h2>
 								<ul>
 									${this.projectOrganiser[group]}
 								</ul>
@@ -123,5 +135,4 @@ export class DashboardComponent extends LitElement {
 			</auth-router>
 		`;
 	}
-
 }
