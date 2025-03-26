@@ -3,4 +3,4 @@ import { routes } from './src/base/main.router';
 
 export const router = new Router(document.querySelector('#outlet')); 
 
-router.setRoutes(routes); 
+router.setRoutes(routes);

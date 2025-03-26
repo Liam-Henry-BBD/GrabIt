@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import com.grabit.app.service.TaskService;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:8000")
 @RequestMapping("/api/tasks")
 public class TaskController {
 
@@ -50,7 +52,7 @@ public class TaskController {
     @PostMapping
     public ResponseEntity<CreateResponseDTO> createTask(@Valid @RequestBody Task task, Authentication authentication) {
         taskService.createTask(task, userService.getAuthenticatedUser(authentication));
-        return ResponseEntity.ok(new CreateResponseDTO("Task created successfully", 201));
+        return ResponseEntity.ok(new CreateResponseDTO("Task created successfully", 201, null));
     }
 
     @PutMapping("/{taskID}")

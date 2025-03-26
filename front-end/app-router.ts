@@ -16,11 +16,18 @@ export class AppRouter extends CtLit {
 
 	static pages: Page[] = [
 		{
-			path: '/home',
+			path: '/',
 			element: html`<home-app></home-app>`,
-			from: () => import('../home/home-app'),
+			from: () => import('./src/home/home-app'),
 			auth: false,
 			title: () => `Dashboard`
+		},
+		{
+			path: '/project/:projectID/leaderboard',
+			element: html`<leaderboard-app></leaderboard-app>`,
+			from: () => import('./src/board/leaderboard'),
+			auth: false,
+			title: () => `Leaderboard`
 		},
 		// {
 		//     path: '/404',
@@ -32,53 +39,45 @@ export class AppRouter extends CtLit {
 		{
 			path: '/login',
 			element: html`<app-login></app-login>`,
-			from: () => import('../login/activities/app-login'),
+			from: () => import('./src/login/activities/app-login'),
 			auth: false,
 			title: () => `Login`
 		},
 		{
 			path: '/projects',
 			element: html`<projects-app></projects-app>`,
-			from: () => import('../home/activities/projects/activities/projects-app'),
+			from: () => import('./src/home/activities/projects/activities/projects-app'),
 			auth: false,
 			title: () => `Login`
 		},
 		{
 			path: '/redirect',
 			element: html`<redirect-app></redirect-app>`,
-			from: () => import('../redirect/activities/redirect-app'),
+			from: () => import('./src/redirect/activities/redirect-app'),
 			auth: false,
 			title: () => `Login`
 		},
 		{
 			path: '/create-project',
 			element: html`<create-project></create-project>`,
-			from: () => import('../components/create-project'),
+			from: () => import('./src/projects/create-project'),
 			auth: false,
 			title: () => `create-project`
 		},
 		{
 			path: '/project/:id',
 			element: html`<project-description></project-description>`,
-			from: () => import('../components/project-description'),
+			from: () => import('./src/projects/project-overview'),
 			auth: false,
 			title: () => `• created-project.com`
 		},
 		{
 			path: '/tutorials',
 			element: html`<tutorials-page></tutorials-page>`,
-			from:  () => import("../components/tutorials-page"),
+			from:  () => import("./src/tutorial/tutorials"),
 			auth: false,
 			title: () => `• tutorial-page.com`
-		},
-
-		{ 
-			path: '/',
-			element: html`<landing-app></landing-app>`,
-			from: () => import('../landing/activities/landing-app'),
-			auth: false,
-			title: () => `* Landing`
-		},
+		}
 	];
 
 	render() {

@@ -1,8 +1,8 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
-@customElement('create-task-modal')
-export class CreateTaskModal extends LitElement {
+@customElement('create-task')
+export class CreateTask extends LitElement {
   @state() name: string = '';
   @state() description: string = '';
   @state() deadline: string = '';

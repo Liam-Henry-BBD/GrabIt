@@ -25,10 +25,9 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/projects")
-@CrossOrigin(origins = "http://localhost:8000")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ProjectController {
     private final Map<String, String> responseMessages;
-
     private final ProjectService projectService;
     private final UserService userService;
 
@@ -46,8 +45,8 @@ public class ProjectController {
     public ResponseEntity<CreateResponseDTO> createProject(@RequestBody ProjectCreationDTO request,
             Authentication authentication) {
         User user = userService.getAuthenticatedUser(authentication);
-        projectService.createProject(request, user);
-        return new ResponseEntity<>(new CreateResponseDTO(responseMessages.get("created"), 201),
+        Project newProject = projectService.createProject(request, user);
+        return new ResponseEntity<>(new CreateResponseDTO(responseMessages.get("created"), 201, newProject != null ? newProject.getProjectID() : null), 
                 HttpStatus.CREATED);
     }
 

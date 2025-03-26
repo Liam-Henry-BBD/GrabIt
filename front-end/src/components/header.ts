@@ -1,5 +1,4 @@
 import { css, customElement, html, LitElement, state } from "@conectate/ct-lit";
-import sendRequest from "../services/requests";
 import { getUser } from "../services/user.service";
 
 
@@ -48,8 +47,11 @@ export class HeaderApp extends LitElement {
 		}
 		#profile-icon {
 			margin-right: 3rem;
-			margin-left: auto;
+			margin-left: 3rem;
 			height: 3rem;
+			width: 3rem;
+			border-radius: 50%;
+
 		}
 		.header input {
 			padding: 0.5rem;

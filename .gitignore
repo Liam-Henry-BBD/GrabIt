@@ -1,7 +1,8 @@
 .vs/
 .vscode/
-.idea/
+*.idea/
 API/target/
+API/.idea/
 !API/.mvn/wrapper/maven-wrapper.jar
 !API/**/src/main/**/target/
 !API/**/src/test/**/target/

@@ -56,8 +56,9 @@ export const svgLoader: () => Plugin = () => {
 export default (opts: { mode: 'production' | 'development'; command: 'build' | 'serve' }) => {
 	return defineConfig({
 		server: {
-			port: Number(process.env.PORT || 3000)
+			port: 8000
 		},
+		
 		define: {
 			'process.env.NODE_ENV': JSON.stringify(opts.mode),
 			'process.env.VERSION': JSON.stringify(app.version)

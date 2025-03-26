@@ -2,7 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
 @customElement('tutorials-page')
-export class TutorialsPage extends LitElement {
+export class Tutorials extends LitElement {
 	@state() activeStep: string | null = null;
 
 	static styles = css`
