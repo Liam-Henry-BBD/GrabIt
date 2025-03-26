@@ -2,11 +2,19 @@ import { Route } from '@vaadin/router';
 
 export const routes: Route[] = [
     {
-      path: '/',
+      path: '/home',
       component: 'home-app',
       action: async () => {
         await import('../home/home-app');
         document.title = 'Dashboard';
+      }
+    },
+    {
+      path: '/',
+      component: 'landing-app',
+      action: async () => {
+        await import('../landing/activities/landing-app');
+        document.title = 'welcome to grabit';
       }
     },
     {
