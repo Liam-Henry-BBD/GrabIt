@@ -242,25 +242,10 @@ export const homeStyles = css`
 		color: #b3b3b3;
 	}
 
-		.points {
-			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
- 
-		}
-
-		.simple {
-			border-left: 8px solid green;
-			background-color: #e8f5e9; /* Light green background */
-		}
-
-		.medium {
-			border-left: 8px solid yellow;
-			background-color: #fffde7; /* Light yellow background */
-		}
-
-		.hard {
-			border-left: 8px solid red;
-			background-color: #ffebee; /* Light red background */
-		}
+	.points {
+		font-weight: bold;
+		color: #ff9800; 
+	}
 
 	.project-item a {
 		text-decoration: none;
