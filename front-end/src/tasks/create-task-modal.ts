@@ -23,24 +23,27 @@ export class CreateTask extends LitElement {
 			align-items: center;
 			padding: 1rem;
 		}
+		/* the pop up box */
 		.modal-content {
 			background-color: #242423;
 			color: #f7f0f0;
 			max-width: 400px;
 			width: 100%;
 			border-radius: 8px;
-			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 1);
 		}
 		.header {
 			display: flex;
 			justify-content: space-between;
 			padding: 1rem;
-			border-bottom: 1px solid #f9a03f;
+			border-bottom: 2px solid #f9a03f;
 		}
+
 		h2 {
 			color: #f9a03f;
 		}
-		button {
+
+		button[type="submit"] {
 			background: none;
 			border: none;
 			cursor: pointer;
@@ -48,17 +51,48 @@ export class CreateTask extends LitElement {
 			padding: 15px;
 			background-color: rgba(80, 137, 145, 0.1);
 		}
+
+		button[type="submit"]:hover {
+			background-color: #508991; 
+		}
+
+		button[type="button"] {
+			background: none;
+			border: none;
+			cursor: pointer;
+			color: #f7f0f0;
+			padding: 15px;
+			background-color: rgba(80, 137, 145, 0.1);
+		}
+
+		button[type="button"]:hover {
+			background-color: #508991; 
+		}
+		
+		button{
+			background: none;
+			border: none;
+			cursor: pointer;
+			color: #f7f0f0;
+			padding: 15px;
+		}
+
+		button:hover {
+			color: #f9a03f;
+		}
+
 		form {
 			padding: 1rem;
 			display: flex;
 			flex-direction: column;
 			gap: 2rem;
 		}
+
 		input,
 		textarea,
 		select {
 			width: 90%;
-			padding: 0.5rem;
+			padding: 1rem;
 			padding-bottom: 0.5rem;
 			border-radius: 4px;
 			border: 1px solid #508991;
@@ -66,22 +100,26 @@ export class CreateTask extends LitElement {
 			margin-top: 10px;
 			color: #f7f0f0;
 		}
+
 		.difficulty-buttons {
 			display: flex;
 			gap: 0.5rem;
 		}
+
 		.difficulty-buttons button {
 			flex: 1;
 			border-radius: 4px;
 			border: 1px solid transparent;
 		}
+
 		.difficulty-buttons .selected {
-			background-color: #f9a03f;
 			color: #f7f0f0;
 		}
+
 		.difficulty-buttons button:hover {
 			background-color: #508991;
 		}
+
 	`;
 
 	handleInput(e: Event): void {
@@ -169,7 +207,6 @@ export class CreateTask extends LitElement {
 								level => html` <button type="button" class=${this.difficulty === level ? 'selected' : ''} @click=${() => this.handleDifficulty(level)}>${level}</button> `
 							)}
 						</div>
-
 						<button type="submit">Create Task</button>
 					</form>
 				</div>

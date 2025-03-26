@@ -79,19 +79,21 @@ export class Leaderboard extends CtLit {
 		return html`
 		    <header>
 				<section class="header">
-				<h1>🏆 Leaderboard</h1>
-                <img  id="logo" src="/src/home/home_images/GI_logo-white.png" alt="Logo">
+				<img id="logo" src="/src/home/home_images/GI_logo-white.png" alt="Logo" @click=${() => window.location.href = 'http://localhost:8000/home'}>
+				${this.leaderboardData.length > 0 ? html`<input type="text" placeholder="Search user" @input=${(e: Event) => (this.searchValue = (e.target as HTMLInputElement).value)} />` : html``}
+
 			</section>
             </header>
 
 			<auth-router>
 				<main class="leaderboard__container">
+				<h1>🏆 Leaderboard</h1>
+
 					<a href= 'http://localhost:8000/home/${this.projectID}'> ← Back to Project</a>
 
-					<h2>Project name: <em>${this.projectDetails?.projectName || 'Loading...'}</em></h2>
+					<h2><em>${this.projectDetails?.projectName || 'Loading...'}</em></h2>
 					<article>
-						<p>Project description: <em>${this.projectDetails?.projectDescription || 'Loading...'}</em></p>
-						${this.leaderboardData.length > 0 ? html`<input type="text" placeholder="Search user" @input=${(e: Event) => (this.searchValue = (e.target as HTMLInputElement).value)} />` : html``}
+						<p><em>${this.projectDetails?.projectDescription || 'Loading...'}</em></p>
 					</article>
 
 					<section class="leaderboard">${this.createPositionCardComponents(this.filteredLeaderboard)}</section>

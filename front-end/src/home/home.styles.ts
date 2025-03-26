@@ -70,12 +70,13 @@ export const homeStyles = css`
 		font-weight: bold;
 		border: none;
 		border-radius: 5px;
-		background-color: #f9a03f; /* Corrected color */
-		color: #ffffff;
+		background-color: #f9a03f; 
+		color: #242423;
 		cursor: pointer;
 		transition: background-color 0.2s ease-in-out;
-		margin-bottom: 0.5rem; /* Added margin for separation */
+		margin-bottom: 0.5rem; 
 		text-decoration: none;
+		text-align: center;
 	}
 
 	.project-header {
@@ -127,22 +128,22 @@ export const homeStyles = css`
 		background-color: rgba(255, 255, 255, 0.1);
 	}
 
-		/* Project Icons */
-		.project-item .project-icon {
-			font-size: 1.2rem;
+	/* Project Icons */
+	.project-item .project-icon {
+		font-size: 1.2rem;
+	}
+
+	/* Sidebar Collapsible on Smaller Screens */
+	@media (max-width: 1024px) {
+		.sidebar {
+			position: absolute;
+			transform: translateX(-100%);
+			transition: transform 0.3s ease-in-out;
 		}
 
-		/* Sidebar Collapsible on Smaller Screens */
-		@media (max-width: 1024px) {
-			.sidebar {
-				position: absolute;
-				transform: translateX(-100%);
-				transition: transform 0.3s ease-in-out;
-			}
-
-		.sidebar.open {
-			transform: translateX(0);
-		}
+	.sidebar.open {
+		transform: translateX(0);
+	}
 	}
 
 	main {
@@ -168,7 +169,6 @@ export const homeStyles = css`
 		margin-bottom: 2rem;
 	}
 
-	/* Task Board Columns */
 	.columns {
 		display: flex;
 		gap: 1rem;
@@ -179,10 +179,8 @@ export const homeStyles = css`
 		flex: 1;
 		border-radius: 5px;
 		height: 28rem;
-		/* overflow: hidden;  */
 	}
 
-	/* Optional: Add a max-height to prevent the column from growing too tall */
 	.column {
 		max-height: 80vh;
 	}
@@ -228,7 +226,7 @@ export const homeStyles = css`
 	.column .cards-container::-webkit-scrollbar {
 		display: none;
 	}
-	/* No Tasks Message */
+
 	.no-tasks {
 		color: #cccccc;
 		font-size: 1.1rem;
@@ -241,11 +239,6 @@ export const homeStyles = css`
 		font-size: 1rem;
 		color: #b3b3b3;
 	}
-
-	/* .points {
-		font-weight: bold;
-		color: #ff9800; 
-	} */
 
 	.project-item a {
 		text-decoration: none;

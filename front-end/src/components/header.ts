@@ -16,7 +16,7 @@ export class HeaderApp extends LitElement {
 	render() {
 		return html`
             <header class="header">
-			<img src="/src/home/home_images/GI_logo-white.png" alt="logo" />
+			<img id="logo" src="/src/home/home_images/GI_logo-white.png" alt="Logo" @click=${() => window.location.href = 'http://localhost:8000'}>
 				<input type="search" placeholder="Search tasks..." />
 				<img id="profile-icon" src=${this.picture ? this.picture : ""} alt="Logo" />
 			</header>
