@@ -4,7 +4,21 @@ export const leaderboardStyles = css`
 	:host {
 		display: block;
 	}
-
+	input {
+		padding: 0.5rem;
+		border-radius: 1rem;
+		background-color: #555;
+		color: #fff;
+		border: none;
+		width: 30rem;
+		right: 0;
+		margin-left:auto;
+		align-self:end;
+	}
+	p{
+		display:flex;
+		/* justify-content: space-between */
+	}
 	.leaderboard__container {
 		min-height: 100vh;
 		padding: 1.5rem;
@@ -117,51 +131,50 @@ export const leaderboardStyles = css`
 			font-size: 1.4rem;
 		}
 	}
-    button {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	gap: 0.5rem;
-	background: linear-gradient(135deg, #f9a03f, #ff7b00);
-	color: white;
-	border: none;
-	padding: 0.8rem 1.5rem;
-	font-size: 1rem;
-	font-weight: 600;
-	border-radius: 0.5rem;
-	cursor: pointer;
-	transition:
-		background 0.3s ease,
-		transform 0.2s ease,
-		box-shadow 0.2s ease;
-	box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-	margin-top: 1rem;
-	align-self: center;
-	text-transform: uppercase;
-	letter-spacing: 0.5px;
-	min-width: 120px;
-}
+	button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		background: linear-gradient(135deg, #f9a03f, #ff7b00);
+		color: white;
+		border: none;
+		padding: 0.8rem 1.5rem;
+		font-size: 1rem;
+		font-weight: 600;
+		border-radius: 0.5rem;
+		cursor: pointer;
+		transition:
+			background 0.3s ease,
+			transform 0.2s ease,
+			box-shadow 0.2s ease;
+		box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+		margin-top: 1rem;
+		align-self: center;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+		min-width: 120px;
+	}
 
-button:hover {
-	background: linear-gradient(135deg, #ff7b00, #f96f00);
-	transform: scale(1.05);
-	box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.25);
-}
+	button:hover {
+		background: linear-gradient(135deg, #ff7b00, #f96f00);
+		transform: scale(1.05);
+		box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.25);
+	}
 
-button:active {
-	transform: scale(0.97);
-	box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
-}
+	button:active {
+		transform: scale(0.97);
+		box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+	}
 
-button:focus {
-	outline: 3px solid rgba(255, 123, 0, 0.8);
-	outline-offset: 2px;
-}
+	button:focus {
+		outline: 3px solid rgba(255, 123, 0, 0.8);
+		outline-offset: 2px;
+	}
 
-progress::-webkit-progress-value {
-	background: linear-gradient(90deg, #aed319, #92c81a);
-	border-radius: 10px;
-	transition: width 0.4s ease-in-out;
-}
-
+	progress::-webkit-progress-value {
+		background: linear-gradient(90deg, #aed319, #92c81a);
+		border-radius: 10px;
+		transition: width 0.4s ease-in-out;
+	}
 `;
