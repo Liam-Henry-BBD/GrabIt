@@ -302,8 +302,6 @@ export const projectOverviewStyles = css`
 	}
 
 	.task .remove-btn {
-		background-color: #f9a03f;
-		color: #fff;
 		border: none;
 		padding: 6px 12px;
 		border-radius: 4px;

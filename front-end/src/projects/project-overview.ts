@@ -2,6 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { projectOverviewStyles } from './projects.styles';
 import '../tasks/create-task-modal';
+import './update-project-modal';
 
 interface Task {
 	taskID: any;
@@ -19,6 +20,7 @@ interface Task {
 @customElement('project-overview')
 export class ProjectOverview extends LitElement {
 	@state() isModalOpen: boolean = false;
+	@state() isUpdateModalOpen: boolean = false;
 	@state() tasks: Task[] = [];
 	@state() project = {
 		projectID: '',
@@ -116,6 +118,7 @@ export class ProjectOverview extends LitElement {
 			console.error('Error fetching tasks:', error);
 		}
 	}
+
 	async handleCreateTask(taskData: Omit<Task, 'taskID' | 'createdAt'>) {
 		const difficultyMapping = {
 			easy: 5,
@@ -222,6 +225,7 @@ export class ProjectOverview extends LitElement {
 						return html`<div class="collaborator-badge" title=${collaborator}>${initials}</div>`;
 					})}
 				</div>
+				<button class="update-btn" @click=${() => (this.isUpdateModalOpen = true)}>Update Project</button>
 			</div>
 
 			${this.isModalOpen
@@ -230,15 +234,27 @@ export class ProjectOverview extends LitElement {
 							.isOpen=${this.isModalOpen}
 							.projectId=${this.project.projectID}
 							@task-submit=${(e: CustomEvent) => this.handleCreateTask(e.detail)}
-							@modal-close=${this.toggleModal}
+							@modal-close=${() => (this.isModalOpen = false)}
 						></create-task>
+					`
+				: ''}
+			${this.isUpdateModalOpen
+				? html`
+						<update-project
+							.isOpen=${this.isUpdateModalOpen}
+							.projectID=${this.project.projectID}
+							.projectName=${this.project.projectName}
+							.projectDescription=${this.project.projectDescription}
+							@modal-close=${() => (this.isUpdateModalOpen = false)}
+							@project-updated=${this.fetchProjectData}
+						></update-project>
 					`
 				: ''}
 
 			<div class="task-list-container">
 				<div class="task-list-header">
 					<h2 class="task-list-title">Tasks</h2>
-					<button @click=${this.toggleModal}>Add Task</button>
+					<button @click=${() => (this.isModalOpen = true)}>Add Task</button>
 				</div>
 
 				<div class="no-tasks" ?hidden=${this.tasks.length > 0}>
