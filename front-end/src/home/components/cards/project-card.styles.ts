@@ -28,9 +28,23 @@ export const cardStyles = css`
 
 .points {
     font-size: 1rem;
-    color: #f9a03f;
-    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.2rem;
+
 }
+
+.simple {
+    color: green; 
+}
+
+.medium {
+    color: yellow; 
+}
+
+.hard {
+    color: red; 
+}
+
 
 .card-btn {
     border: 1px solid #f99f3f26;
