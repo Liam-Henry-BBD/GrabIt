@@ -7,7 +7,7 @@ export class CreateProject extends LitElement {
 	@state() name: string = '';
 	@state() description: string = '';
 	@state() collaboratorEmail: string = '';
-	@state() collaborators: string[] = [];
+	@state() collaborators: { gitHubID: string; userID: number }[] = [];
 	@state() projects: any[] = [];
 
 	private urls = {
@@ -64,14 +64,70 @@ export class CreateProject extends LitElement {
 		(this[name] as string) = target.value;
 	}
 
-	handleAddCollaborator() {
-		const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		if (this.collaboratorEmail && emailPattern.test(this.collaboratorEmail) && !this.collaborators.includes(this.collaboratorEmail)) {
-			this.collaborators = [...this.collaborators, this.collaboratorEmail];
-			this.collaboratorEmail = '';
-		} else {
-			alert('Please enter a valid email address.');
+	async handleAddCollaborator() {
+		try {
+			const searchUrl = `http://localhost:8081/api/user/search?query=${this.collaboratorEmail}`;
+			const results = await this.apiRequest(searchUrl, 'GET');
+			if (!results.length) {
+				alert('No users found with that email address.');
+				return;
+			}
+			this.renderDropdown(results);
+		} catch (error) {
+			console.error('Error fetching collaborators:', error);
+			alert('Failed to fetch collaborators. Please try again.');
 		}
+	}
+
+	renderDropdown(results: { gitHubID: string; userID: number }[]) {
+		const container = this.shadowRoot?.querySelector('.collaborator-container');
+		if (!container) return;
+
+		const existingDropdown = container.querySelector('.dropdown');
+		if (existingDropdown) existingDropdown.remove();
+
+		const dropdown = document.createElement('div');
+		dropdown.className = 'dropdown';
+
+		results.forEach(result => {
+			const item = document.createElement('article');
+			item.className = 'dropdown-item';
+			item.textContent = result.gitHubID;
+
+			item.addEventListener('click', () => {
+				if (!this.collaborators.some(c => c.userID === result.userID)) {
+					this.collaborators = [...this.collaborators, result];
+					this.collaboratorEmail = '';
+					this.requestUpdate();
+				}
+				closeDropdown();
+			});
+
+			dropdown.appendChild(item);
+		});
+
+		container.appendChild(dropdown);
+
+		const closeDropdown = () => {
+			dropdown.remove();
+			document.removeEventListener('click', handleClickOutside);
+			document.removeEventListener('keydown', handleKeyDown);
+		};
+
+		const handleClickOutside = (event: MouseEvent) => {
+			if (!dropdown.contains(event.target as Node)) {
+				closeDropdown();
+			}
+		};
+
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if (event.key === 'Escape') {
+				closeDropdown();
+			}
+		};
+
+		document.addEventListener('click', handleClickOutside);
+		document.addEventListener('keydown', handleKeyDown);
 	}
 
 	async handleSubmit(e: Event) {
@@ -95,15 +151,28 @@ export class CreateProject extends LitElement {
 
 	renderCollaboratorList() {
 		if (!this.collaborators.length) return '';
-		return html`<div class="collaborator-list">${this.collaborators.map(collaborator => html`<div>${collaborator}</div>`)}</div>`;
+		return html`<div class="collaborator-list">
+			${this.collaborators.map(
+				collaborator =>
+					html`<div class="colab-list-item">
+						${collaborator.gitHubID}<button
+							type="button"
+							@click=${() => (this.collaborators = this.collaborators.filter(collab => collaborator.gitHubID != collab.gitHubID))}
+							class="remove"
+						>
+							remove
+						</button>
+					</div>`
+			)}
+		</div>`;
 	}
 
 	render() {
 		return html`
-		<header class="create-project-header">
-			<img  id="logo" src="/src/home/home_images/GI_logo-white.png" alt="Logo">
-		</header>
-		<h1> Create New Project</h1>
+			<header class="create-project-header">
+				<img id="logo" src="/src/home/home_images/GI_logo-white.png" alt="Logo" />
+			</header>
+			<h1>Create New Project</h1>
 			<form @submit=${this.handleSubmit}>
 				<h2>Project Name</h2>
 				<input type="text" name="name" .value=${this.name} @input=${this.handleInput} placeholder="Write your project name here" required />
