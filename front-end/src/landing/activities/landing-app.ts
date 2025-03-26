@@ -550,7 +550,7 @@ export class LandingApp extends CtLit {
             <section>
                 <h1>Boost team productivity with seamless task management and progress tracking</h1>
                 <p>Join the most effective platform in managing projects</p>
-                <a class="get-started" href = 'http://localhost:8000/login'>Get Started</a></li>
+                <a class="get-started" href = 'http://localhost:8000/home'>Get Started</a></li>
             </section>
             </section>
 

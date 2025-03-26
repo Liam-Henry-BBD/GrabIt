@@ -78,7 +78,7 @@ export class Leaderboard extends CtLit {
 		return html`
 			<auth-router>
 				<main class="leaderboard__container">
-					<button @click=${() => (window.location.href = '/')}>Back to Project</button>
+					<a href= 'http://localhost:8000/home'>Back to Project</a>
 
 					<h1>
 						<svg

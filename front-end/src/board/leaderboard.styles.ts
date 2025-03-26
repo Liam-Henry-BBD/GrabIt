@@ -131,7 +131,7 @@ export const leaderboardStyles = css`
 			font-size: 1.4rem;
 		}
 	}
-	button {
+	a {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
@@ -154,6 +154,7 @@ export const leaderboardStyles = css`
 		text-transform: uppercase;
 		letter-spacing: 0.5px;
 		min-width: 120px;
+		text-decoration: none;
 	}
 
 	button:hover {
