@@ -1,6 +1,7 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { projectOverviewStyles } from './projects.styles';
+import { formatDate } from '../utils/app';
 import '../tasks/create-task-modal';
 import './update-project-modal';
 
@@ -12,9 +13,11 @@ interface Task {
 	projectDescription: string;
 	taskName: string;
 	taskDescription: string;
-	taskDeadline?: Date;
-	createdAt: Date;
-	difficulty: 5 | 10 | 15;
+	difficulty: 'easy' | 'medium' | 'hard';
+	taskDeadline?: any;
+	createdAt: any;
+	taskPointID: 5 | 10 | 15;
+	active: boolean;
 }
 
 @customElement('project-overview')
@@ -26,8 +29,8 @@ export class ProjectOverview extends LitElement {
 		projectID: '',
 		projectName: '',
 		projectDescription: '',
-		createdAt: new Date(),
-		updatedAt: new Date(),
+		createdAt: Date(),
+		updatedAt: Date(),
 		collaborators: [] as string[]
 	};
 
@@ -66,8 +69,8 @@ export class ProjectOverview extends LitElement {
 					projectID: projectData.projectID,
 					projectName: projectData.projectName,
 					projectDescription: projectData.projectDescription,
-					createdAt: new Date(projectData.createdAt),
-					updatedAt: new Date(projectData.updatedAt),
+					createdAt: formatDate(projectData.createdAt),
+					updatedAt: formatDate(projectData.updatedAt),
 					collaborators: projectData.collaborators || []
 				};
 				this.fetchTasks();
@@ -103,14 +106,15 @@ export class ProjectOverview extends LitElement {
 
 			if (res.ok) {
 				const tasks = await res.json();
-
 				this.tasks = tasks
-					.filter((task: any) => task.isActive !== 0)
+					.filter((task: any) => task.active != false)
 					.map((task: any) => ({
 						...task,
-						createdAt: task.createdAt ? new Date(task.createdAt) : null,
-						deadline: task.deadline ? new Date(task.deadline) : null
+						difficulty: task.difficulty,
+						createdAt: formatDate(task.createdAt),
+						deadline: formatDate(task.taskDeadline)
 					}));
+				console.log('Filtered & Mapped Tasks:', this.tasks, tasks.taskDifficulty);
 			} else {
 				console.error(`Failed to fetch tasks. Status: ${res.status}`);
 			}
@@ -128,9 +132,8 @@ export class ProjectOverview extends LitElement {
 
 		const newTask = {
 			...taskData,
-			difficulty: difficultyMapping[taskData.difficulty as unknown as 'easy' | 'medium' | 'hard'],
 			project: { projectID: this.project.projectID },
-			taskPoint: { taskPointID: difficultyMapping[taskData.difficulty as unknown as 'easy' | 'medium' | 'hard'] },
+			taskPoint: { taskPointID: difficultyMapping[taskData.difficulty] },
 			taskStatus: { taskStatusID: 1 }
 		};
 
@@ -162,6 +165,9 @@ export class ProjectOverview extends LitElement {
 	}
 
 	async handleRemoveTask(taskID: string) {
+		const confirmDelete = window.confirm('Are you sure you want to delete this task?');
+		if (!confirmDelete) return;
+
 		try {
 			const token = localStorage.getItem('token');
 			if (!token) {
@@ -186,7 +192,7 @@ export class ProjectOverview extends LitElement {
 		}
 	}
 
-	getDifficultyColor(difficulty: Task['difficulty']) {
+	getDifficultyColor(difficulty: Task['taskPointID']) {
 		switch (difficulty) {
 			case 5:
 				return 'green';
@@ -204,14 +210,14 @@ export class ProjectOverview extends LitElement {
 	render() {
 		return html`
 			<section class="header">
-				<img id="logo" src="/src/home/home_images/GI_logo-white.png" alt="Logo" @click=${() => window.location.href = 'http://localhost:8000/home'}>
+				<img id="logo" src="/src/home/home_images/GI_logo-white.png" alt="Logo" @click=${() => (window.location.href = 'http://localhost:8000/home')} />
 			</section>
 			<div class="project-header">
 				<h1>${this.project.projectName}</h1>
 				<p>${this.project.projectDescription}</p>
 				<div class="dates-container">
-					<p>Created: ${this.project.createdAt.toLocaleDateString()}</p>
-					<p>Updated: ${this.project.updatedAt.toLocaleDateString()}</p>
+					<p>Created: ${formatDate(this.project.createdAt)}</p>
+					<p>Updated: ${formatDate(this.project.updatedAt)}</p>
 				</div>
 				<h3>Collaborators:</h3>
 				<div class="collaborators-container">
@@ -268,9 +274,9 @@ export class ProjectOverview extends LitElement {
 									<h3>${task.taskName}</h3>
 								</div>
 								<p>${task.taskDescription}</p>
-								${task.taskDeadline ? html`<p>Deadline: ${task.taskDeadline.toLocaleDateString()}</p>` : ''}
-								<p>Created: ${task.createdAt ? task.createdAt.toLocaleDateString() : 'Unknown'}</p>
-								<p style="color: ${this.getDifficultyColor(task.difficulty)}">Difficulty: ${task.difficulty}</p>
+								${task.taskDeadline ? html`<p>Deadline: ${formatDate(task.taskDeadline)}</p>` : ''}
+								<p>Created: ${formatDate(task.createdAt)}</p>
+								<p style="color: ${this.getDifficultyColor(task.taskPointID)}">Difficulty: ${task.taskPointID}</p>
 								<button class="remove-btn" @click=${() => this.handleRemoveTask(task.taskID)}>Remove</button>
 							</div>
 						`
