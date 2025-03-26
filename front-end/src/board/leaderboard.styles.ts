@@ -12,13 +12,10 @@ export const leaderboardStyles = css`
 		border: none;
 		width: 30rem;
 		right: 0;
-		margin-left:auto;
-		align-self:end;
+		margin-left: auto;
+		align-self: end;
 	}
-	p{
-		display:flex;
-		/* justify-content: space-between */
-	}
+
 	.leaderboard__container {
 		min-height: 100vh;
 		padding: 1.5rem;
@@ -33,7 +30,11 @@ export const leaderboardStyles = css`
 	.leaderboard__container svg {
 		color: #f9a03f;
 	}
-
+	article {
+		display: flex;
+		flex-direction: row;
+		margin: 0.5rem;
+	}
 	h1,
 	h2 {
 		text-align: center;
@@ -139,8 +140,8 @@ export const leaderboardStyles = css`
 		background: linear-gradient(135deg, #f9a03f, #ff7b00);
 		color: white;
 		border: none;
-		padding: 0.8rem 1.5rem;
-		font-size: 1rem;
+		padding: 0.3rem 1rem;
+		font-size: 1.8em;
 		font-weight: 600;
 		border-radius: 0.5rem;
 		cursor: pointer;
@@ -153,7 +154,7 @@ export const leaderboardStyles = css`
 		align-self: center;
 		text-transform: uppercase;
 		letter-spacing: 0.5px;
-		min-width: 120px;
+		min-width: 3rem;
 	}
 
 	button:hover {
