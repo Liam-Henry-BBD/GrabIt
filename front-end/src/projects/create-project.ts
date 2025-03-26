@@ -142,6 +142,18 @@ export class CreateProject extends LitElement {
 
 		this.apiRequest(this.urls.createProject, 'POST', project)
 			.then(newProject => {
+				this.apiRequest(
+					'http://localhost:8081/api/project-collaborators/list',
+					'POST',
+					this.collaborators.map(collab => {
+						const collaborator: any = { ...collab };
+						collaborator.joinedAt = new Date().toISOString();
+						collaborator.projectId = newProject.projectId;
+						collaborator.isActive = true;
+						collaborator.roleID = 2;
+						return collaborator;
+					})
+				);
 				window.location.href = `/project/${newProject.projectId}`;
 			})
 			.catch(error => {
