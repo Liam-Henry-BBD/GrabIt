@@ -34,6 +34,7 @@ export class Leaderboard extends CtLit {
 
 	/** Returns the filtered leaderboard based on searchValue */
 	get filteredLeaderboard() {
+		if (!this.searchValue) return this.leaderboardData;
 		return this.leaderboardData.filter(user => user.githubID.toLowerCase().includes(this.searchValue.toLowerCase()));
 	}
 
@@ -41,7 +42,7 @@ export class Leaderboard extends CtLit {
 		if (listOfColaboratorsWithScores.length === 0) return html`<p>No results found</p>`;
 
 		const firstPlaceScore = listOfColaboratorsWithScores[0]?.totalScore || 1;
-
+		
 		return listOfColaboratorsWithScores.map(user => {
 			const progressValue = (user.totalScore / firstPlaceScore) * 100;
 			return html`
@@ -90,7 +91,7 @@ export class Leaderboard extends CtLit {
 					<h2>Project name: <em>${this.projectDetails?.projectName || 'Loading...'}</em></h2>
 					<article>
 						<p>Project description: <em>${this.projectDetails?.projectDescription || 'Loading...'}</em></p>
-						<input type="text" placeholder="Search user" @input=${(e: Event) => (this.searchValue = (e.target as HTMLInputElement).value)} />
+						${this.leaderboardData.length > 0 ? html`<input type="text" placeholder="Search user" @input=${(e: Event) => (this.searchValue = (e.target as HTMLInputElement).value)} />` : html``}
 					</article>
 
 					<section class="leaderboard">${this.createPositionCardComponents(this.filteredLeaderboard)}</section>

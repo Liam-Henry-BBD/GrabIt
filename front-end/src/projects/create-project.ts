@@ -100,7 +100,9 @@ export class CreateProject extends LitElement {
 
 	render() {
 		return html`
+		<header class="create-project-header">
 			<h1>Create New Project</h1>
+		</header>
 			<form @submit=${this.handleSubmit}>
 				<h2>Project Name</h2>
 				<input type="text" name="name" .value=${this.name} @input=${this.handleInput} placeholder="Write your project name here" required />

@@ -242,10 +242,10 @@ export const homeStyles = css`
 		color: #b3b3b3;
 	}
 
-	.points {
+	/* .points {
 		font-weight: bold;
 		color: #ff9800; 
-	}
+	} */
 
 	.project-item a {
 		text-decoration: none;
