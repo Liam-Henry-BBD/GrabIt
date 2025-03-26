@@ -103,10 +103,10 @@ export class Leaderboard extends CtLit {
 						Leaderboard
 					</h1>
 					<h2>Project name: <em>${this.projectDetails?.projectName || 'Loading...'}</em></h2>
-					<p>
-						Project description: <em>${this.projectDetails?.projectDescription || 'Loading...'}</em>
+					<article>
+						<p>Project description: <em>${this.projectDetails?.projectDescription || 'Loading...'}</em></p>
 						<input type="text" placeholder="Search user" @input=${(e: Event) => (this.searchValue = (e.target as HTMLInputElement).value)} />
-					</p>
+					</article>
 
 					<section class="leaderboard">${this.createPositionCardComponents(this.filteredLeaderboard)}</section>
 				</main>
