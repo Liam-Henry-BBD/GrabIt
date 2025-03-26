@@ -133,6 +133,7 @@ export const homeStyles = css`
 		.project-item .project-icon {
 			font-size: 1.2rem;
 		}
+
 		/* Sidebar Collapsible on Smaller Screens */
 		@media (max-width: 1024px) {
 			.sidebar {
@@ -248,8 +249,23 @@ export const homeStyles = css`
 		}
 
 		.points {
-			font-weight: bold;
-			color: #ff9800; 
+			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+ 
+		}
+
+		.simple {
+			border-left: 8px solid green;
+			background-color: #e8f5e9; /* Light green background */
+		}
+
+		.medium {
+			border-left: 8px solid yellow;
+			background-color: #fffde7; /* Light yellow background */
+		}
+
+		.hard {
+			border-left: 8px solid red;
+			background-color: #ffebee; /* Light red background */
 		}
 
         .project-item a {

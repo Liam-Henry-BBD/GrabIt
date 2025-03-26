@@ -8,7 +8,6 @@ import { homeStyles } from './home.styles';
 @customElement('home-app')
 export class DashboardComponent extends LitElement {
 
-	//Styles
 	static styles = homeStyles;
 
 
