@@ -45,23 +45,23 @@ export const routes: Route[] = [
       path: '/create-project',
       component: 'create-project',
       action: async () => {
-        await import('../components/create-project');
-        document.title = 'Create Project';
+        await import('../projects/create-project');
+        document.title = '• created-project.com';
       }
     },
     {
       path: '/project/:id',
-      component: 'project-description',
+      component: 'project-overview',
       action: async () => {
-        await import('../components/project-description');
-        document.title = '• created-project.com';
+        await import('../projects/project-overview');
+        document.title = '• project-overview.com';
       }
     },
     {
       path: '/tutorials',
       component: 'tutorials-page',
       action: async () => {
-        await import('../components/tutorials-page');
+        await import('../tutorial/tutorials');
         document.title = '• tutorial-page.com';
       }
     }

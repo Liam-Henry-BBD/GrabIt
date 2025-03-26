@@ -1,5 +1,4 @@
 import { css, customElement, html, LitElement, state } from "@conectate/ct-lit";
-import sendRequest from "../services/requests";
 import { getUser } from "../services/user.service";
 
 

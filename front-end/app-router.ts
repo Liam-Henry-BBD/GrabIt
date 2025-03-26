@@ -60,21 +60,21 @@ export class AppRouter extends CtLit {
 		{
 			path: '/create-project',
 			element: html`<create-project></create-project>`,
-			from: () => import('./src/components/create-project'),
+			from: () => import('./src/projects/create-project'),
 			auth: false,
 			title: () => `create-project`
 		},
 		{
 			path: '/project/:id',
 			element: html`<project-description></project-description>`,
-			from: () => import('./src/components/project-description'),
+			from: () => import('./src/projects/project-overview'),
 			auth: false,
 			title: () => `• created-project.com`
 		},
 		{
 			path: '/tutorials',
 			element: html`<tutorials-page></tutorials-page>`,
-			from:  () => import("./src/components/tutorials-page"),
+			from:  () => import("./src/tutorial/tutorials"),
 			auth: false,
 			title: () => `• tutorial-page.com`
 		}

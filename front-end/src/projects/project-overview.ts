@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import './create-task-modal';
+import '../tasks/create-task-modal';
 
 interface Task {
     id: string;
@@ -12,8 +12,8 @@ interface Task {
     difficulty: 'easy' | 'medium' | 'hard';
 }
 
-@customElement('project-description')
-export class ProjectDetails extends LitElement {
+@customElement('project-overview')
+export class ProjectOverview extends LitElement {
     @state() isModalOpen: boolean = false;
     @state() tasks: Task[] = [];
     @state() project = {
@@ -200,8 +200,8 @@ export class ProjectDetails extends LitElement {
 	
 				this.project = {
 					projectID: projectData.projectID, 
-					projectName: projectData.projectName || 'Unnamed Project', 
-					projectDescription: projectData.projectDescription || 'No description available.',
+					projectName: projectData.projectName, 
+					projectDescription: projectData.projectDescription,
 					createdAt: new Date(projectData.createdAt),
 					updatedAt: new Date(projectData.updatedAt),
 					collaborators: projectData.collaborators || []
