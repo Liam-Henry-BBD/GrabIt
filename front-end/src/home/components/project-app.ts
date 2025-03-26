@@ -1,10 +1,12 @@
-import { getMyProjectTasks, getProject, getProjectTasks } from "../../services/projects.service";
+import { getProject, getProjectTasks } from "../../services/projects.service";
 import { RouterLocation } from "@vaadin/router";
-import { css, CtLit, html } from "@conectate/ct-lit";
+import { CtLit, html } from "@conectate/ct-lit";
 import { customElement, property, state } from 'lit/decorators.js';
-import { Project, Task } from "../../utils/types";
+import { Project, Task, User } from "../../utils/types";
 import { projectAppStyles } from "./project-app.styles";
-import { grabTask } from "../../services/task.service";
+import { filterTasks } from "../../utils/app";
+import { getUser } from "../../services/user.service";
+import { grabTask, requestTaskReview } from "../../services/task.service";
 
 
 @customElement("project-app")
@@ -20,8 +22,18 @@ export class ProjectApp extends CtLit {
         projectDescription: "",
         createdAt: "",
         updatedAt: "",
-        active: false
+        active: false,
+        collaboratorRole: 0,
     };
+
+    @state()
+    private currentUser: User = {
+        email: "",
+        fullName: "",
+        picture: "",
+        verified: false,
+        userID: 0,
+    }
 
     @state()
     private projectID: number = 0;
@@ -44,14 +56,16 @@ export class ProjectApp extends CtLit {
     }
 
     async fetchData() {
-        console.log(this.projectID);
+        
         const response = await getProjectTasks(this.projectID);
-        const myTasks = await getMyProjectTasks(this.projectID);
+        
         const project = await getProject(this.projectID);
-        console.log(myTasks);
+
+        this.currentUser = await getUser() as User;
+       
         this.project = project;
         this.tasks = response;
-        console.log(this.tasks);
+        this.tasks = filterTasks(this.tasks, this.currentUser.userID);
 
         this.available = this.tasks.filter(task => task.taskStatusID == 1).length;
         this.grabbed = this.tasks.filter(task => task.taskStatusID == 2).length;
@@ -60,13 +74,19 @@ export class ProjectApp extends CtLit {
     }
 
 
-    async handleGrabTask(taskID: number) {
-        console.log(taskID, this.projectID);
-        // const response = await grabTask(taskID, this.projectID);
-        // console.log(response);
+    async handleGrabTask(taskID: number, projectID: number) {
+        const grabbedTask = await grabTask(taskID, projectID) as Task;
+        if (grabbedTask != null) {
+           window.location.reload()
+        }
     }
 
-    async requestReview() {}
+    async handleRequestReview(taskID: number, _: number) {
+        const requestReview = await requestTaskReview(taskID) as Task;
+        if (requestReview != null) {
+           window.location.reload()
+        }
+    }
 
     async completeTask() {
 
@@ -83,8 +103,8 @@ export class ProjectApp extends CtLit {
 
             <section class="project-head">
                 <article class="project-details" >
-                    <h1>${this.project ? this.project.projectName : 'Create or select a project'}</h1>
-                    <p class="project-desc">${this.project ? this.project.projectDescription : 'Your current open projects details will be available here'}</p>
+                    <h1>${this.project ? this.project.projectName : 'Loading...'}</h1>
+                    <p class="project-desc">${this.project ? this.project.projectDescription : '...'}</p>
                 </article>
                 <article>
                 <section class="article-buttons">
@@ -104,7 +124,8 @@ export class ProjectApp extends CtLit {
                         <div class="column-space"><span>Available</span> <span class="task-count">${this.available}</span></div>
                         ${
                             this.tasks.filter(task => task.taskStatusID == 1).map(task => {
-                               return html`<project-card .handleTaskAction=${this.handleGrabTask} .task=${task} .action=${"Grab task"}></project-card>`;
+                                const allowedToGrab = (this.project.collaboratorRole != 1); 
+                                return html`<project-card .visible=${allowedToGrab} .handleTaskAction=${this.handleGrabTask} .task=${task} .action=${"Grab task"}></project-card>`;
                             })
                         }
                     </article>
@@ -113,7 +134,8 @@ export class ProjectApp extends CtLit {
                         <div class="column-space"><span>Grabbed</span> <span class="task-count">${this.grabbed}</span></div>
                         ${
                             this.tasks.filter(task => task.taskStatusID == 2).map(task => {
-                                return html`<project-card .handleTaskAction=${this.handleGrabTask} .task=${task} .action=${"Request review"}></project-card>`;
+                                const allowedToGrab = (this.project.collaboratorRole != 1) && task.userID == this.currentUser.userID;
+                                return html`<project-card .visible=${allowedToGrab} .handleTaskAction=${this.handleRequestReview} .task=${task} .action=${"Request review"}></project-card>`;
                             })
                         }
                     </article>
@@ -122,7 +144,8 @@ export class ProjectApp extends CtLit {
                         <div class="column-space"><span>In Review</span> <span class="task-count">${this.review}</span></div>
                         ${
                             this.tasks.filter(task => task.taskStatusID == 3).map(task => {
-                               return html`<project-card .handleTaskAction=${this.handleGrabTask} .task=${task} .action=${"Complete"}></project-card>`;
+                                const allowedToComplete = (this.project.collaboratorRole == 1);
+                                return html`<project-card .visible=${allowedToComplete} .handleTaskAction=${this.handleGrabTask} .task=${task} .action=${"Complete"}></project-card>`;
                             })
                         }
                     </article>

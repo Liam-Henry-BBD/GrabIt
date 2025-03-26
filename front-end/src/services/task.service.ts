@@ -11,7 +11,7 @@ export const grabTask = async (taskID: number, projectID: number) => {
     }
 }
 
-export const requestTaskReview = async (taskID: string) => {
+export const requestTaskReview = async (taskID: number) => {
     try {
         const response = await sendRequest(`/tasks/${taskID}/status/3`, {
             method: "PUT"

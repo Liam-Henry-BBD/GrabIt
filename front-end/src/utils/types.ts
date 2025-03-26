@@ -5,7 +5,9 @@ export interface Task {
     taskCreatedAt: string
     taskPointID: number
     taskStatusID: number
-    taskReviewRequestedAt: any
+    taskReviewRequestedAt: any;
+    userID: number;
+    projectID: number;
   }
   
 
@@ -16,4 +18,15 @@ export interface Project {
     createdAt: string
     updatedAt: string
     active: boolean
+    collaboratorRole: number
 }
+
+
+export interface User {
+    email: string
+    fullName: string
+    picture: string
+    verified: boolean
+    userID: number;
+  }
+  

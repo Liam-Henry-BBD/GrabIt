@@ -10,7 +10,7 @@ export class RedirectComponent extends LitElement {
         const token = urlParams.get('token');
         if (token) {
             localStorage.setItem('token', token);
-                window.location.href = '/';
+            window.location.href = '/home';
         }
     }
 
