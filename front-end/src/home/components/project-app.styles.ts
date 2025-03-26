@@ -39,8 +39,6 @@ export const projectAppStyles = css`
 	a {
 		text-decoration: none;
 		text-align: center;
-		width: fit-content;
-		padding: 1em;
 	}
 	/* Task Board Columns */
 	.columns {
@@ -53,7 +51,7 @@ export const projectAppStyles = css`
 	.new-project-body,
 	.new-collaborator,
 	.leaderboard-button {
-		padding: 1rem 0;
+		padding: 1rem .5rem;
 		font-size: 0.8rem;
 		width: 150px;
 		border: none;
