@@ -4,13 +4,52 @@ export const leaderboardStyles = css`
 	:host {
 		display: block;
 	}
+
+	header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		background-color: #242423;
+		border-color: wheat;
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 5rem;
+		z-index: 1000;
+		padding: 0 2rem; 
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	
+	}
+
+	.header {
+		display: flex;
+		width: 100%;
+		justify-content: center; 
+		align-items: center;
+	}
+
+	#logo {
+		position: absolute;
+		left: 0;
+		height: 10rem;
+		width: 10rem;
+	}
+
+	h1 {
+		text-align: center;
+		margin: 0; 
+		color: white;
+	}
+
+	/* -------------------------------------------------- */
+
 	input {
 		padding: 0.5rem;
 		border-radius: 1rem;
-		background-color: #555;
-		color: #fff;
-		border: none;
-		width: 30rem;
+		background-color: transparent;
+		border-color:#f9a03f;
+		width: 18rem;
 		right: 0;
 		margin-left: auto;
 		align-self: end;
@@ -27,9 +66,17 @@ export const leaderboardStyles = css`
 		border-radius: 1rem;
 	}
 
-	.leaderboard__container svg {
-		color: #f9a03f;
+	.leaderboard__container a{
+		background-color: #f9a03f;
+		color: #242423;
+		padding: 0.5rem;
+		border-radius: 1rem;
+		text-decoration: none;
+
+
 	}
+
+
 	article {
 		display: flex;
 		flex-direction: row;
@@ -132,7 +179,7 @@ export const leaderboardStyles = css`
 			font-size: 1.4rem;
 		}
 	}
-	a {
+	/* a {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
@@ -156,7 +203,7 @@ export const leaderboardStyles = css`
 		letter-spacing: 0.5px;
 		min-width: 120px;
 		text-decoration: none;
-	}
+	} */
 
 	button:hover {
 		background: linear-gradient(135deg, #ff7b00, #f96f00);

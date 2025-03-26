@@ -2,7 +2,7 @@ import { css } from "lit";
 
 export const homeStyles = css`
 		:host {
-			background-color: #1e1e1e;
+			background-color: #242423;
 			color: #fff;
 			display: flex;
 			height: 100vh;
@@ -11,7 +11,7 @@ export const homeStyles = css`
 		}
 
 		.dashboard {
-			margin-top: 5rem; /* Adjust for header spacing */
+			margin-top: 5rem; 
 			height: calc(100vh - 5rem);
 			width: 100vw;
 			overflow: hidden;
@@ -23,7 +23,7 @@ export const homeStyles = css`
 			display: flex;
 			flex-direction: column;
             justify-content: start;
-			background-color: #2c2c2c;
+			background-color: #242423;
 			width: 17rem;
 			padding: 2rem 1rem;
 			height: 100vh;
@@ -72,7 +72,7 @@ export const homeStyles = css`
 			font-weight: bold;
 			border: none;
 			border-radius: 5px;
-			background-color: #ff9800; /* Corrected color */
+			background-color: #F9A03F; /* Corrected color */
 			color: #ffffff;
 			cursor: pointer;
 			transition: background-color 0.2s ease-in-out;

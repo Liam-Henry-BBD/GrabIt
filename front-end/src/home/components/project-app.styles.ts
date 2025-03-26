@@ -9,7 +9,7 @@ export const projectAppStyles = css`
 
 /* New Task Button */
     .new-project-body {
-        background-color: #806f57; 
+        background-color: #ff9800; 
         color: #ffffff;
     }
 
