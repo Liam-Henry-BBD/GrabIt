@@ -47,7 +47,7 @@ export class ProjectCard extends CtLit {
     
         return html`
             <div class="project-card">
-                <h3>${this.task.taskName} <span class="points ${getPointClass(this.task.taskPointID)}">${this.task.taskPointID} pts</span></h3>
+                <h3>${this.task.taskName} <span class="points ${getPointClass(this.task.taskPointID)}">${this.task.taskPointID}</span></h3>
                 <p class="task-description">${this.task.taskDescription.slice(0, 95)}...</p>
                 <p class="due-date">Due: ${formatDate(this.task.taskCreatedAt)}</p>
     
