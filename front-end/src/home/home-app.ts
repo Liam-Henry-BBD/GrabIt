@@ -56,7 +56,7 @@ export class DashboardComponent extends LitElement {
 					
 				>
 					<span class="project-icon">📁</span>
-					<a  href=${"/project/" + project.projectID}>${project.projectName}</a>
+					<a  href=${"/home/" + project.projectID}>${project.projectName}</a>
 				</li>
 			`;
 		};

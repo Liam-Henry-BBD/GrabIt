@@ -15,7 +15,7 @@ export const routes: Route[] = [
 
       children: [
         {
-            path: 'project/:projectID',
+            path: '/:projectID',
             component: 'project-app',
         }
       ]
