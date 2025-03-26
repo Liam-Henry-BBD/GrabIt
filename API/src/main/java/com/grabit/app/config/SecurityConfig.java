@@ -42,7 +42,7 @@ public class SecurityConfig {
                                 .successHandler((request, response, authentication) -> {
                                     OidcUser user = (OidcUser) authentication.getPrincipal();
                                     TokenDTO token = new TokenDTO(user.getIdToken().getTokenValue());
-                                    response.sendRedirect("http://localhost:3000/redirect?token=" + token.getToken());
+                                    response.sendRedirect("http://localhost:8000/redirect?token=" + token.getToken());
                                 })
                 )
                 .csrf(csrf -> csrf
