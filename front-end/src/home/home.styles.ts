@@ -1,40 +1,37 @@
 import { css } from 'lit';
 
 export const homeStyles = css`
-		:host {
-			background-color: #242423;
-			color: #fff;
-			display: flex;
-			height: 100vh;
-			width: 100%;
-			overflow: hidden;
-		}
+	:host {
+		background-color: #242423;
+		color: #fff;
+		display: flex;
+		height: 100vh;
+		width: 100%;
+		overflow: hidden;
+	}
 
-		.dashboard {
-			margin-top: 5rem; 
-			height: calc(100vh - 5rem);
-			width: 100vw;
-			overflow: hidden;
-			display: flex;
-		}
+	.dashboard {
+		margin-top: 5rem;
+		height: calc(100vh - 5rem);
+		width: 100vw;
+		overflow: hidden;
+		display: flex;
+	}
 
-		/* Sidebar Styling */
-		.sidebar {
-			display: flex;
-			flex-direction: column;
-            justify-content: start;
-			background-color: #242423;
-			width: 17rem;
-			padding: 2rem 1rem;
-			height: 100vh;
-			border-right: 1px solid rgba(255, 255, 255, 0.1);
-			transition: transform 0.3s ease-in-out;
-			overflow-y: auto;
-			box-sizing: border-box;
-
-		}
-
-
+	/* Sidebar Styling */
+	.sidebar {
+		display: flex;
+		flex-direction: column;
+		justify-content: start;
+		background-color: #242423;
+		width: 17rem;
+		padding: 2rem 1rem;
+		height: 100vh;
+		border-right: 1px solid rgba(255, 255, 255, 0.1);
+		transition: transform 0.3s ease-in-out;
+		overflow-y: auto;
+		box-sizing: border-box;
+	}
 
 	/* Sidebar Headings */
 	.sidebar h2 {
@@ -52,32 +49,34 @@ export const homeStyles = css`
 		gap: 1rem;
 	}
 
-		/* Search Input */
-		.sidebar-search {
-			width: 100%;
-			padding: 0.75rem;
-			font-size: 1rem;
-			border: none;
-			border-radius: 5px;
-			background-color: transparent;
-			border: 1px solid rgba(80, 137, 145, 0.2);
-			color: #fff;
-			margin-bottom: 0.15rem;
-		}
-		/* New Project Button */
-		.new-project {
-			width: 100%;
-			padding: 0.75rem;
-			font-size: 1rem;
-			font-weight: bold;
-			border: none;
-			border-radius: 5px;
-			background-color: #F9A03F; /* Corrected color */
-			color: #ffffff;
-			cursor: pointer;
-			transition: background-color 0.2s ease-in-out;
-			margin-bottom: .5rem; /* Added margin for separation */
-		}
+	/* Search Input */
+	.sidebar-search {
+		width: 100%;
+		padding: 0.75rem;
+		font-size: 1rem;
+		border: none;
+		border-radius: 5px;
+		background-color: transparent;
+		border: 1px solid rgba(80, 137, 145, 0.2);
+		color: #fff;
+		margin-bottom: 0.15rem;
+	}
+	/* New Project Button */
+	.new-project {
+		width: 80%;
+		place-self: center;
+		padding: 0.75rem;
+		font-size: 1rem;
+		font-weight: bold;
+		border: none;
+		border-radius: 5px;
+		background-color: #f9a03f; /* Corrected color */
+		color: #ffffff;
+		cursor: pointer;
+		transition: background-color 0.2s ease-in-out;
+		margin-bottom: 0.5rem; /* Added margin for separation */
+		text-decoration: none;
+	}
 
 	.project-header {
 		display: flex;

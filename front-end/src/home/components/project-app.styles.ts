@@ -51,12 +51,13 @@ export const projectAppStyles = css`
 	.new-project-body,
 	.new-collaborator,
 	.leaderboard-button {
-		padding: 1rem .5rem;
+		padding: 1rem 0.5rem;
 		font-size: 0.8rem;
 		width: 150px;
 		border: none;
 		border-radius: 5px;
 		cursor: pointer;
+		word-wrap: nowrap;
 		transition: background-color 0.2s;
 	}
 
