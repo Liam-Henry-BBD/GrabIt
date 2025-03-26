@@ -213,6 +213,10 @@ export class ProjectOverview extends LitElement {
 				<img id="logo" src="/src/home/home_images/GI_logo-white.png" alt="Logo" @click=${() => (window.location.href = 'http://localhost:8000/home')} />
 			</section>
 			<div class="project-header">
+				<div class="back">
+
+					<a  href= 'http://localhost:8000/home/${this.project.projectID}'> ← Back to Project</a>
+				</div>
 				<h1>${this.project.projectName}</h1>
 				<p>${this.project.projectDescription}</p>
 				<div class="dates-container">

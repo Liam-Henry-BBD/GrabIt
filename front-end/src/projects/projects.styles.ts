@@ -81,7 +81,6 @@ export const createProjectStyles = css`
 	}
 
 	.collaborator-list {
-		/* background-color: #508991; */
 		color: #f7f0f0;
 		border-radius: 5px;
 		margin-top: 10px;
@@ -100,7 +99,6 @@ export const createProjectStyles = css`
 		animation: fadeIn 0.2s ease-in-out;
 	}
 
-	/* Dropdown Item */
 	.dropdown-item {
 		padding: 10px 14px;
 		cursor: pointer;
@@ -110,12 +108,10 @@ export const createProjectStyles = css`
 		border-bottom: 1px solid #eee;
 	}
 
-	/* Last item shouldn't have a border */
 	.dropdown-item:last-child {
 		border-bottom: none;
 	}
 
-	/* Hover & Click Effects */
 	.dropdown-item:hover {
 		background: #f8f8f8;
 	}
@@ -124,7 +120,6 @@ export const createProjectStyles = css`
 		background: #e0e0e0;
 	}
 
-	/* Scrollbar Styling */
 	.dropdown::-webkit-scrollbar {
 		width: 6px;
 	}
@@ -165,7 +160,7 @@ export const createProjectStyles = css`
 	.colab-list-item:hover {
 		background-color: #f9a03f;
 		color: #242423;
-		transform: translateY(-2px); /* Slight lift on hover */
+		transform: translateY(-2px); 
 	}
 
 	.colab-list-item .remove {
@@ -334,6 +329,16 @@ export const projectOverviewStyles = css`
 		border: 2px dashed #f9a03fcc;
 		border-radius: 8px;
 		background-color: rgba(80, 137, 145, 0.1);
+	}
+
+	.back a {
+    background-color: #f9a03f;
+    color: #242423;
+    padding: 0.7rem;
+    border-radius: 1rem;
+    text-decoration: none;
+    left: 0;
+	margin-bottom: 30px;
 	}
 
 	.task-list-header {
