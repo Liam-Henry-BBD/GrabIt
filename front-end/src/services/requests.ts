@@ -1,6 +1,6 @@
 async function sendRequest(endpoint: string, options: RequestInit = {}) {
     const token = localStorage.getItem('token');
-    if (!token) {
+    if (!token && window.location.pathname !== '/') {
         window.location.href = '/login';
         localStorage.removeItem('token');
         return;
@@ -11,7 +11,7 @@ async function sendRequest(endpoint: string, options: RequestInit = {}) {
         ...options.headers
     };
 
-    const url ='http://localhost:8081/api' + endpoint;
+    const url = 'http://localhost:8081/api' + endpoint;
     const response = await fetch(url, {
         ...options,
         headers

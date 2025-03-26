@@ -201,8 +201,8 @@ export class LandingApp extends CtLit {
                 font-size: 1rem;
                 font-weight: 500;
                 border-radius: 0.5rem;
-                /* margin-top: 0.5rem; */
                 cursor: pointer;
+                text-decoration: none;
 
             }
 
@@ -550,7 +550,7 @@ export class LandingApp extends CtLit {
             <section>
                 <h1>Boost team productivity with seamless task management and progress tracking</h1>
                 <p>Join the most effective platform in managing projects</p>
-                <button class="get-started" @click="${this.navigateToLogin}">Get Started</button></li>
+                <a class="get-started" href = 'http://localhost:8000/login'>Get Started</a></li>
             </section>
             </section>
 
@@ -694,9 +694,7 @@ export class LandingApp extends CtLit {
         }
     }
 
-    private navigateToLogin() {
-        window.location.href = 'http://localhost:3004/login';
-    }
+
 
 
 }
