@@ -11,8 +11,31 @@ export const createProjectStyles = css`
 		border-radius: 10px;
 	}
 
+	.create-project-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			background-color: #242423;
+			width: 100vw;
+			max-width: 100%;
+			position: fixed;
+			top: 0;
+			right: 0;
+			height: 5rem;
+			z-index: 1000;
+			overflow: hidden;
+		}
+
+		.create-project-header img {
+			margin-top: 1rem;
+			height: 10rem;
+			width: 10rem;
+		}
+
 	h1 {
 		color: #f9a03f;
+		margin-top: 5rem;
+		text-align: center;
 	}
 
 	h2 {
@@ -35,12 +58,13 @@ export const createProjectStyles = css`
 	button,
 	a {
 		background-color: #f9a03f;
-		color: #f7f0f0;
+		color: #242423;
 		cursor: pointer;
 		border: none;
 		padding: 10px 20px;
 		border-radius: 5px;
 		margin-top: 10px;
+		text-decoration: none;
 	}
 
 	button:hover {

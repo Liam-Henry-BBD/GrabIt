@@ -101,8 +101,9 @@ export class CreateProject extends LitElement {
 	render() {
 		return html`
 		<header class="create-project-header">
-			<h1>Create New Project</h1>
+			<img  id="logo" src="/src/home/home_images/GI_logo-white.png" alt="Logo">
 		</header>
+		<h1> Create New Project</h1>
 			<form @submit=${this.handleSubmit}>
 				<h2>Project Name</h2>
 				<input type="text" name="name" .value=${this.name} @input=${this.handleInput} placeholder="Write your project name here" required />
