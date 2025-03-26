@@ -1,66 +1,112 @@
 import { CtLit, html, property, customElement, css } from '@conectate/ct-lit';
 
 @customElement('landing-app')
-export class LandingApp extends CtLit{
- 
+export class LandingApp extends CtLit {
+
     static styles = css`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            line-height: 1.6;
-            background-color: white;
-        }
 
 
-            /* this is the actual header */
-            nav {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 1rem 10%;
-                background-color: #242423;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 1);
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 5rem;
-                z-index:1000;
+                body {
+                    font-family: 'Poppins', sans-serif;
+                    line-height: 1.6;
+                    background-color: white;
+                }
+
+
+                /* this is the actual header */
+                nav {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 1rem 10%;
+                    background-color: #242423;
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 1);
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    height: 3rem;
+                    z-index:1000;
+                }
+
+               #logo {
+                    height: 9rem;
+                    width: 9rem;
+                    position: absolute;
+                    bottom: 1;
+                    left: 1rem;
+                }
+
+                nav ul {
+                    display: flex;
+                    list-style: none;
+                    gap: 4rem;
+                    text-align: center;
+                    margin-left: 25rem;
+                }
+
+                nav a {
+                    color: white;
+                    font-weight: 500;
+                    font-size: 1.2rem;
+                    text-decoration: none;
+                    text-align: center;
+                }
+
+                nav a:hover {
+                    color: #F9A03F;
+                }
+
+                @media (max-width: 1024px) {
+                nav {
+                    padding: 1rem 5%;
+                }
+
+                /* Center logo in mobile view */
+                #logo {
+                    position: absolute;
+                    left: 50%;
+                    transform: translateX(-50%);
+                }
+
+                nav ul {
+                    display: none; /* Hide the menu by default */
+                    flex-direction: column;
+                    position: absolute;
+                    top: 6rem;
+                    left: 0;
+                    right: 0;
+                    background-color: #242423;
+                    text-align: center;
+                    padding: 1rem 0;
+                }
+
+                nav ul.active {
+                    display: flex; /* Show the menu when active */
+                }
+
+                nav ul li {
+                    padding: 1rem;
+                }
+
+                nav ul li a {
+                    font-size: 1rem;
+                }
+
+                .hamburger {
+                    display: block;
+                    cursor: pointer;
+                    z-index: 1100;
+                    position: absolute;
+                    right: 1rem; /* Hamburger on the left */
+                    top: 1rem;
+                    font-size: 2rem;
+                    color: white;
+                }
             }
 
-            img {
-                height: 9rem;
-                width: 9rem;
-                position: absolute;
-                bottom: 1;
-                left: 1rem;
-            }
-
-            /* ---------------------------------------- */
-
-            nav ul {
-                display: flex;
-                list-style: none;
-                gap: 4rem;
-            }
-
-            nav a {
-                color: white;
-                font-weight: 500;
-                font-size: 1.2rem;
-                text-decoration: none;
-            }
-
-            nav a:hover {
-                color: #F9A03F;
-            }
 
             /* ---------------------------------------- */
             .auth-links {
@@ -110,8 +156,9 @@ export class LandingApp extends CtLit{
                 justify-content: space-evenly;
                 align-items: center;
                 padding: 8rem 1rem 6rem;
-                background: linear-gradient(to bottom, white, #242423);
-                height: 100vh;
+                /* background: linear-gradient(to bottom, white, #242423); */
+                background-color: white;
+                height: 90vh;
                 padding-inline: 10%;
                 box-shadow: 0 2px 10px rgb(47, 46, 46);
             }
@@ -131,7 +178,8 @@ export class LandingApp extends CtLit{
                 color: #242423;
                 letter-spacing: 0.9px;
                 line-height: 1.1;
-                margin-top: 1.5rem;
+                margin-top: 2.5rem;
+                margin-bottom: 1.5rem;
                 align-items: center;
                 text-align: center;
             }
@@ -141,7 +189,7 @@ export class LandingApp extends CtLit{
                 font-weight: 500;
                 font-family: 'Poppins', sans-serif;
                 color: #242423;
-                margin-top: 1rem;
+                margin-bottom: 1rem;
                 text-align: center;
             }
 
@@ -149,89 +197,145 @@ export class LandingApp extends CtLit{
                 background-color: #F9A03F;
                 color: #242423;
                 border: none;
-                padding: 0.5rem 1rem;
+                padding: 1rem;
                 font-size: 1rem;
                 font-weight: 500;
-                cursor: pointer;
                 border-radius: 0.5rem;
+                /* margin-top: 0.5rem; */
+                cursor: pointer;
+
+            }
+
+            .get-started:hover {
+                background-color: #242423;
+                color: #F9A03F;
+            }
+
+            @media (max-width: 1024px) {
+            .hero {
+                flex-direction: column; 
+                padding: 6rem 2rem 4rem; 
+            }
+
+            .hero h1 {
+                font-size: 3rem; 
+                line-height: 1.3;
+            }
+
+            .hero p {
+                font-size: 1.2rem; 
+                margin-top: 1.5rem;
+            }
+
+            .get-started {
+                padding: 0.5rem 1.5rem; 
+                font-size: 1.1rem; 
+            }
 
             }
 
             /* ---------------------------------------- */
 
-            .features h2 {
-                font-size: 3rem;
-                font-weight: bold;
-                margin-bottom: 1rem;
-                text-align: center;
-                color: #242423;
-
-            }
 
             .features {
-                padding: 4rem;
-                background: linear-gradient(to bottom, white, white); 
-                height: 90vh;
-                grid-template-columns: repeat(2, 2fr); 
-                margin-bottom: 3rem ;
+                height: 110vh;
+                margin-top: 5rem;
             }
 
-            .feature-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-                gap: 2rem;
-                margin-top: 1rem;
-                margin-left: 28rem;
+            .features h2 {
+                font-size: 3rem;
+                margin-top: -2rem;
+                text-align: center;
+                color: white;
+                width:100%;
+                font-weight: bold;
+                place-self: center;
+                grid-column: 1 / -1;
+                grid-row: 1/2;
             }
 
-            .feature-card {
-                padding: 1rem;
-                border: 0.2rem solid #508991;
-                width: 15rem;
-                
+            .features p {
+                font-size: 1rem;
+                color: white;
+                text-align: center;
+                margin-top: 0.1rem;
             }
 
-            .feature-card h3 {
-                color: #242423;
-                font-size: 1.5rem;
-                margin-bottom: 1rem;
+            .card h3 {
+            font-size: 1.5rem;
+            color: white;
             }
 
-
-
-            .features-image {
-                max-width: 100%; 
-                display: flex; 
-                justify-content: center; 
-                align-items: center; 
-                margin: 0; 
+            .card p {
+                font-size: clamp(0.85rem, 2vw, 0.95rem);
+                word-wrap: break-word;
             }
 
-            .features-image img {
-                width: 100%; 
-                height: 25rem;
-                width: 25rem;
-                margin-bottom: 35rem;
-                margin-left: 6%;
-                background: inherit; 
-                filter: blur(5%); 
-                z-index: 1; 
-                mask-image: radial-gradient(circle, white 70%, transparent 100%);
+            .card-container {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1em;
+                list-style: none;
+                background-color: #242423;
+                padding: 4em;
             }
             
-            @media (max-width: 1024px) {
-            .features-image img {
-                display: none;
+            .card {
+                position: relative;
+                width: 20em;
+                min-height: 15em;
+                border: 0.2rem solid #508991;
+                border-radius: 1rem;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-evenly;
+                text-align: center;
+                padding: 1em;
+                margin-left: 1rem;
+                margin-top: -2rem;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 1);
             }
-        }
 
             @media (max-width: 768px) {
                 .features {
-                    padding: 4rem 5%;
+                    height: auto;
+                    margin-top: 3rem;
                 }
 
-                .feature-grid {
-                    grid-template-columns: 1fr 1fr; /* On smaller screens, make it 2 columns */
+                .features h2 {
+                    font-size: clamp(2rem, 8vw, 2.5rem);
+                }
+
+                .features p {
+                    font-size: clamp(0.8rem, 4vw, 1rem);
+                }
+
+                .card-container {
+                    padding: 1em;
+                }
+
+                .card {
+                    width: 90%;
+                    margin-left: 0;
+                    margin-top: 1rem;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .features {
+                    margin-top: 2rem;
+                }
+
+                .features h2 {
+                    font-size: clamp(1.8rem, 9vw, 2.2rem);
+                }
+
+                .card {
+                    width: 100%;
+                    margin-left: 0;
+                    margin-top: 1rem;
                 }
             }
 
@@ -240,7 +344,7 @@ export class LandingApp extends CtLit{
             .workflow {
                 padding: 6rem 10%;
                 background: linear-gradient(to bottom, white, white);
-                height: 80vh; 
+                height: 100vh; 
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
@@ -249,7 +353,7 @@ export class LandingApp extends CtLit{
 
             .workflow h2 {
                 font-size: 3rem;
-                margin-bottom: 8rem;
+                margin-bottom: 3rem;
                 text-align: center;
                 color: #333;
                 font-weight: bold;
@@ -330,7 +434,7 @@ export class LandingApp extends CtLit{
 
             .Dashboard h2 {
                 font-size: 4rem;
-                margin-bottom: 35rem;
+                margin-bottom: 3rem;
                 text-align: center;
                 color: #333;
                 font-weight: bold;
@@ -339,18 +443,50 @@ export class LandingApp extends CtLit{
 
 
             .Dashboard img {
-                height: 30rem;
-                width: 60rem;
-                margin-top: 8rem;
-                margin-bottom: 5rem;
-                margin-left: 18%;
                 align-items: center;
                 display: flex;
                 justify-content: center;
                 border-radius: 1rem;
                 box-shadow: 0 4px 10px rgba(0, 0, 0, 2);
+                height: 40rem;
+                width: 80rem;
 
             }
+
+            /* tablet */
+            @media (max-width: 1024px) {
+            .Dashboard {
+                padding: 4rem 5%;
+            }
+
+            .Dashboard h2 {
+                font-size: 3rem; 
+            }
+
+            .Dashboard img {
+                height: 25rem; 
+                width: 50rem; 
+                margin-left: 0; 
+            }
+            }
+
+            /* phone */
+            @media (max-width: 768px) {
+            .Dashboard {
+                padding: 4rem 3%; 
+            }
+
+            .Dashboard h2 {
+                font-size: 2.5rem; 
+            }
+
+            .Dashboard img {
+                height: 20rem; 
+                width: 30rem; 
+                margin-left: 0;
+                margin-top: 4rem; 
+            }
+}
 
             /* -------------------------------------------------------- */
 
@@ -393,23 +529,20 @@ export class LandingApp extends CtLit{
                 color: #242423;
             }
              `;
-        
+
 
     render() {
         return html`
             <header>
             <nav>
-                <img src="/src/home/home_images/GI_logo-white.png" alt="Logo">
+                <img  id="logo" src="/src/home/home_images/GI_logo-white.png" alt="Logo">
                 <ul>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#workflow">Workflow</a></li>
-                <li><a href="#points">Dashboard</a></li>
-                <li><a href="#contact">Contact</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#workflow">Workflow</a></li>
+                    <li><a href="#points">Dashboard</a></li>
+                    <li><a href="#contact">Contact</a></li>
                 </ul>
-                <ul class="auth-links">
-                <li><button class="sign-up">Sign Up</button></li>
-                <li><button class="sign-in" @click="${this.navigateToLogin}">Sign In</button></li>
-                </ul>
+                <div class="hamburger" @click="${this.toggleMenu}">&#9776;</div>
             </nav>
             </header>
 
@@ -417,40 +550,87 @@ export class LandingApp extends CtLit{
             <section>
                 <h1>Boost team productivity with seamless task management and progress tracking</h1>
                 <p>Join the most effective platform in managing projects</p>
-                <li><button class="get-started" @click="${this.navigateToLogin}">Get Started</button></li>
+                <button class="get-started" @click="${this.navigateToLogin}">Get Started</button></li>
             </section>
             </section>
 
             <main>
-            <section id="features" class="features">
-                <h2>Key Features</h2>
-                <div class="feature-grid">
-                <article class="feature-card">
-                    <h3>Task Management</h3>
-                    <p>Create, assign, and track tasks with ease. Monitor progress in real-time.</p>
-                </article>
+            <section class="features">
+                <h2>Powerful Features</h2>
+                <p>Everything you need to manage projects effectively and keep your team motivated.</p>
 
-                <article class="feature-card">
-                    <h3>Point System</h3>
-                    <p>Gamified approach with points based on task difficulty. Keep team members engaged.</p>
-                </article>
+            <ul id="feature-cards" class="card-container">
+                <li>
+                    <article class="card">
+                    <div class="step-icon">📋</div>
+                        <h3>Task Management</h3>
+                        <p>
+                            Create, assign, and track tasks with ease. Set priorities, deadlines, and point values based
+                            on
+                            task difficulty.
+                        </p>
+                    </article>
+                </li>
 
-                <article class="feature-card">
-                    <h3>Team Leaderboard</h3>
-                    <p>Track performance with individual and team scores. Foster healthy competition.</p>
-                </article>
+                <li>
+                    <article class="card">
+                    <div class="step-icon">🔄</div>
+                        <h3>Gamified Workflow</h3>
+                        <p>
+                            Turn work into a game with points, leaderboards, and competitive nature. Keep your team
+                            engaged
+                            and
+                            motivated.
+                        </p>
+                    </article>
+                </li>
+                <li>
+                    <article class="card">
+                    <div class="step-icon">🤲</div>
+                        <h3>Task Grabbing</h3>
+                        <p>
+                            Team members can "grab" available tasks, moving them from the available pool to their
+                            personal
+                            workspace.
+                        </p>
+                    </article>
+                </li>
 
-                <article class="feature-card">
-                    <h3>GitHub Authentication</h3>
-                    <p>Seamless authentication through GitHub. Quick and secure access.</p>
-                </article>
+                <li>
+                    <article class="card">
+                    <div class="step-icon">🔢</div>
+                        <h3>Point System</h3>
+                        <p>
+                            Assign point values to tasks based on difficulty: Simple (5 points), Medium (10 points), and
+                            Hard
+                            (15 points).
+                        </p>
+                    </article>
+                </li>
 
-                <figure class="features-image">
-                    <img src="./src/home/home_images/777.jpg" alt="Features Image" class="features-image">
-                </figure>
-                </div>
-            </section>
-
+                <li>
+                    <article class="card">
+                    <div class="step-icon">🏆</div>
+                        <h3>Leaderboards</h3>
+                        <p>
+                            Track individual and team performance with leaderboards showing accumulated points and
+                            completed
+                            tasks.
+                        </p>
+                    </article>
+                </li>
+                <li>
+                    <article class="card">
+                    <div class="step-icon">🌐</div>
+                        <h3>Google Authentication</h3>
+                        <p>
+                            Secure login using Google authentication, making it easy for development teams to get
+                            started.
+                        </p>
+                    </article>
+                </li>
+            </ul>
+        </section>
             <section id="workflow" class="workflow">
                 <h2>Workflow</h2>
                 <section class="workflow-steps">
@@ -501,14 +681,24 @@ export class LandingApp extends CtLit{
             <section class="footer-bottom">
                 <p>&copy; 2025 GrabIt. All rights reserved.</p>
             </section>
+
+
             </footer>
         `;
-        }
+    }
 
-        private navigateToLogin() {
+    toggleMenu() {
+        const menu = this.shadowRoot?.querySelector('nav ul');
+        if (menu) {
+            menu.classList.toggle('active');
+        }
+    }
+
+    private navigateToLogin() {
         window.location.href = 'http://localhost:3004/login';
-        }
-        }
+    }
 
-    
-            
+
+}
+
+

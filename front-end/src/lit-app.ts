@@ -11,7 +11,7 @@ export class LitApp extends CtLit {
 		main {
 			min-height: 100vh;
 			background-color: #242423;
-			padding: 1rem;
+			/* padding: 1rem; */
 		}
 	`;
 
