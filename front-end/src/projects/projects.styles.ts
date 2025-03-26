@@ -200,11 +200,32 @@ export const projectOverviewStyles = css`
 		border-radius: 8px;
 	}
 
+	.header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			background-color: #242423;
+			width: 100vw;
+			max-width: 100%;
+			position: fixed;
+			top: 0;
+			right: 0;
+			height: 5rem;
+			z-index: 1000;
+			overflow: hidden;
+		}
+
+	.header img {
+			left: 2rem;
+			height: 10rem;
+			width: 10rem;
+	}
+
 	.project-header {
 		background-color: #50899120;
 		padding: 20px;
 		border-radius: 8px;
-		margin-bottom: 20px;
+		margin-top: calc(4rem + 20px); 
 	}
 
 	.project-header h1 {

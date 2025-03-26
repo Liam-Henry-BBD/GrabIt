@@ -62,7 +62,6 @@ export const leaderboardStyles = css`
 		margin-top: 5rem;
 		width: 65%;
 		margin-inline: auto;
-		background: rgba(255, 255, 255, 0.05);
 		border-radius: 1rem;
 	}
 
@@ -72,19 +71,20 @@ export const leaderboardStyles = css`
 		padding: 0.5rem;
 		border-radius: 1rem;
 		text-decoration: none;
+		left: 0;
 
 
 	}
 
 
 	article {
-		display: flex;
-		flex-direction: row;
+		text-align: center;
 		margin: 0.5rem;
 	}
-	h1,
+	
 	h2 {
 		text-align: center;
+		color: #f9a03f;
 	}
 
 	h1 {
@@ -179,31 +179,6 @@ export const leaderboardStyles = css`
 			font-size: 1.4rem;
 		}
 	}
-	/* a {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		gap: 0.5rem;
-		background: linear-gradient(135deg, #f9a03f, #ff7b00);
-		color: white;
-		border: none;
-		padding: 0.3rem 1rem;
-		font-size: 1.8em;
-		font-weight: 600;
-		border-radius: 0.5rem;
-		cursor: pointer;
-		transition:
-			background 0.3s ease,
-			transform 0.2s ease,
-			box-shadow 0.2s ease;
-		box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-		margin-top: 1rem;
-		align-self: center;
-		text-transform: uppercase;
-		letter-spacing: 0.5px;
-		min-width: 120px;
-		text-decoration: none;
-	} */
 
 	button:hover {
 		background: linear-gradient(135deg, #ff7b00, #f96f00);
