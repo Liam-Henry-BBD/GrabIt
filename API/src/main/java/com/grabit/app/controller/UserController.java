@@ -1,8 +1,10 @@
 package com.grabit.app.controller;
 
-
 import com.grabit.app.dto.UserDTO;
+import com.grabit.app.dto.UserSearchDTO;
 import com.grabit.app.service.UserService;
+
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -10,6 +12,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,8 +31,13 @@ public class UserController {
         OidcUser user = (OidcUser) principal.getPrincipal();
         Integer userID = userService.getAuthenticatedUser(principal).getUserID();
         UserDTO userDTO = new UserDTO(
-            user.getEmail(), user.getFullName(), user.getPicture(), user.getEmailVerified(), userID
-        );
+                user.getEmail(), user.getFullName(), user.getPicture(), user.getEmailVerified(), userID);
         return ResponseEntity.ok(userDTO);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<UserSearchDTO>> searchUserNames(@RequestParam String query) {
+        List<UserSearchDTO> users = userService.searchUserNames(query);
+        return ResponseEntity.ok(users);
     }
 }

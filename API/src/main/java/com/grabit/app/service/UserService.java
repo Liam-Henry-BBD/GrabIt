@@ -1,8 +1,11 @@
 package com.grabit.app.service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.grabit.app.dto.UserSearchDTO;
 import com.grabit.app.exceptions.NotFound;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -48,9 +51,17 @@ public class UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         String githubID = Optional.ofNullable(oAuth2User.getAttribute("login"))
-                                  .map(Object::toString)
-                                  .orElseThrow(() -> new NotFound("Google ID not found"));
+                .map(Object::toString)
+                .orElseThrow(() -> new NotFound("Google ID not found"));
         this.saveOrUpdateUser(githubID);
         return oAuth2User;
     }
+
+    public List<UserSearchDTO> searchUserNames(String query) {
+        List<User> users = userRepository.findByGitHubIDContainingIgnoreCase(query);
+        return users.stream()
+                .map(user -> new UserSearchDTO(user.getGitHubID(), user.getUserID()))
+                .collect(Collectors.toList());
+    }
+
 }
