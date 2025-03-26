@@ -17,9 +17,9 @@ async function sendRequest(endpoint: string, options: RequestInit = {}) {
         headers
     });
 
-    if (!response.ok) {
-        // window.location.href = '/login';
-        // localStorage.removeItem('token');
+    if (!response.ok && response.status === 401) {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
         return;
     }
 
