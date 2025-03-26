@@ -8,8 +8,8 @@ export const projectAppStyles = css`
 
 	/* New Task Button */
 	.new-project-body {
-		background-color: #ff9800;
-		color: #ffffff;
+		background-color: #F9A03F;
+		color: #242423	;
 		width: 100%;
 	}
 
@@ -34,7 +34,7 @@ export const projectAppStyles = css`
 	}
 
 	.leaderboard-button:hover {
-		background-color: #388e3c;
+		background-color: #F9A03F;
 	}
 	a {
 		text-decoration: none;
@@ -63,10 +63,9 @@ export const projectAppStyles = css`
 
 	/* New Project, Collaborators, and Leaderboard Button Placement */
 	.article-buttons {
-		padding: 1rem 0;
+		padding: 1rem;
 		display: flex;
 		gap: 1rem;
-		/* justify-content: space-between;  */
 		align-items: center;
 	}
 

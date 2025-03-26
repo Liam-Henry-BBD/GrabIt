@@ -39,15 +39,17 @@ export const cardStyles = css`
         align-items: center;
         justify-content: center;
         background-color: #f9a03f; 
-        color: #fff; 
+        color: #242423; 
     }
 
     .simple {
-        color: green; 
+        color: #242423; 
+        background-color: #3ff952;
     }
 
     .medium {
-        color: yellow; 
+        color: #242423; 
+        background-color: #f9ec3f;
     }
 
     .hard {
