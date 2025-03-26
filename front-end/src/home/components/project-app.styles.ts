@@ -8,9 +8,9 @@ export const projectAppStyles = css`
 
 	/* New Task Button */
 	.new-project-body {
-		background-color: #806f57;
+		background-color: #ff9800;
 		color: #ffffff;
-        width: 100%;
+		width: 100%;
 	}
 
 	.new-project-body:hover {
@@ -38,9 +38,9 @@ export const projectAppStyles = css`
 	}
 	a {
 		text-decoration: none;
-        text-align: center;
-        width:fit-content;
-        padding:1em;
+		text-align: center;
+		width: fit-content;
+		padding: 1em;
 	}
 	/* Task Board Columns */
 	.columns {

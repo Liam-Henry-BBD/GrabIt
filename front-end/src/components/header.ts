@@ -5,30 +5,30 @@ import { getUser } from "../services/user.service";
 @customElement("header-app")
 export class HeaderApp extends LitElement {
 
-    @state() picture: string | null = null;
+	@state() picture: string | null = null;
 
-    async connectedCallback() {
-        super.connectedCallback();
-        const user = await getUser()
-        this.picture = user.picture;
-    }
-    
-    render() {
-        return html`
+	async connectedCallback() {
+		super.connectedCallback();
+		const user = await getUser()
+		this.picture = user.picture;
+	}
+
+	render() {
+		return html`
             <header class="header">
-			<img src="/src/home/home_images/GI_logo-white.png" height="100" alt="logo" />
+			<img src="/src/home/home_images/GI_logo-white.png" alt="logo" />
 				<input type="search" placeholder="Search tasks..." />
-				<img id="profile-icon" src=${this.picture ? this.picture : "" } alt="Logo" />
+				<img id="profile-icon" src=${this.picture ? this.picture : ""} alt="Logo" />
 			</header>
         `;
-    }
+	}
 
-    static styles = css`
+	static styles = css`
         .header {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			background-color: #2c2c2c;
+			background-color: #242423;
 			width: 100vw;
 			max-width: 100%;
 			position: fixed;
@@ -40,16 +40,17 @@ export class HeaderApp extends LitElement {
 			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 		}
 
-		#logo {
-			height: 3rem;
-			margin-left: 3rem;
-			margin-right: auto;
+		.header img {
+			left: 2rem;
+			height: 10rem;
+			width: 10rem;
 		}
+
 		#profile-icon {
 			margin-right: 3rem;
 			margin-left: 3rem;
-			height: 3rem;
-			width: 3rem;
+			height: 2.5rem;
+			width: 2.5rem;
 			border-radius: 50%;
 
 		}

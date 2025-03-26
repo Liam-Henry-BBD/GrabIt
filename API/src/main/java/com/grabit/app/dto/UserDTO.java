@@ -15,4 +15,5 @@ public class UserDTO {
     String fullName;
     String picture;
     boolean verified;
+    Integer userID;
 }
