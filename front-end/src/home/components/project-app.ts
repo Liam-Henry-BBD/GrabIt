@@ -111,7 +111,6 @@ export class ProjectApp extends CtLit {
 				<article>
 					<section class="article-buttons">
 						<a href="http://localhost:8000/project/${this.projectID}" class="new-project-body">Manage Tasks</a>
-
 						<a href="http://localhost:8000/project/${this.projectID}/leaderboard" class="leaderboard-button">Leaderboard</a>
 					</section>
 				</article>
