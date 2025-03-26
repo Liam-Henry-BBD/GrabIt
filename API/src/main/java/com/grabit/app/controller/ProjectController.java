@@ -1,6 +1,7 @@
 package com.grabit.app.controller;
 
 import com.grabit.app.dto.ProjectLeaderboardDTO;
+import com.grabit.app.dto.TaskAndRoleDTO;
 import com.grabit.app.exceptions.BadRequest;
 import com.grabit.app.model.ProjectCollaborator;
 import com.grabit.app.model.Task;
@@ -59,14 +60,14 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectID}")
-    public ResponseEntity<Project> getProjectByID(@PathVariable Integer projectID,
+    public ResponseEntity<ProjectAndRoleDTO> getProjectByID(@PathVariable Integer projectID,
             Authentication authentication) {
         if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),
                 projectID)) {
             throw new BadRequest(responseMessages.get("invalidCollaborator"));
         }
 
-        Project project = projectService.getProjectByID(projectID);
+        ProjectAndRoleDTO  project = projectService.getProjectByID(projectID, userService.getAuthenticatedUser(authentication));
         return ResponseEntity.ok(project);
     }
 
@@ -85,27 +86,27 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectID}/tasks")
-    public ResponseEntity<List<TaskDTO>> getProjectTasks(@PathVariable Integer projectID,
+    public ResponseEntity<List<TaskAndRoleDTO>> getProjectTasks(@PathVariable Integer projectID,
             Authentication authentication) {
         if (!projectService.isProjectCollaborator(userService.getAuthenticatedUser(authentication).getUserID(),
                 projectID)) {
             throw new BadRequest(responseMessages.get("invalidCollaborator"));
         }
 
-        List<Task> projectTasksByProjectID = projectService.getProjectTasksByProjectID(projectID);
-        List<TaskDTO> dtos = TaskDTO.getTasks(projectTasksByProjectID);
-        return ResponseEntity.ok(dtos);
+        List<TaskAndRoleDTO> projectTasksByProjectID = projectService.getTasksAndRole(projectID);
+        // List<TaskDTO> dtos = TaskDTO.getTasks(projectTasksByProjectID);
+        return ResponseEntity.ok(projectTasksByProjectID);
     }
 
     @GetMapping("/{projectID}/my-tasks")
-    public ResponseEntity<List<TaskDTO>> getMyProjectTasks(@PathVariable Integer projectID,
+    public ResponseEntity<List<TaskAndRoleDTO>> getMyProjectTasks(@PathVariable Integer projectID,
             Authentication authentication) {
         Integer userID = userService.getAuthenticatedUser(authentication).getUserID();
 
         if (!projectService.isProjectCollaborator(userID, projectID)) {
             throw new BadRequest(responseMessages.get("invalidCollaborator"));
         }
-        return ResponseEntity.ok(projectService.getProjectTasksByProjectIDAndUserID(projectID, userID));
+        return ResponseEntity.ok(projectService.getMyProjectTasksByProjectIDAndUserID(projectID, userID));
     }
 
     @GetMapping("/{projectID}/collaborators")

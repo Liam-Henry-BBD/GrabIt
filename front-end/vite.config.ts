@@ -56,7 +56,7 @@ export const svgLoader: () => Plugin = () => {
 export default (opts: { mode: 'production' | 'development'; command: 'build' | 'serve' }) => {
 	return defineConfig({
 		server: {
-			port: 8000
+			port: 3000
 		},
 		
 		define: {

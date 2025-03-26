@@ -24,7 +24,7 @@ import com.grabit.app.service.TaskService;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:8000")
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/tasks")
 public class TaskController {
 

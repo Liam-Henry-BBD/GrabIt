@@ -16,7 +16,7 @@ export class HeaderApp extends LitElement {
     render() {
         return html`
             <header class="header">
-				<img id="logo" src="src/home/activities/white_logo.png" alt="Logo" />
+			<img src="/src/home/home_images/GI_logo-white.png" height="100" alt="logo" />
 				<input type="search" placeholder="Search tasks..." />
 				<img id="profile-icon" src=${this.picture ? this.picture : "" } alt="Logo" />
 			</header>
@@ -26,10 +26,9 @@ export class HeaderApp extends LitElement {
     static styles = css`
         .header {
 			display: flex;
-			justify-content: space-evenly;
+			justify-content: space-between;
 			align-items: center;
-			background-color: #1e1e1e;
-			box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
+			background-color: #2c2c2c;
 			width: 100vw;
 			max-width: 100%;
 			position: fixed;
@@ -38,6 +37,7 @@ export class HeaderApp extends LitElement {
 			height: 5rem;
 			z-index: 1000;
 			overflow: hidden;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 		}
 
 		#logo {
@@ -54,10 +54,11 @@ export class HeaderApp extends LitElement {
 
 		}
 		.header input {
-			padding: 0.5rem;
+			padding: 0.8rem;
 			border-radius: 1rem;
 			background-color: #555;
 			color: #fff;
+			outline: none;
 			border: none;
 			width: 30rem;
 			right: 0;

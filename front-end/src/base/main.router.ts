@@ -1,4 +1,8 @@
 import { Route } from '@vaadin/router';
+import "../home/components/cards/project-card"
+
+import "../home/components/project-app"
+
 
 export const routes: Route[] = [
     {
@@ -7,7 +11,15 @@ export const routes: Route[] = [
       action: async () => {
         await import('../home/home-app');
         document.title = 'Dashboard';
-      }
+      },
+
+      children: [
+        {
+            path: 'project/:projectID',
+            component: 'project-app',
+        }
+      ]
+
     },
     {
       path: '/',

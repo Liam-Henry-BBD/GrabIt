@@ -1,6 +1,6 @@
 async function sendRequest(endpoint: string, options: RequestInit = {}) {
     const token = localStorage.getItem('token');
-    if (!token && window.location.pathname !== '/') {
+    if (!token && window.location.pathname) {
         window.location.href = '/login';
         localStorage.removeItem('token');
         return;
@@ -18,8 +18,8 @@ async function sendRequest(endpoint: string, options: RequestInit = {}) {
     });
 
     if (!response.ok) {
-        window.location.href = '/login';
-        localStorage.removeItem('token');
+        // window.location.href = '/login';
+        // localStorage.removeItem('token');
         return;
     }
 

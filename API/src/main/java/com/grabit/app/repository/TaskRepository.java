@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.grabit.app.dto.TaskAndRoleDTO;
 import com.grabit.app.dto.TaskDTO;
 import com.grabit.app.model.Task;
 
@@ -35,4 +36,53 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
 
     @Query(value = "SELECT * FROM Tasks task WHERE TaskPointID = :taskPointID", nativeQuery = true)
     List<Task> findByTaskPointID(Integer taskPointID);
+
+
+    @Query(value = """
+            SELECT 
+                task.TaskID,
+                task.TaskDescription,
+                task.TaskName,
+                task.TaskPointID,
+                task.TaskStatusID,
+                collab.UserID as userID,
+                task.IsActive,
+                task.ProjectID,
+                task.TaskCreatedAt,
+                task.TaskReviewRequestedAt,
+                task.TaskCompletedAt,
+                task.TaskDeadline,
+                task.TaskUpdatedAt
+            FROM Tasks task
+            LEFT JOIN TaskCollaborators collab
+            ON task.TaskID = collab.TaskID
+            WHERE 
+                task.ProjectID = :projectID
+            """, nativeQuery = true)
+    List<TaskAndRoleDTO> getTasksWithRoles(Integer projectID);
+
+    @Query(value = """
+            SELECT 
+                task.TaskID,
+                task.TaskDescription,
+                task.TaskName,
+                task.TaskPointID,
+                task.TaskStatusID,
+                collab.UserID as userID,
+                task.IsActive,
+                task.ProjectID,
+                task.TaskCreatedAt,
+                task.TaskReviewRequestedAt,
+                task.TaskCompletedAt,
+                task.TaskDeadline,
+                task.TaskUpdatedAt
+            FROM Tasks task
+            JOIN TaskCollaborators collab
+            ON task.TaskID = collab.TaskID
+            WHERE 
+                task.ProjectID = :projectID
+                AND collab.UserID = :userID;
+            """, nativeQuery = true)
+    List<TaskAndRoleDTO> getMyTasksWithRoles(Integer projectID, Integer userID);
+
 }

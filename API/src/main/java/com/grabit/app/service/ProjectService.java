@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.grabit.app.dto.ProjectAndRoleDTO;
 import com.grabit.app.dto.ProjectCreationDTO;
 import com.grabit.app.dto.ProjectLeaderboardDTO;
+import com.grabit.app.dto.TaskAndRoleDTO;
 import com.grabit.app.dto.TaskDTO;
 import com.grabit.app.enums.Roles;
 import com.grabit.app.model.Project;
@@ -90,6 +91,10 @@ public class ProjectService extends Task {
         return projectRepository.findById(projectID).orElseThrow(() -> new NotFound(responseMessages.get("404")));
     }
 
+    public ProjectAndRoleDTO  getProjectByID(Integer projectID, User user) {
+        return projectRepository.getProjectByUserID(projectID, user.getUserID());
+    }
+
     @Transactional
     public void closeProject(Integer projectID) {
         projectRepository.findById(projectID).orElseThrow(() -> new NotFound(responseMessages.get("404")));
@@ -100,8 +105,17 @@ public class ProjectService extends Task {
         return taskRepository.findByProjectID(projectID);
     }
 
+    public List<TaskAndRoleDTO> getTasksAndRole(Integer projectID) {
+        return taskRepository.getTasksWithRoles(projectID);
+    }
+
+
     public List<TaskDTO> getProjectTasksByProjectIDAndUserID(Integer projectID, Integer userId) {
         return taskRepository.findByProjectIDAndUserID(projectID, userId);
+    }
+
+    public List<TaskAndRoleDTO> getMyProjectTasksByProjectIDAndUserID(Integer projectID, Integer userId) {
+        return taskRepository.getMyTasksWithRoles(projectID, userId);
     }
 
     public List<ProjectLeaderboardDTO> getProjectLeaderboardByProjectID(Integer projectID) {

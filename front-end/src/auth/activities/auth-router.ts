@@ -20,7 +20,7 @@ class AuthRouter extends LitElement {
 
   async checkAuth() {
       try {
-       const response = await sendRequest('/user/validate'); 
+       await sendRequest('/user/validate'); 
       } catch (error) {
         console.error('Error validating token:', error);
         this.isAuthenticated = false;
