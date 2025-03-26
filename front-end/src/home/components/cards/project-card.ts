@@ -31,12 +31,24 @@ export class ProjectCard extends CtLit {
     
     render() {
         return html`
-           <div class="project-card">
-				<h3>${this.task.taskName} <span class="points">${this.task.taskPointID} pts</span></h3>
-				<p class="task-description">${this.task.taskDescription.slice(0, 95)}...</p>
-				<p class="due-date">Due: ${formatDate(this.task.taskCreatedAt)}</p>
-                
-				${this.action && this.visible ? html`<button @click=${() => this.handleTaskAction(this.task.taskID, this.task.projectID)} class="card-btn">${this.action} </button>` : ''}
-			</div>`;
-    }
+           <div class="project-card ${this.getTaskCategory()}">
+                    <h3>${this.task.taskName} <span class="points">${this.task.taskPointID} pts</span></h3>
+                    <p class="task-description">${this.task.taskDescription.slice(0, 95)}...</p>
+                    <p class="due-date">Due: ${formatDate(this.task.taskCreatedAt)}</p>
+            
+                    ${this.action && this.visible ? html`<button @click=${() => this.handleTaskAction(this.task.taskID, this.task.projectID)} class="card-btn">${this.action} </button>` : ''}
+                </div>`;
+        }
+
+        private getTaskCategory(): string {
+        if (this.task.taskPointID === 5) {
+            return 'simple';
+        } else if (this.task.taskPointID === 10) {
+            return 'medium';
+        } else if (this.task.taskPointID === 15) {
+            return 'hard';
+        }
+        return '';
+        }
 }
+

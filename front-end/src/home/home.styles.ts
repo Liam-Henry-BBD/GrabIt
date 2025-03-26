@@ -127,17 +127,18 @@ export const homeStyles = css`
 		background-color: rgba(255, 255, 255, 0.1);
 	}
 
-	/* Project Icons */
-	.project-item .project-icon {
-		font-size: 1.2rem;
-	}
-	/* Sidebar Collapsible on Smaller Screens */
-	@media (max-width: 1024px) {
-		.sidebar {
-			position: absolute;
-			transform: translateX(-100%);
-			transition: transform 0.3s ease-in-out;
+		/* Project Icons */
+		.project-item .project-icon {
+			font-size: 1.2rem;
 		}
+
+		/* Sidebar Collapsible on Smaller Screens */
+		@media (max-width: 1024px) {
+			.sidebar {
+				position: absolute;
+				transform: translateX(-100%);
+				transition: transform 0.3s ease-in-out;
+			}
 
 		.sidebar.open {
 			transform: translateX(0);
@@ -241,10 +242,25 @@ export const homeStyles = css`
 		color: #b3b3b3;
 	}
 
-	.points {
-		font-weight: bold;
-		color: #ff9800;
-	}
+		.points {
+			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+ 
+		}
+
+		.simple {
+			border-left: 8px solid green;
+			background-color: #e8f5e9; /* Light green background */
+		}
+
+		.medium {
+			border-left: 8px solid yellow;
+			background-color: #fffde7; /* Light yellow background */
+		}
+
+		.hard {
+			border-left: 8px solid red;
+			background-color: #ffebee; /* Light red background */
+		}
 
 	.project-item a {
 		text-decoration: none;
