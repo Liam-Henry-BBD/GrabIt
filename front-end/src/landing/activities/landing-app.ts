@@ -1,4 +1,4 @@
-import { CtLit, html, property, customElement, css } from '@conectate/ct-lit';
+import { CtLit, html, customElement, css } from '@conectate/ct-lit';
 
 @customElement('landing-app')
 export class LandingApp extends CtLit {

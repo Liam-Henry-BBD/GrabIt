@@ -7,7 +7,6 @@ class Projects extends LitElement {
   @state() isAuthenticated = false;
 
 
-
   static styles = css`
     :host {
       display: block;

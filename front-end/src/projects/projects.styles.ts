@@ -310,7 +310,7 @@ export const projectOverviewStyles = css`
 
 	button {
 		background-color: #f9a03f;
-		color: #f7f0f0;
+		color: #242423;
 		border: none;
 		border-radius: 5px;
 		padding: 8px 16px;

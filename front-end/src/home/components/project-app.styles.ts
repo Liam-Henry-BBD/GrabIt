@@ -6,7 +6,6 @@ export const projectAppStyles = css`
 		flex-direction: row;
 	}
 
-	/* New Task Button */
 	.new-project-body {
 		background-color: #F9A03F;
 		color: #242423	;
@@ -17,7 +16,6 @@ export const projectAppStyles = css`
 		background-color: #e68900;
 	}
 
-	/* Collaborator Button */
 	.new-collaborator {
 		background-color: #2c2c2c;
 		color: #ffffff;
@@ -27,7 +25,6 @@ export const projectAppStyles = css`
 		background-color: #444444;
 	}
 
-	/* Leaderboard Button */
 	.leaderboard-button {
 		background-color: #4a676a75;
 		color: #ffffff;
@@ -40,14 +37,13 @@ export const projectAppStyles = css`
 		text-decoration: none;
 		text-align: center;
 	}
-	/* Task Board Columns */
+
 	.columns {
 		display: flex;
 		gap: 1rem;
 		margin-bottom: 2rem;
 	}
 
-	/* Button Styles for Main Section */
 	.new-project-body,
 	.new-collaborator,
 	.leaderboard-button {
@@ -61,7 +57,6 @@ export const projectAppStyles = css`
 		transition: background-color 0.2s;
 	}
 
-	/* New Project, Collaborators, and Leaderboard Button Placement */
 	.article-buttons {
 		padding: 1rem;
 		display: flex;
@@ -73,10 +68,8 @@ export const projectAppStyles = css`
 		flex: 1;
 		border-radius: 5px;
 		height: 28rem;
-		/* overflow: hidden;  */
 	}
 
-	/* Optional: Add a max-height to prevent the column from growing too tall */
 	.column {
 		max-height: 80vh;
 	}

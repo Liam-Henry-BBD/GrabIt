@@ -1,6 +1,5 @@
 import { css } from "lit";
 
-/* Task Card Styles */
 export const cardStyles = css`
 
     .project-card {

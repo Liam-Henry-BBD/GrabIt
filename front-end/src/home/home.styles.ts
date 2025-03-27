@@ -18,7 +18,6 @@ export const homeStyles = css`
 		display: flex;
 	}
 
-	/* Sidebar Styling */
 	.sidebar {
 		display: flex;
 		flex-direction: column;
@@ -33,7 +32,6 @@ export const homeStyles = css`
 		box-sizing: border-box;
 	}
 
-	/* Sidebar Headings */
 	.sidebar h2 {
 		font-weight: 500;
 		font-size: 1.2rem;
@@ -42,14 +40,12 @@ export const homeStyles = css`
 		padding: 0 0.75rem;
 	}
 
-	/* Sidebar Header */
 	.sidebar-header {
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
 	}
 
-	/* Search Input */
 	.sidebar-search {
 		width: 100%;
 		padding: 0.75rem;
@@ -61,7 +57,7 @@ export const homeStyles = css`
 		color: #fff;
 		margin-bottom: 0.15rem;
 	}
-	/* New Project Button */
+
 	.new-project {
 		width: 80%;
 		place-self: center;
@@ -94,7 +90,6 @@ export const homeStyles = css`
 		background-color: #e68900;
 	}
 
-	/* Separator */
 	.separator {
 		width: 100%;
 		height: 1px;
@@ -103,14 +98,12 @@ export const homeStyles = css`
 		border: none;
 	}
 
-	/* Project List */
 	ul {
 		list-style-type: none;
 		padding: 0;
 		margin: 0;
 	}
 
-	/* Project Items */
 	.project-item {
 		display: flex;
 		align-items: center;
@@ -128,12 +121,10 @@ export const homeStyles = css`
 		background-color: rgba(255, 255, 255, 0.1);
 	}
 
-	/* Project Icons */
 	.project-item .project-icon {
 		font-size: 1.2rem;
 	}
 
-	/* Sidebar Collapsible on Smaller Screens */
 	@media (max-width: 1024px) {
 		.sidebar {
 			position: absolute;
@@ -155,14 +146,12 @@ export const homeStyles = css`
 		box-sizing: border-box;
 	}
 
-	/* Main Section Header */
 	h1 {
 		font-size: 2rem;
 		color: #ff9800;
 		margin-bottom: 1rem;
 	}
 
-	/* Paragraph Styling */
 	p {
 		font-size: 1.2rem;
 		color: #b3b3b3;
