@@ -7,6 +7,7 @@ export const createTaskStyles = css`
 	.modal {
 		position: fixed;
 		inset: 0;
+		z-index: 10;
 		background-color: rgba(0, 0, 0, 0.5);
 		display: flex;
 		justify-content: center;
