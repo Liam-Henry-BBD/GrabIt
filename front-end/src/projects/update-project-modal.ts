@@ -177,10 +177,10 @@ export class UpdateProject extends LitElement {
 				transform: translateY(0);
 			}
 		}
-		.collaborators-container {
+		.collaborator-container {
 			display: flex;
 			flex-direction: row;
-			flex-wrap: wrap;
+			flex-wrap: nowrap;
 			gap: 10px;
 			margin-top: 15px;
 		}
