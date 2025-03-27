@@ -29,6 +29,7 @@ export const homeStyles = css`
 		justify-content: start;
 		background-color: #242423;
 		width: 17rem;
+		z-index: 1000;
 		padding: 2rem 1rem;
 		height: 100vh;
 		border-right: 1px solid rgba(255, 255, 255, 0.1);

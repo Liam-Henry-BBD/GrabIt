@@ -66,7 +66,6 @@ export class DashboardComponent extends LitElement {
 
 	private toggleSidebar(): void {
 		this.isSidebarOpen = !this.isSidebarOpen;
-		console.log(this.isSidebarOpen);
 	}
 
 
