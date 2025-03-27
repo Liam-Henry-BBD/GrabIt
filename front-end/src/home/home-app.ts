@@ -12,25 +12,9 @@ interface Project {
 	collaboratorRole: number;
 }
 
-interface Task {
-	taskID: number;
-	taskName: string;
-	description: string;
-	dueDate: string;
-	taskPointID: number;
-	taskStatusID: number;
-}
-
 interface ProjectOrganizer {
 	owned: TemplateResult[];
 	collaborating: TemplateResult[];
-}
-
-interface TaskOrganizer {
-	available: TemplateResult[];
-	grabbed: TemplateResult[];
-	inReview: TemplateResult[];
-	complete: TemplateResult[];
 }
 
 @customElement('home-app')
@@ -39,10 +23,9 @@ export class DashboardComponent extends LitElement {
 
 	@state() private data: Project[] = [];
 	@state() private filteredProjects: Project[] = [];
-	@state() private currentProject: Project | null = null;
 	@state() private projectOrganiser: ProjectOrganizer = { owned: [], collaborating: [] };
-	@state() private tasks: TaskOrganizer = { available: [], grabbed: [], inReview: [], complete: [] };
-	@state() private currentProjectRole: number | null = null;
+	@state() private isSidebarOpen: boolean = false;
+
 	@state() private urls = {
 		getProjects: 'http://localhost:8081/api/projects',
 		getProjectTasks: (projectID: number) => `http://localhost:8081/api/projects/${projectID}/tasks`,
@@ -79,6 +62,10 @@ export class DashboardComponent extends LitElement {
 		}
 	}
 
+	private toggleSidebar(): void {
+		this.isSidebarOpen = !this.isSidebarOpen;
+	}
+
 	private createProjectGroupByRoleComponent(response: Project[]): void {
 		const createProjectComponent = (project: Project): TemplateResult => {
 			return html`
@@ -100,7 +87,7 @@ export class DashboardComponent extends LitElement {
 		const date = new Date(dateString);
 		return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 	}
-	
+
 	private handleFilterProjects(event: Event): void {
 		const searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
 
@@ -117,6 +104,7 @@ export class DashboardComponent extends LitElement {
 		return html`
 			<auth-router>
 				<header-app> </header-app>
+				<button class="burger-menu" @click=${() => this.toggleSidebar()}>☰</button>
 				<section class="dashboard">
 					<nav class="sidebar">
 						<section class="sidebar-header">
