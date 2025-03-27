@@ -64,6 +64,7 @@ export class DashboardComponent extends LitElement {
 
 	private toggleSidebar(): void {
 		this.isSidebarOpen = !this.isSidebarOpen;
+		console.log(this.isSidebarOpen);
 	}
 
 	private createProjectGroupByRoleComponent(response: Project[]): void {
@@ -106,7 +107,7 @@ export class DashboardComponent extends LitElement {
 				<header-app> </header-app>
 				<button class="burger-menu" @click=${() => this.toggleSidebar()}>☰</button>
 				<section class="dashboard">
-					<nav class="sidebar">
+					<nav class="sidebar ${this.isSidebarOpen ? 'open' : 'closed'}">
 						<section class="sidebar-header">
 							<input type="search" placeholder="Find a project..." class="sidebar-search" @input=${this.handleFilterProjects} />
 							<a href=${this.urls.createProject} class="new-project">+ New Project</a>
