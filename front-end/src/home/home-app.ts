@@ -22,7 +22,7 @@ interface Task {
 }
 
 interface ProjectOrganizer {
-	owned: TemplateResult[];
+	"my projects": TemplateResult[];
 	collaborating: TemplateResult[];
 }
 
@@ -40,7 +40,7 @@ export class DashboardComponent extends LitElement {
 	@state() private data: Project[] = [];
 	@state() private filteredProjects: Project[] = [];
 	@state() private currentProject: Project | null = null;
-	@state() private projectOrganiser: ProjectOrganizer = { owned: [], collaborating: [] };
+	@state() private projectOrganiser: ProjectOrganizer = { "my projects": [], collaborating: [] };
 	@state() private tasks: TaskOrganizer = { available: [], grabbed: [], inReview: [], complete: [] };
 	@state() private currentProjectRole: number | null = null;
 	@state() private urls = {
@@ -90,7 +90,7 @@ export class DashboardComponent extends LitElement {
 		};
 
 		this.projectOrganiser = {
-			owned: response.filter(project => project.collaboratorRole === 1).map(createProjectComponent),
+			"my projects": response.filter(project => project.collaboratorRole === 1).map(createProjectComponent),
 			collaborating: response.filter(project => project.collaboratorRole === 2).map(createProjectComponent)
 		};
 	}
