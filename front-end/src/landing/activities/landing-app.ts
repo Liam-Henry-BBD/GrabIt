@@ -54,8 +54,8 @@ export class LandingApp extends CtLit {
 		nav button:hover {
 			color: #f9a03f;
 		}
-		.hamburger{
-			display:none;
+		.hamburger {
+			display: none;
 		}
 
 		@media (max-width: 1024px) {
@@ -81,7 +81,7 @@ export class LandingApp extends CtLit {
 			}
 
 			nav ul.active {
-				display: flex; 
+				display: flex;
 			}
 
 			nav ul li {
@@ -165,7 +165,7 @@ export class LandingApp extends CtLit {
 			display: flex;
 			flex-direction: column;
 			align-items: center;
-			place-content:center;
+			place-content: center;
 		}
 
 		.hero h1 {
@@ -521,6 +521,9 @@ export class LandingApp extends CtLit {
 			border-top: 1px solid rgba(255, 255, 255, 0.1);
 			color: #242423;
 		}
+		.nav-start {
+			margin-right: 3.5em;
+		}
 	`;
 	scrollToSection(sectionId: string) {
 		const section = this.shadowRoot?.querySelector(`#${sectionId}`);
@@ -532,153 +535,128 @@ export class LandingApp extends CtLit {
 		return html`
 			<header>
 				<nav>
-				<div class="hamburger" @click="${this.toggleMenu}">☰</div>
-				<img id="logo" src="/src/home/home_images/GI_logo-white.png" alt="Logo" @click=${() => (window.location.href = 'http://localhost:8000')}>
-				<ul>
-					<li><button @click=${() => this.scrollToSection('start')} >Features</button></li>
-					<li><button @click=${() => this.scrollToSection('workflow')} >Workflow</button></li>
-					<li><button @click=${() => this.scrollToSection('Dashboard')}>Dashboard</button></li>
-				</ul>
-			</nav>
+					<div class="hamburger" @click="${this.toggleMenu}">☰</div>
+					<img id="logo" src="/src/home/home_images/GI_logo-white.png" alt="Logo" @click=${() => (window.location.href = 'http://localhost:8000')} />
+					<ul>
+						<li><button @click=${() => this.scrollToSection('start')}>Features</button></li>
+						<li><button @click=${() => this.scrollToSection('workflow')}>Workflow</button></li>
+						<li><button @click=${() => this.scrollToSection('Dashboard')}>Dashboard</button></li>
+					</ul>
+					<a class="get-started nav-start" href="http://localhost:8000/home">Get Started</a>
+				</nav>
 			</header>
 
 			<section class="hero">
-			<section>
-				<h1>Boost team productivity with seamless task management and progress tracking</h1>
-				<p>Join the most effective platform in managing projects</p>
-				<a class="get-started" href = 'http://localhost:8000/home'>Get Started</a></li>
-			</section>
+				<section>
+					<h1>Boost team productivity with seamless task management and progress tracking</h1>
+					<p>Join the most effective platform in managing projects</p>
+					<a class="get-started" href="http://localhost:8000/home">Get Started</a>
+				</section>
 			</section>
 
 			<main id="start">
-			<section id="our-features" class="features">
-				<h2>Powerful Features</h2>
-				<p>Everything you need to manage projects effectively and keep your team motivated.</p>
+				<section id="our-features" class="features">
+					<h2>Powerful Features</h2>
+					<p>Everything you need to manage projects effectively and keep your team motivated.</p>
 
-			<ul id="feature-cards" class="card-container">
-				<li>
-					<article class="card">
-					<div class="step-icon">📋</div>
-						<h3>Task Management</h3>
-						<p>
-							Create, assign, and track tasks with ease. Set priorities, deadlines, and point values based
-							on
-							task difficulty.
-						</p>
-					</article>
-				</li>
+					<ul id="feature-cards" class="card-container">
+						<li>
+							<article class="card">
+								<div class="step-icon">📋</div>
+								<h3>Task Management</h3>
+								<p>Create, assign, and track tasks with ease. Set priorities, deadlines, and point values based on task difficulty.</p>
+							</article>
+						</li>
 
-				<li>
-					<article class="card">
-					<div class="step-icon">🔄</div>
-						<h3>Gamified Workflow</h3>
-						<p>
-							Turn work into a game with points, leaderboards, and competitive nature. Keep your team
-							engaged
-							and
-							motivated.
-						</p>
-					</article>
-				</li>
-				<li>
-					<article class="card">
-					<div class="step-icon">🤲</div>
-						<h3>Task Grabbing</h3>
-						<p>
-							Team members can "grab" available tasks, moving them from the available pool to their
-							personal
-							workspace.
-						</p>
-					</article>
-				</li>
+						<li>
+							<article class="card">
+								<div class="step-icon">🔄</div>
+								<h3>Gamified Workflow</h3>
+								<p>Turn work into a game with points, leaderboards, and competitive nature. Keep your team engaged and motivated.</p>
+							</article>
+						</li>
+						<li>
+							<article class="card">
+								<div class="step-icon">🤲</div>
+								<h3>Task Grabbing</h3>
+								<p>Team members can "grab" available tasks, moving them from the available pool to their personal workspace.</p>
+							</article>
+						</li>
 
-				<li>
-					<article class="card">
-					<div class="step-icon">🔢</div>
-						<h3>Point System</h3>
-						<p>
-							Assign point values to tasks based on difficulty: Simple (5 points), Medium (10 points), and
-							Hard
-							(15 points).
-						</p>
-					</article>
-				</li>
+						<li>
+							<article class="card">
+								<div class="step-icon">🔢</div>
+								<h3>Point System</h3>
+								<p>Assign point values to tasks based on difficulty: Simple (5 points), Medium (10 points), and Hard (15 points).</p>
+							</article>
+						</li>
 
-				<li>
-					<article class="card">
-					<div class="step-icon">🏆</div>
-						<h3>Leaderboards</h3>
-						<p>
-							Track individual and team performance with leaderboards showing accumulated points and
-							completed
-							tasks.
-						</p>
-					</article>
-				</li>
-				<li>
-					<article class="card">
-					<div class="step-icon">🌐</div>
-						<h3>Google Authentication</h3>
-						<p>
-							Secure login using Google authentication, making it easy for development teams to get
-							started.
-						</p>
-					</article>
-				</li>
-			</ul>
-		</section>
-			<section id="workflow" class="workflow">
-				<h2>Workflow</h2>
-				<section class="workflow-steps">
-				<section class="step active">
-					<div class="step-icon">🔧</div>
-					<h3>1. Project Setup</h3>
-					<p>Team leads create projects and invite members</p>
+						<li>
+							<article class="card">
+								<div class="step-icon">🏆</div>
+								<h3>Leaderboards</h3>
+								<p>Track individual and team performance with leaderboards showing accumulated points and completed tasks.</p>
+							</article>
+						</li>
+						<li>
+							<article class="card">
+								<div class="step-icon">🌐</div>
+								<h3>Google Authentication</h3>
+								<p>Secure login using Google authentication, making it easy for development teams to get started.</p>
+							</article>
+						</li>
+					</ul>
+				</section>
+				<section id="workflow" class="workflow">
+					<h2>Workflow</h2>
+					<section class="workflow-steps">
+						<section class="step active">
+							<div class="step-icon">🔧</div>
+							<h3>1. Project Setup</h3>
+							<p>Team leads create projects and invite members</p>
+						</section>
+
+						<section class="step">
+							<div class="step-icon">📝</div>
+							<h3>2. Task Creation</h3>
+							<p>Add tasks with descriptions and deadlines</p>
+						</section>
+
+						<section class="step">
+							<div class="step-icon">🎯</div>
+							<h3>3. Task Assignment</h3>
+							<p>Team members grab available tasks</p>
+						</section>
+
+						<section class="step">
+							<div class="step-icon">📊</div>
+							<h3>4. Track Progress</h3>
+							<p>Monitor completion and review tasks</p>
+						</section>
+					</section>
 				</section>
 
-				<section class="step">
-					<div class="step-icon">📝</div>
-					<h3>2. Task Creation</h3>
-					<p>Add tasks with descriptions and deadlines</p>
+				<section id="Dashboard" class="Dashboard">
+					<h2>Dashboard</h2>
+					<img src="/src/home/home_images/dash.png" alt="Dashboard Image" class="dashboard-image" />
 				</section>
-
-				<section class="step">
-					<div class="step-icon">🎯</div>
-					<h3>3. Task Assignment</h3>
-					<p>Team members grab available tasks</p>
-				</section>
-
-				<section class="step">
-					<div class="step-icon">📊</div>
-					<h3>4. Track Progress</h3>
-					<p>Monitor completion and review tasks</p>
-				</section>
-				</section>
-			</section>
-
-			<section id="Dashboard" class="Dashboard">
-				<h2>Dashboard</h2>
-				<img src="/src/home/home_images/dash.png" alt="Dashboard Image" class="dashboard-image">
-			</section>
 			</main>
 
 			<footer>
-			<section class="footer-content">
-				<section class="footer-section">
-				<h3>GrabIt</h3>
-				<p>Gamified task management for modern teams</p>
+				<section class="footer-content">
+					<section class="footer-section">
+						<h3>GrabIt</h3>
+						<p>Gamified task management for modern teams</p>
+					</section>
+					<section class="footer-section">
+						<h3>Contact</h3>
+						<p>Email: nullidentifiers@grabit.co.za</p>
+						<p>Phone: 011 484 7548</p>
+					</section>
 				</section>
-				<section class="footer-section">
-				<h3>Contact</h3>
-				<p>Email: nullidentifiers@grabit.co.za</p>
-				<p>Phone: 011 484 7548</p>
+				<section class="footer-bottom">
+					<p>&copy; 2025 GrabIt. All rights reserved.</p>
 				</section>
-			</section>
-			<section class="footer-bottom">
-				<p>&copy; 2025 GrabIt. All rights reserved.</p>
-			</section>
-
-
 			</footer>
 		`;
 	}
