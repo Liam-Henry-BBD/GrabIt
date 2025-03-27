@@ -4,7 +4,6 @@ import com.grabit.app.dto.ProjectLeaderboardDTO;
 import com.grabit.app.dto.TaskAndRoleDTO;
 import com.grabit.app.exceptions.BadRequest;
 import com.grabit.app.model.ProjectCollaborator;
-import com.grabit.app.model.Task;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +12,6 @@ import org.springframework.security.core.Authentication;
 import com.grabit.app.dto.CreateResponseDTO;
 import com.grabit.app.dto.ProjectAndRoleDTO;
 import com.grabit.app.dto.ProjectCreationDTO;
-import com.grabit.app.dto.TaskDTO;
 
 import com.grabit.app.model.Project;
 import com.grabit.app.model.User;

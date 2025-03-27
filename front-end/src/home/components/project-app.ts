@@ -105,13 +105,13 @@ export class ProjectApp extends CtLit {
 		return html`<main>
 			<section class="project-head">
 				<article class="project-details">
-					<h1>${this.project ? this.project.projectName : 'Loading...'}</h1>
-					<p class="project-desc">${this.project ? this.project.projectDescription : '...'}</p>
+					<h1>${this.project.projectName ? this.project.projectName : 'Loading...'}</h1>
+					<p class="project-desc">${this.project.projectDescription ? this.project.projectDescription : '...'}</p>
 				</article>
 				<article>
 					<section class="article-buttons">
-						<a href="http://localhost:8000/project/${this.projectID}" class="new-project-body">Manage Tasks</a>
-						<a href="http://localhost:8000/project/${this.projectID}/leaderboard" class="leaderboard-button">Leaderboard</a>
+						${this.project.collaboratorRole == 1 ?  html`<a href="/project/${this.projectID}" class="new-project-body">Manage Tasks</a>`: ''}
+						<a href="/project/${this.projectID}/leaderboard" class="leaderboard-button">Leaderboard</a>
 					</section>
 				</article>
 			</section>

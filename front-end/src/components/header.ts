@@ -16,14 +16,34 @@ export class HeaderApp extends LitElement {
 	render() {
 		return html`
             <header class="header">
-			<img id="logo" src="/src/home/home_images/GI_logo-white.png" alt="Logo" @click=${() => window.location.href = 'http://localhost:8000'}>
-				<input type="search" placeholder="Search tasks..." />
+			<img id="logo" width="70" src="/src/home/home_images/GI_logo-white.png" alt="Logo" @click=${() => window.location.href = 'http://localhost:8000'}>
+				<!-- <input type="search" placeholder="Search tasks..." /> -->
 				<img id="profile-icon" src=${this.picture ? this.picture : ""} alt="Logo" />
 			</header>
         `;
 	}
 
 	static styles = css`
+		.logo {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		.logo button {
+			border: none;
+			padding-inline: 20px;
+			color: #ff9800;
+			padding: 1rem;
+			margin-left: 3px;
+			height: 2.5rem;
+			width: 2.5rem;
+			border-radius: 50%;
+			background-color: inherit;
+			text-decoration: underline;
+		}
+		.logo a {
+			margin-top: 7px;
+		}
         .header {
 			display: flex;
 			justify-content: space-between;
@@ -40,11 +60,7 @@ export class HeaderApp extends LitElement {
 			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 		}
 
-		.header img {
-			left: 2rem;
-			height: 10rem;
-			width: 10rem;
-		}
+		
 
 		#profile-icon {
 			margin-right: 3rem;

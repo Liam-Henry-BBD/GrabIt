@@ -1,6 +1,8 @@
 import { LitElement, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { createProjectStyles } from './projects.styles';
+import '../auth/activities/auth-router';
+
 
 @customElement('create-project')
 export class CreateProject extends LitElement {
@@ -142,18 +144,19 @@ export class CreateProject extends LitElement {
 
 		this.apiRequest(this.urls.createProject, 'POST', project)
 			.then(newProject => {
+				console.log(newProject);
 				this.apiRequest(
 					'http://localhost:8081/api/project-collaborators/list',
 					'POST',
-					this.collaborators.map(collab => {
+					 this.collaborators.map(collab => {
 						const collaborator: any = { ...collab };
 						collaborator.joinedAt = new Date().toISOString();
-						collaborator.projectId = newProject.projectId;
+						collaborator.projectID = newProject.projectId;
 						collaborator.isActive = true;
 						collaborator.roleID = 2;
 						return collaborator;
 					})
-				);
+				).then(res => console.log(res));
 				window.location.href = `/project/${newProject.projectId}`;
 			})
 			.catch(error => {
@@ -181,6 +184,7 @@ export class CreateProject extends LitElement {
 
 	render() {
 		return html`
+			<auth-router>
 			<header class="create-project-header">
 				<img id="logo" src="/src/home/home_images/GI_logo-white.png" alt="Logo" />
 			</header>
@@ -199,6 +203,7 @@ export class CreateProject extends LitElement {
 				<button type="submit">Create Project</button>
 				<a href="http://localhost:8000/home" class="cancel-btn">Cancel</a>
 			</form>
+			</auth-router>
 		`;
 	}
 }

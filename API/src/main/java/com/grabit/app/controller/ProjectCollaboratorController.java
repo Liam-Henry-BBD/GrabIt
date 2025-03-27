@@ -15,6 +15,7 @@ import com.grabit.app.service.UserService;
 
 @RestController
 @RequestMapping("/api/project-collaborators")
+@CrossOrigin(origins = "http://localhost:8000")
 public class ProjectCollaboratorController {
 
     private final ProjectCollaboratorService projectCollaboratorService;
@@ -56,10 +57,14 @@ public class ProjectCollaboratorController {
     public ResponseEntity<CreateResponseDTO> createProjectCollaboratorsFromList(
             @RequestBody List<ProjectCollaborator> projectCollaborators,
             Authentication authentication) {
+
+                System.out.println(projectCollaborators);
         projectCollaborators.forEach(projectCollaborator -> {
             projectCollaboratorService.addProjectCollaborator(projectCollaborator,
                     userService.getAuthenticatedUser(authentication));
         });
+
+
 
         CreateResponseDTO responseDTO = new CreateResponseDTO("Successfully added collaborators", 201, null);
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);

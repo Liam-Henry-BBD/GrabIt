@@ -8,6 +8,7 @@ export interface Task {
     taskReviewRequestedAt: any;
     userID: number;
     projectID: number;
+    isActive?: boolean;
   }
   
 

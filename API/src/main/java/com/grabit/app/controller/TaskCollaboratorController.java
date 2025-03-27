@@ -12,6 +12,7 @@ import com.grabit.app.service.TaskCollaboratorService;
 
 @RestController
 @RequestMapping("/api/task-collaborators")
+@CrossOrigin(origins = "http://localhost:8000")
 public class TaskCollaboratorController {
 
     private final TaskCollaboratorService taskCollaboratorService;

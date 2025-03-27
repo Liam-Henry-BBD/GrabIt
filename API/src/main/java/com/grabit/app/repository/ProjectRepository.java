@@ -43,13 +43,17 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
                 p.ProjectName,
                 p.ProjectDescription,
                 pc.ProjectCollaboratorID,
+                p.CreatedAt,
+                p.UpdatedAt,
                 pc.RoleID AS CollaboratorRole
             FROM
                 [grabit].Projects p
             LEFT JOIN
                 [grabit].ProjectCollaborators pc ON p.ProjectID = pc.ProjectID
             WHERE
-                pc.UserID = :userID;
+                pc.UserID = :userID
+                AND p.IsActive = 1
+                ;
             """, nativeQuery = true)
     List<ProjectAndRoleDTO>  getProjectsByUserID(@Param("userID") Integer userID);
 
@@ -63,6 +67,8 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
                 p.ProjectName,
                 p.ProjectDescription,
                 pc.ProjectCollaboratorID,
+                p.CreatedAt,
+                p.UpdatedAt,
                 pc.RoleID AS CollaboratorRole
             FROM
                 [grabit].Projects p

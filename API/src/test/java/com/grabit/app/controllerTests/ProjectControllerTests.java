@@ -61,7 +61,7 @@ public class ProjectControllerTests {
     public void testGetAllProjects() {
         User testUser = new User();
 
-        List<ProjectAndRoleDTO> projects = List.of(new ProjectAndRoleDTO(1, "project", "blah blah", 2, (byte) 1));
+        List<ProjectAndRoleDTO> projects = List.of(new ProjectAndRoleDTO(1, "project", "blah blah", 2, null, null, (byte) 1));
 
         when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
         when(projectService.getAllProjects(testUser)).thenReturn(projects);

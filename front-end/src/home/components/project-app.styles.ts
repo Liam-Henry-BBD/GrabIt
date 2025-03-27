@@ -99,6 +99,45 @@ export const projectAppStyles = css`
 		margin: 0.5rem;
 		font-weight: bold;
 	}
+
+    @media (max-width: 1024px) {
+			main {
+				overflow-y: auto;
+			}
+			.columns {
+				flex-direction: column;
+				gap: 1rem;
+			}
+			.column > section {
+				height: 100%;
+				width: 100%;
+				overflow-y: hidden;
+				overflow-x: auto;
+				display: flex;
+				gap: 1rem;
+				flex-direction: row;
+			}
+			.project-card {
+				background-color: #1e1e1e; 
+				color: #ffffff; 
+				padding: 1rem;
+				border-radius: 5px;
+				margin-bottom: 1rem;
+				min-width: 12rem;
+				box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+			}
+            .project-head {
+                flex-direction: column;
+            }
+
+            .project-details {
+                width: 100%;
+            }
+            .project-details * {
+                width: 100%;
+            }
+		}
+
 	.column .column-space .task-count {
 		background-color: #4a9191a4;
 		padding: 0.5rem;

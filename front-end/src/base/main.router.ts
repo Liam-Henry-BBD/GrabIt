@@ -2,6 +2,7 @@ import { Route } from '@vaadin/router';
 import "../home/components/cards/project-card"
 
 import "../home/components/project-app"
+import "../home/components/empty-app";
 
 
 export const routes: Route[] = [
@@ -15,7 +16,11 @@ export const routes: Route[] = [
 
       children: [
         {
-            path: '/:projectID',
+            path: '/',
+            component: 'empty-app',
+        },
+        {
+            path: ':projectID',
             component: 'project-app',
         }
       ]
@@ -26,7 +31,7 @@ export const routes: Route[] = [
       component: 'landing-app',
       action: async () => {
         await import('../landing/activities/landing-app');
-        document.title = 'welcome to grabit';
+        document.title = 'Welcome';
       }
     },
     {
@@ -66,7 +71,7 @@ export const routes: Route[] = [
       component: 'create-project',
       action: async () => {
         await import('../projects/create-project');
-        document.title = '• created-project.com';
+        document.title = 'Create new project';
       }
     },
     {
@@ -74,7 +79,7 @@ export const routes: Route[] = [
       component: 'project-overview',
       action: async () => {
         await import('../projects/project-overview');
-        document.title = '• project-overview.com';
+        document.title = 'Project Details';
       }
     },
     {
@@ -82,7 +87,7 @@ export const routes: Route[] = [
       component: 'tutorials-page',
       action: async () => {
         await import('../tutorial/tutorials');
-        document.title = '• tutorial-page.com';
+        document.title = 'Tutorials';
       }
     }
   ]

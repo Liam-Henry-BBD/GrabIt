@@ -16,7 +16,7 @@ async function sendRequest(endpoint: string, options: RequestInit = {}) {
         ...options,
         headers
     });
-
+    
     if (!response.ok && response.status === 401) {
         localStorage.removeItem('token');
         window.location.href = '/login';

@@ -41,8 +41,8 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     @Query(value = """
             SELECT 
                 task.TaskID,
-                task.TaskDescription,
                 task.TaskName,
+                task.TaskDescription,
                 task.TaskPointID,
                 task.TaskStatusID,
                 collab.UserID as userID,
@@ -64,8 +64,8 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     @Query(value = """
             SELECT 
                 task.TaskID,
-                task.TaskDescription,
                 task.TaskName,
+                task.TaskDescription,
                 task.TaskPointID,
                 task.TaskStatusID,
                 collab.UserID as userID,

@@ -14,6 +14,12 @@ export const cardStyles = css`
         position: relative; 
     }
 
+    .project-card:disabled {
+        background-color: #0000007b;
+        color: #1e1e1e62;
+        cursor: not-allowed;
+    }
+
     .task-description {
         font-size: .8rem;
         color: #ebe9e9cf;

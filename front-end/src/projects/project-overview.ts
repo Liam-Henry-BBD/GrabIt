@@ -4,6 +4,7 @@ import { projectOverviewStyles } from './projects.styles';
 import { formatDate } from '../utils/app';
 import '../tasks/create-task-modal';
 import './update-project-modal';
+import '../auth/activities/auth-router';
 
 interface Task {
 	taskID: any;
@@ -209,12 +210,12 @@ export class ProjectOverview extends LitElement {
 
 	render() {
 		return html`
+		<auth-router>
 			<section class="header">
 				<img id="logo" src="/src/home/home_images/GI_logo-white.png" alt="Logo" @click=${() => (window.location.href = 'http://localhost:8000/home')} />
 			</section>
 			<div class="project-header">
 				<div class="back">
-
 					<a  href= 'http://localhost:8000/home/${this.project.projectID}'> ← Back to Project</a>
 				</div>
 				<h1>${this.project.projectName}</h1>
@@ -274,7 +275,7 @@ export class ProjectOverview extends LitElement {
 					${this.tasks.map(
 						task => html`
 							<div class="task">
-								<div class="header">
+								<div class="task-header">
 									<h3>${task.taskName}</h3>
 								</div>
 								<p>${task.taskDescription}</p>
@@ -287,6 +288,7 @@ export class ProjectOverview extends LitElement {
 					)}
 				</div>
 			</div>
+			</auth-router>
 		`;
 	}
 }
