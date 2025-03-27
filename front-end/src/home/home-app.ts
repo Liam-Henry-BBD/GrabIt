@@ -37,15 +37,6 @@ interface TaskOrganizer {
 export class DashboardComponent extends LitElement {
 	static styles = homeStyles;
 
-	connectedCallback() {
-		super.connectedCallback();
-		this.apiRequest(this.urls.getProjects, 'GET', (data: any) => {
-			this.data = data;
-			this.filteredProjects = [...data];
-			this.createProjectGroupByRoleComponent(data);
-		});
-	}
-
 	@state() private data: Project[] = [];
 	@state() private filteredProjects: Project[] = [];
 	@state() private currentProject: Project | null = null;
@@ -58,6 +49,15 @@ export class DashboardComponent extends LitElement {
 		getProjectDetails: (projectID: number) => `http://localhost:8081/api/projects/${projectID}`,
 		createProject: 'http://localhost:8000/create-project'
 	};
+
+	connectedCallback() {
+		super.connectedCallback();
+		this.apiRequest(this.urls.getProjects, 'GET', (data: any) => {
+			this.data = data;
+			this.filteredProjects = [...data];
+			this.createProjectGroupByRoleComponent(data);
+		});
+	}
 
 	async apiRequest<T>(url: string, method: string, callback: (data: T) => void): Promise<void> {
 		try {
@@ -100,17 +100,16 @@ export class DashboardComponent extends LitElement {
 		const date = new Date(dateString);
 		return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 	}
+	
 	private handleFilterProjects(event: Event): void {
 		const searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
 
-		// Reset filteredProjects to the original data if the input is empty
 		if (searchTerm === '') {
 			this.filteredProjects = [...this.data];
 		} else {
 			this.filteredProjects = this.data.filter(project => project.projectName.toLowerCase().includes(searchTerm));
 		}
 
-		// Recreate the project organizer based on the filtered projects
 		this.createProjectGroupByRoleComponent(this.filteredProjects);
 	}
 
