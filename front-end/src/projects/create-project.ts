@@ -73,7 +73,7 @@ export class CreateProject extends LitElement {
 			const searchUrl = `${this.urls.searchForCollaborator}${this.collaboratorEmail}`;
 			const results = await this.apiRequest(searchUrl, 'GET');
 			if (!results.length) {
-				alert('No users found with that email address.');
+				alert('No users found with that name.');
 				return;
 			}
 			this.renderDropdown(results);
