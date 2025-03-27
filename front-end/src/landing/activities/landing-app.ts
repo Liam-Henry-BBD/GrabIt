@@ -54,21 +54,22 @@ export class LandingApp extends CtLit {
 		nav button:hover {
 			color: #f9a03f;
 		}
+		.hamburger{
+			display:none;
+		}
 
 		@media (max-width: 1024px) {
 			nav {
-				padding: 1rem 5%;
+				padding: 1rem auto;
+				display: flex;
 			}
 
-			/* Center logo in mobile view */
 			#logo {
 				position: absolute;
-				left: 50%;
-				transform: translateX(-50%);
 			}
 
 			nav ul {
-				display: none; /* Hide the menu by default */
+				display: none;
 				flex-direction: column;
 				position: absolute;
 				top: 6rem;
@@ -80,7 +81,7 @@ export class LandingApp extends CtLit {
 			}
 
 			nav ul.active {
-				display: flex; /* Show the menu when active */
+				display: flex; 
 			}
 
 			nav ul li {
@@ -95,9 +96,9 @@ export class LandingApp extends CtLit {
 				display: block;
 				cursor: pointer;
 				z-index: 1100;
-				position: absolute;
-				right: 1rem; /* Hamburger on the left */
-				top: 1rem;
+				position: relative;
+				right: 0rem;
+				top: 0rem;
 				font-size: 2rem;
 				color: white;
 			}
@@ -164,6 +165,7 @@ export class LandingApp extends CtLit {
 			display: flex;
 			flex-direction: column;
 			align-items: center;
+			place-content:center;
 		}
 
 		.hero h1 {
@@ -231,12 +233,12 @@ export class LandingApp extends CtLit {
 		.features {
 			height: calc(100vh - 3rem);
 			padding-top: 3rem;
-			margin-top: 3rem;
+			margin-top: 6rem;
 		}
 
 		.features h2 {
 			font-size: 3rem;
-			margin-top: -2rem;
+			margin-top: 3rem;
 			text-align: center;
 			color: white;
 			width: 100%;
@@ -529,14 +531,14 @@ export class LandingApp extends CtLit {
 	render() {
 		return html`
 			<header>
-			<nav>
-				<img id="logo" src="/src/home/home_images/GI_logo-white.png" alt="Logo" @click=${() => window.location.href = 'http://localhost:8000'}>
+				<nav>
+				<div class="hamburger" @click="${this.toggleMenu}">☰</div>
+				<img id="logo" src="/src/home/home_images/GI_logo-white.png" alt="Logo" @click=${() => (window.location.href = 'http://localhost:8000')}>
 				<ul>
-					<li><button @click=${() => this.scrollToSection('our-features')} >Features</button></li>
+					<li><button @click=${() => this.scrollToSection('start')} >Features</button></li>
 					<li><button @click=${() => this.scrollToSection('workflow')} >Workflow</button></li>
 					<li><button @click=${() => this.scrollToSection('Dashboard')}>Dashboard</button></li>
 				</ul>
-				<div class="hamburger" @click="${this.toggleMenu}">&#9776;</div>
 			</nav>
 			</header>
 
@@ -548,7 +550,7 @@ export class LandingApp extends CtLit {
 			</section>
 			</section>
 
-			<main>
+			<main id="start">
 			<section id="our-features" class="features">
 				<h2>Powerful Features</h2>
 				<p>Everything you need to manage projects effectively and keep your team motivated.</p>
