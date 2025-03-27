@@ -5,6 +5,8 @@ import '../auth/activities/auth-router';
 import './components/cards/project-card';
 import './components/empty-app';
 import { homeStyles } from './home.styles';
+import sendRequest from '../services/requests';
+import { c } from 'vite/dist/node/types.d-aGj9QkWt';
 
 interface Project {
 	projectID: number;
@@ -67,11 +69,23 @@ export class DashboardComponent extends LitElement {
 		console.log(this.isSidebarOpen);
 	}
 
+
+	async deleteProject(projectID: number) {
+		try {
+			const response = await sendRequest("/projects/" + projectID, {
+				method: "DELETE"
+			});
+			window.location.reload();
+		} catch (error) {
+			window.location.reload();
+		}
+	}
+
 	private createProjectGroupByRoleComponent(response: Project[]): void {
 		const createProjectComponent = (project: Project): TemplateResult => {
 			return html`
 				<li class="project-item">
-					<span class="project-icon">📁</span>
+					${project.collaboratorRole == 1 ? html`<button class="project-del" @click=${() => this.deleteProject(project.projectID)}>del</button>`: html`<span>📁</span>`}
 					<a href=${'/home/' + project.projectID}>${project.projectName}</a>
 				</li>
 			`;
