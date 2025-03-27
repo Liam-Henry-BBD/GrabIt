@@ -17,6 +17,7 @@ interface Task {
 	difficulty: 'easy' | 'medium' | 'hard';
 	taskDeadline?: any;
 	createdAt: any;
+	taskCreatedAt: any;
 	taskPointID: 5 | 10 | 15;
 	active: boolean;
 }
