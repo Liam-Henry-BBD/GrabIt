@@ -37,14 +37,17 @@ interface TaskOrganizer {
 export class DashboardComponent extends LitElement {
 	static styles = homeStyles;
 
-
-
 	connectedCallback() {
 		super.connectedCallback();
-		this.apiRequest(this.urls.getProjects, 'GET', (data: any) => this.createProjectGroupByRoleComponent(data));
+		this.apiRequest(this.urls.getProjects, 'GET', (data: any) => {
+			this.data = data;
+			this.filteredProjects = [...data];
+			this.createProjectGroupByRoleComponent(data);
+		});
 	}
 
 	@state() private data: Project[] = [];
+	@state() private filteredProjects: Project[] = [];
 	@state() private currentProject: Project | null = null;
 	@state() private projectOrganiser: ProjectOrganizer = { owned: [], collaborating: [] };
 	@state() private tasks: TaskOrganizer = { available: [], grabbed: [], inReview: [], complete: [] };
@@ -86,10 +89,9 @@ export class DashboardComponent extends LitElement {
 			`;
 		};
 
-		this.data = response;
 		this.projectOrganiser = {
-			owned: this.data.filter(project => project.collaboratorRole === 1).map(createProjectComponent),
-			collaborating: this.data.filter(project => project.collaboratorRole === 2).map(createProjectComponent)
+			owned: response.filter(project => project.collaboratorRole === 1).map(createProjectComponent),
+			collaborating: response.filter(project => project.collaboratorRole === 2).map(createProjectComponent)
 		};
 	}
 
@@ -97,6 +99,19 @@ export class DashboardComponent extends LitElement {
 		if (!dateString) return 'Not set';
 		const date = new Date(dateString);
 		return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+	}
+	private handleFilterProjects(event: Event): void {
+		const searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
+
+		// Reset filteredProjects to the original data if the input is empty
+		if (searchTerm === '') {
+			this.filteredProjects = [...this.data];
+		} else {
+			this.filteredProjects = this.data.filter(project => project.projectName.toLowerCase().includes(searchTerm));
+		}
+
+		// Recreate the project organizer based on the filtered projects
+		this.createProjectGroupByRoleComponent(this.filteredProjects);
 	}
 
 	render() {
@@ -106,7 +121,7 @@ export class DashboardComponent extends LitElement {
 				<section class="dashboard">
 					<nav class="sidebar">
 						<section class="sidebar-header">
-							<input type="search" placeholder="Find a project..." class="sidebar-search" />
+							<input type="search" placeholder="Find a project..." class="sidebar-search" @input=${this.handleFilterProjects} />
 							<a href=${this.urls.createProject} class="new-project">+ New Project</a>
 						</section>
 						<hr class="separator" />
