@@ -7,5 +7,6 @@ API/.idea/
 !API/**/src/main/**/target/
 !API/**/src/test/**/target/
 front-end/.vscode/
+front-end/.vite/
 front-end/node_modules
 node_modules

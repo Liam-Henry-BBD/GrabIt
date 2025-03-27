@@ -308,7 +308,7 @@ export const projectOverviewStyles = css`
 		background-color: #508991;
 	}
 
-	button {
+	button, .update-btn {
 		background-color: #f9a03f;
 		color: #242423;
 		border: none;
@@ -316,6 +316,7 @@ export const projectOverviewStyles = css`
 		padding: 8px 16px;
 		cursor: pointer;
 		margin-bottom: 10px;
+		margin-top: 25px;
 	}
 
 	button:hover {

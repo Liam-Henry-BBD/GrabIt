@@ -2,9 +2,6 @@ import { CtLit, customElement, html, property, state } from "@conectate/ct-lit";
 import { cardStyles } from "./project-card.styles";
 import { Task } from "../../../utils/types";
 import { formatDate } from "../../../utils/app";
-import { RouterLocation } from "@vaadin/router";
-
-
 
 @customElement("project-card")
 export class ProjectCard extends CtLit {
