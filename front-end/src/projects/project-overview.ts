@@ -31,6 +31,7 @@ export class ProjectOverview extends LitElement {
 		projectName: '',
 		projectDescription: '',
 		createdAt: Date(),
+		taskCreatedAt: Date(),
 		updatedAt: Date(),
 		collaborators: [] as string[]
 	};
@@ -70,6 +71,7 @@ export class ProjectOverview extends LitElement {
 					projectID: projectData.projectID,
 					projectName: projectData.projectName,
 					projectDescription: projectData.projectDescription,
+					taskCreatedAt: formatDate(projectData.taskCreatedAt),
 					createdAt: formatDate(projectData.createdAt),
 					updatedAt: formatDate(projectData.updatedAt),
 					collaborators: projectData.collaborators || []
@@ -280,7 +282,7 @@ export class ProjectOverview extends LitElement {
 								</div>
 								<p>${task.taskDescription}</p>
 								${task.taskDeadline ? html`<p>Deadline: ${formatDate(task.taskDeadline)}</p>` : ''}
-								<p>Created: ${formatDate(task.createdAt)}</p>
+								<p>Created: ${formatDate(task.taskCreatedAt)}</p>
 								<p style="color: ${this.getDifficultyColor(task.taskPointID)}">Difficulty: ${task.taskPointID}</p>
 								<button class="remove-btn" @click=${() => this.handleRemoveTask(task.taskID)}>Remove</button>
 							</div>

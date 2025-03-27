@@ -58,6 +58,7 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
             ON task.TaskID = collab.TaskID
             WHERE 
                 task.ProjectID = :projectID
+                AND task.IsActive = 1;
             """, nativeQuery = true)
     List<TaskAndRoleDTO> getTasksWithRoles(Integer projectID);
 
@@ -81,6 +82,7 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
             ON task.TaskID = collab.TaskID
             WHERE 
                 task.ProjectID = :projectID
+                AND task.IsActive = 1
                 AND collab.UserID = :userID;
             """, nativeQuery = true)
     List<TaskAndRoleDTO> getMyTasksWithRoles(Integer projectID, Integer userID);
