@@ -14,7 +14,9 @@ export class CreateProject extends LitElement {
 
 	private urls = {
 		getProjects: 'http://localhost:8081/api/projects',
-		createProject: 'http://localhost:8081/api/projects'
+		createProject: 'http://localhost:8081/api/projects',
+		searchForCollaborator: 'http://localhost:8081/api/user/search?query=',
+		addCollaborators: 'http://localhost:8081/api/project-collaborators/list'
 	};
 
 	static styles = createProjectStyles;
@@ -68,7 +70,7 @@ export class CreateProject extends LitElement {
 
 	async handleAddCollaborator() {
 		try {
-			const searchUrl = `http://localhost:8081/api/user/search?query=${this.collaboratorEmail}`;
+			const searchUrl = `${this.urls.searchForCollaborator}${this.collaboratorEmail}`;
 			const results = await this.apiRequest(searchUrl, 'GET');
 			if (!results.length) {
 				alert('No users found with that email address.');
@@ -146,7 +148,7 @@ export class CreateProject extends LitElement {
 			.then(newProject => {
 				console.log(newProject);
 				this.apiRequest(
-					'http://localhost:8081/api/project-collaborators/list',
+					this.urls.addCollaborators,
 					'POST',
 					 this.collaborators.map(collab => {
 						const collaborator: any = { ...collab };
