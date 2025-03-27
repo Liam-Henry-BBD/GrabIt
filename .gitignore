@@ -1,12 +1,11 @@
 .vs/
 .vscode/
+*.idea/
 API/target/
+API/.idea/
 !API/.mvn/wrapper/maven-wrapper.jar
 !API/**/src/main/**/target/
 !API/**/src/test/**/target/
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
+front-end/.vscode/
+front-end/node_modules
+node_modules
