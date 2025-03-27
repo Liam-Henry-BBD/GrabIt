@@ -1,9 +1,7 @@
 import { Route } from '@vaadin/router';
 import "../home/components/cards/project-card"
-
 import "../home/components/project-app"
 import "../home/components/empty-app";
-
 
 export const routes: Route[] = [
     {
@@ -82,12 +80,4 @@ export const routes: Route[] = [
         document.title = 'Project Details';
       }
     },
-    {
-      path: '/tutorials',
-      component: 'tutorials-page',
-      action: async () => {
-        await import('../tutorial/tutorials');
-        document.title = 'Tutorials';
-      }
-    }
   ]

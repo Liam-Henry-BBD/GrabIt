@@ -1,9 +1,5 @@
 import { CtLit, customElement, html, state } from '@conectate/ct-lit';
-
-// Components
 import '../components/header';
-
-// CSS
 import { leaderboardStyles } from './leaderboard.styles';
 import { getLeaderboard } from '../services/leaderboard.service';
 import { Router, RouterLocation } from '@vaadin/router';
@@ -26,13 +22,12 @@ export class Leaderboard extends CtLit {
 		super.connectedCallback();
 		if (this.projectID) {
 			getLeaderboard(this.projectID).then(data => {
-				this.leaderboardData = data; // Store full leaderboard data
+				this.leaderboardData = data; 
 			});
 			sendRequest(`/projects/${this.projectID}`).then(data => (this.projectDetails = data));
 		}
 	}
 
-	/** Returns the filtered leaderboard based on searchValue */
 	get filteredLeaderboard() {
 		if (!this.searchValue) return this.leaderboardData;
 		return this.leaderboardData.filter(user => user.githubID.toLowerCase().includes(this.searchValue.toLowerCase()));

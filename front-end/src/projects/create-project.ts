@@ -3,7 +3,6 @@ import { customElement, state } from 'lit/decorators.js';
 import { createProjectStyles } from './projects.styles';
 import '../auth/activities/auth-router';
 
-
 @customElement('create-project')
 export class CreateProject extends LitElement {
 	@state() name: string = '';
@@ -73,7 +72,7 @@ export class CreateProject extends LitElement {
 			const searchUrl = `${this.urls.searchForCollaborator}${this.collaboratorEmail}`;
 			const results = await this.apiRequest(searchUrl, 'GET');
 			if (!results.length) {
-				alert('No users found with that email address.');
+				alert('No users found with that name.');
 				return;
 			}
 			this.renderDropdown(results);
@@ -144,9 +143,13 @@ export class CreateProject extends LitElement {
 			collaborators: this.collaborators
 		};
 
+		if(project.projectDescription.length > 500) {
+			alert('Project description should not exceed 500 characters. Please shorten your input.');
+			return;
+		}
+
 		this.apiRequest(this.urls.createProject, 'POST', project)
 			.then(newProject => {
-				console.log(newProject);
 				this.apiRequest(
 					this.urls.addCollaborators,
 					'POST',
@@ -198,7 +201,7 @@ export class CreateProject extends LitElement {
 				<textarea name="description" .value=${this.description} @input=${this.handleInput} placeholder="Write your project description here" required></textarea>
 				<h2>Add Collaborators</h2>
 				<div class="collaborator-container">
-					<input type="email" name="collaboratorEmail" .value=${this.collaboratorEmail} @input=${this.handleInput} placeholder="Enter the collaborator's email" />
+					<input type="text" name="collaboratorEmail" .value=${this.collaboratorEmail} @input=${this.handleInput} placeholder="Enter the collaborator's email" />
 					<button type="button" @click=${this.handleAddCollaborator}>+</button>
 				</div>
 				${this.renderCollaboratorList()}

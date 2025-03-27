@@ -9,6 +9,7 @@ import { getUser } from '../../services/user.service';
 import { completeTask, grabTask, rejectTaskReview, requestTaskReview } from '../../services/task.service';
 
 import '../components/cards/review-card';
+import '../components/cards/grab-card';
 
 @customElement('project-app')
 export class ProjectApp extends CtLit {
@@ -99,6 +100,8 @@ export class ProjectApp extends CtLit {
 		}
 	}
 
+    
+
 	static styles = projectAppStyles;
 
 	render() {
@@ -134,7 +137,8 @@ export class ProjectApp extends CtLit {
 							.filter(task => task.taskStatusID == 2)
 							.map(task => {
 								const allowedToGrab = this.project.collaboratorRole != 1 && task.userID == this.currentUser.userID;
-								return html`<project-card .visible=${allowedToGrab} .handleTaskAction=${this.handleRequestReview} .task=${task} .action=${'Request review'}></project-card>`;
+                                const canCollab = this.project.collaboratorRole == 1 || task.userID == this.currentUser.userID;
+								return html`<grab-card .collab=${canCollab} .visible=${allowedToGrab} .handleTaskAction=${this.handleRequestReview} .task=${task} .action=${'Request review'}></grab-card>`;
 							})}
 					</article>
 

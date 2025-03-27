@@ -1,9 +1,7 @@
-import { CtLit, customElement, html, property, state } from "@conectate/ct-lit";
+import { CtLit, customElement, html, property } from "@conectate/ct-lit";
 import { cardStyles } from "./project-card.styles";
 import { Task } from "../../../utils/types";
 import { formatDate } from "../../../utils/app";
-
-
 
 @customElement("review-card")
 export class ReviewCard extends CtLit {

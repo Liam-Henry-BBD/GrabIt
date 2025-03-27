@@ -11,7 +11,6 @@ export class LandingApp extends CtLit {
 			background-color: white;
 		}
 
-		/* this is the actual header */
 		nav {
 			display: flex;
 			justify-content: space-between;
@@ -143,8 +142,6 @@ export class LandingApp extends CtLit {
 		}
 
 		/* ---------------------------------------- */
-
-		/* where we land */
 
 		.hero {
 			display: flex;
@@ -412,7 +409,7 @@ export class LandingApp extends CtLit {
 			}
 
 			.workflow-steps {
-				grid-template-columns: 1fr 1fr; /* On smaller screens, make it 2 columns */
+				grid-template-columns: 1fr 1fr; 
 			}
 		}
 
@@ -463,7 +460,6 @@ export class LandingApp extends CtLit {
 			}
 		}
 
-		/* phone */
 		@media (max-width: 768px) {
 			.Dashboard {
 				padding: 4rem 3%;
@@ -489,7 +485,6 @@ export class LandingApp extends CtLit {
 			color: white;
 			text-decoration: none;
 			background-color: #508991;
-			/* accent colour */
 		}
 
 		footer {

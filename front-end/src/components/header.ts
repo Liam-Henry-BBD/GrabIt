@@ -28,6 +28,7 @@ export class HeaderApp extends LitElement {
 			justify-content: center;
 			align-items: center;
 		}
+		
 		.logo button {
 			border: none;
 			padding-inline: 20px;
@@ -43,7 +44,7 @@ export class HeaderApp extends LitElement {
 		.logo a {
 			margin-top: 7px;
 		}
-        .header {
+		.header {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
@@ -59,15 +60,12 @@ export class HeaderApp extends LitElement {
 			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 		}
 
-		
-
 		#profile-icon {
 			margin-right: 3rem;
 			margin-left: 3rem;
 			height: 2.5rem;
 			width: 2.5rem;
 			border-radius: 50%;
-
 		}
 		.header input {
 			padding: 0.8rem;
@@ -88,5 +86,17 @@ export class HeaderApp extends LitElement {
 			margin-left: 30rem;
 		}
 
-    `;
+		@media (max-width: 1024px) {
+			.header {
+				justify-content: center;
+			}
+			#logo {
+				margin: 0 auto;
+			}
+			#profile-icon {
+				position: fixed;
+				right: 0;
+			}
+		}
+	`;
 }

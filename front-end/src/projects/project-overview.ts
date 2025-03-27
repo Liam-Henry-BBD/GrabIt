@@ -118,7 +118,6 @@ export class ProjectOverview extends LitElement {
 						createdAt: formatDate(task.createdAt),
 						deadline: formatDate(task.taskDeadline)
 					}));
-				console.log('Filtered & Mapped Tasks:', this.tasks, tasks.taskDifficulty);
 			} else {
 				console.error(`Failed to fetch tasks. Status: ${res.status}`);
 			}
@@ -160,6 +159,8 @@ export class ProjectOverview extends LitElement {
 				const createdTask = await res.json();
 				this.tasks = [...this.tasks, createdTask];
 				this.isModalOpen = false;
+
+				
 			} else {
 				console.error('Failed to create task.');
 			}
@@ -226,18 +227,6 @@ export class ProjectOverview extends LitElement {
 				<div class="dates-container">
 					<p>Created: ${formatDate(this.project.createdAt)}</p>
 					<p>Updated: ${formatDate(this.project.updatedAt)}</p>
-				</div>
-				<h3>Collaborators:</h3>
-				<div class="collaborators-container">
-					${this.project.collaborators.map(collaborator => {
-						const initials = collaborator
-							.split('@')[0]
-							.split('.')
-							.map(namePart => namePart[0])
-							.join('')
-							.toUpperCase();
-						return html`<div class="collaborator-badge" title=${collaborator}>${initials}</div>`;
-					})}
 				</div>
 				<button class="update-btn" @click=${() => (this.isUpdateModalOpen = true)}>Update Project</button>
 			</div>
