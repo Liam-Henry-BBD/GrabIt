@@ -18,6 +18,11 @@ export const homeStyles = css`
 		display: flex;
 	}
 
+	.project-del {
+		color: red;
+		font-size: 8px;
+	}
+
 	.sidebar {
 		display: flex;
 		flex-direction: column;
