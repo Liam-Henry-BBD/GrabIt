@@ -15,8 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -74,24 +72,6 @@ public class ProjectControllerTests {
     }
 
     @Test
-    public void testGetProjectByID() {
-        User testUser = new User();
-        testUser.setUserID(1);
-        Project project = new Project();
-
-        when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
-        when(projectService.isProjectCollaborator(eq(testUser.getUserID()), eq(1))).thenReturn(true);
-        when(projectService.getProjectByID(1)).thenReturn(project);
-
-        // ResponseEntity<Project> response = projectController.getProjectByID(1, authentication);
-
-        // verify(projectService, times(1)).isProjectCollaborator(eq(testUser.getUserID()), eq(1));
-        // verify(projectService, times(1)).getProjectByID(1);
-        // assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        // assertThat(response.getBody()).isEqualTo(project);
-    }
-
-    @Test
     public void testCloseProject() {
         User testUser = new User();
         Project project = new Project();
@@ -133,26 +113,6 @@ public class ProjectControllerTests {
 
         verify(projectService, times(1)).getProjectLeaderboardByProjectID(1);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    }
-
-    @Test
-    public void testGetMyProjectTasks() {
-        User testUser = new User();
-        testUser.setUserID(1);
-        Integer projectID = 1;
-        TaskDTO taskDTO = new TaskDTO(1, "Task 1", "Task description", Timestamp.valueOf(LocalDateTime.now()), (byte) 1, (byte) 1, LocalDateTime.now());
-        List<TaskDTO> tasks = List.of(taskDTO);
-
-        when(userService.getAuthenticatedUser(authentication)).thenReturn(testUser);
-        when(projectService.isProjectCollaborator(testUser.getUserID(), projectID)).thenReturn(true);
-        when(projectService.getProjectTasksByProjectIDAndUserID(projectID, testUser.getUserID())).thenReturn(tasks);
-
-        // ResponseEntity<List<TaskDTO>> response = projectController.getMyProjectTasks(projectID, authentication);
-
-        // verify(projectService, times(1)).isProjectCollaborator(testUser.getUserID(), projectID);
-        // verify(projectService, times(1)).getProjectTasksByProjectIDAndUserID(projectID, testUser.getUserID());
-        // assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        // assertThat(response.getBody()).isEqualTo(tasks);
     }
 
     @Test

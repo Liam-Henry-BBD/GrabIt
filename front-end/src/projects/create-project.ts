@@ -3,7 +3,6 @@ import { customElement, state } from 'lit/decorators.js';
 import { createProjectStyles } from './projects.styles';
 import '../auth/activities/auth-router';
 
-
 @customElement('create-project')
 export class CreateProject extends LitElement {
 	@state() name: string = '';
@@ -144,9 +143,13 @@ export class CreateProject extends LitElement {
 			collaborators: this.collaborators
 		};
 
+		if(project.projectDescription.length > 500) {
+			alert('Project description should not exceed 500 characters. Please shorten your input.');
+			return;
+		}
+
 		this.apiRequest(this.urls.createProject, 'POST', project)
 			.then(newProject => {
-				console.log(newProject);
 				this.apiRequest(
 					this.urls.addCollaborators,
 					'POST',
