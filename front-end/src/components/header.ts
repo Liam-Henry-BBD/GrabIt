@@ -53,7 +53,8 @@ export class HeaderApp extends LitElement {
 			border-radius: 0.7rem;
 			background-color: #242423;
 			color: #f9a03f;
-			text-decoration: underline;
+			text-decoration: none;
+			border: 1px solid #f9a03f;
 		}
 
 		@media (max-width: 1024px) {

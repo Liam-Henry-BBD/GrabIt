@@ -8,12 +8,15 @@ export const projectAppStyles = css`
 
 	.new-project-body {
 		background-color: #F9A03F;
+		font-weight: bold;
 		color: #242423	;
 		width: 100%;
 	}
 
 	.new-project-body:hover {
-		background-color: #e68900;
+		border-radius: 0.7rem;
+		background-color: #242423;
+		color: #f9a03f;
 	}
 
 	.new-collaborator {
@@ -28,10 +31,12 @@ export const projectAppStyles = css`
 	.leaderboard-button {
 		background-color: #4a676a75;
 		color: #ffffff;
+		font-weight: bold;
 	}
 
 	.leaderboard-button:hover {
 		background-color: #F9A03F;
+		color: #242423;
 	}
 	a {
 		text-decoration: none;
