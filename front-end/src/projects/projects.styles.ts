@@ -30,6 +30,7 @@ export const createProjectStyles = css`
 		margin-top: 1rem;
 		height: 10rem;
 		width: 10rem;
+		background-color: #242423;
 	}
 
 	h1 {
@@ -55,8 +56,7 @@ export const createProjectStyles = css`
 		color: #f7f0f0;
 	}
 
-	button,
-	a {
+	.collaborator-container button{
 		background-color: #f9a03f;
 		color: #242423;
 		cursor: pointer;
@@ -65,10 +65,53 @@ export const createProjectStyles = css`
 		border-radius: 5px;
 		margin-top: 10px;
 		text-decoration: none;
+		font-weight: bold;
+
+	}
+
+	.create-project-btns a{
+		background-color: #f93f3f;
+		color: #242423;
+		cursor: pointer;
+		border: none;
+		padding: 10px 20px;
+		border-radius: 5px;
+		margin-top: 10px;
+		text-decoration: none;
+		font-weight: bold;
+
+
+	}
+
+	.create-project-btns a:hover {
+		border-radius: 0.7rem;
+		background-color: #242423;
+		color: #f93f3f;
+		text-decoration: none;
+		border: 1px solid #f93f3f;
+
+
+	}
+
+	button,
+	.collaborator-container a {
+		background-color: #508991;
+		color: #242423;
+		cursor: pointer;
+		border: none;
+		padding: 10px 20px;
+		border-radius: 5px;
+		margin-top: 10px;
+		text-decoration: none;
+		font-weight: bold;
 	}
 
 	button:hover {
-		background-color: #508991;
+		border-radius: 0.7rem;
+		background-color: #242423;
+		color: #f9a03f;
+		text-decoration: none;
+		border: 1px solid #f9a03f;
 	}
 
 	.collaborator-container {

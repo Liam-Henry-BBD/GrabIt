@@ -191,8 +191,11 @@ export class CreateProject extends LitElement {
 		return html`
 			<auth-router>
 			<header class="create-project-header">
-				<img id="logo" src="/src/home/home_images/GI_logo-white.png" alt="Logo" />
+				<a href="http://localhost:8000/home" class="logo">
+					<img id="logo" src="/src/home/home_images/GI_logo-white.png" alt="Logo" />
+				</a>
 			</header>
+
 			<h1>Create New Project</h1>
 			<form @submit=${this.handleSubmit}>
 				<h2>Project Name</h2>
@@ -200,13 +203,16 @@ export class CreateProject extends LitElement {
 				<h2>Project Description</h2>
 				<textarea name="description" .value=${this.description} @input=${this.handleInput} placeholder="Write your project description here" required></textarea>
 				<h2>Add Collaborators</h2>
+
 				<div class="collaborator-container">
 					<input type="text" name="collaboratorEmail" .value=${this.collaboratorEmail} @input=${this.handleInput} placeholder="Enter the collaborator's email" />
-					<button type="button" @click=${this.handleAddCollaborator}>+</button>
+					<button type="button" @click=${this.handleAddCollaborator}>Search</button>
 				</div>
-				${this.renderCollaboratorList()}
-				<button type="submit">Create Project</button>
-				<a href="http://localhost:8000/home" class="cancel-btn">Cancel</a>
+					${this.renderCollaboratorList()}
+					<div class="create-project-btns">
+						<a href="http://localhost:8000/home" class="cancel-btn">Cancel</a>
+						<button type="submit">Create Project</button>
+					</div>
 			</form>
 			</auth-router>
 		`;

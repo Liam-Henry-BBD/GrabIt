@@ -43,13 +43,13 @@ export const cardStyles = css`
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: #f9a03f; 
+        background-color: #f9ec3f; 
         color: #242423; 
     }
 
     .simple {
         color: #242423; 
-        background-color: #3ff952;
+        background-color: #f9ec3f;
     }
 
     .medium {
@@ -59,7 +59,7 @@ export const cardStyles = css`
 
     .hard {
         color: #242423;
-        background-color: #c91f1f; 
+        background-color: #f9ec3f; 
     }
 
     .card-btn {
