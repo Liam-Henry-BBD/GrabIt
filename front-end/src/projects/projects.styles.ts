@@ -345,6 +345,7 @@ export const projectOverviewStyles = css`
 		border-radius: 4px;
 		cursor: pointer;
 		align-self: flex-end;
+		background-color: #f93f3f;
 	}
 
 	.task .remove-btn:hover {
@@ -352,7 +353,7 @@ export const projectOverviewStyles = css`
 	}
 
 	button, .update-btn {
-		background-color: #f9a03f;
+		background-color: #508991;
 		color: #242423;
 		border: none;
 		border-radius: 5px;
@@ -363,7 +364,7 @@ export const projectOverviewStyles = css`
 	}
 
 	button:hover {
-		background-color: #508991;
+		background-color: #617070;
 	}
 
 	.no-tasks {

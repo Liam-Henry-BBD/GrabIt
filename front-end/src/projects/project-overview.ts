@@ -5,6 +5,7 @@ import { formatDate } from '../utils/app';
 import '../tasks/create-task-modal';
 import './update-project-modal';
 import '../auth/activities/auth-router';
+import '../home/components/confirm-dialogue';
 
 interface Task {
 	taskID: any;
@@ -26,6 +27,7 @@ interface Task {
 export class ProjectOverview extends LitElement {
 	@state() isModalOpen: boolean = false;
 	@state() isUpdateModalOpen: boolean = false;
+	@state() isConfirmDialogOpen: boolean = false;
 	@state() tasks: Task[] = [];
 	@state() project = {
 		projectID: '',
@@ -36,6 +38,7 @@ export class ProjectOverview extends LitElement {
 		updatedAt: Date(),
 		collaborators: [] as string[]
 	};
+	@state() taskToDelete: string | null = null;
 
 	static styles = projectOverviewStyles;
 
@@ -82,7 +85,6 @@ export class ProjectOverview extends LitElement {
 				console.error(`Failed to fetch project data. Status: ${res.status}`);
 			}
 		} catch (error) {
-			console.log(error);
 			console.error('Error fetching project data:', error);
 		}
 	}
@@ -159,8 +161,6 @@ export class ProjectOverview extends LitElement {
 				const createdTask = await res.json();
 				this.tasks = [...this.tasks, createdTask];
 				this.isModalOpen = false;
-
-				
 			} else {
 				console.error('Failed to create task.');
 			}
@@ -169,9 +169,13 @@ export class ProjectOverview extends LitElement {
 		}
 	}
 
-	async handleRemoveTask(taskID: string) {
-		const confirmDelete = window.confirm('Are you sure you want to delete this task?');
-		if (!confirmDelete) return;
+	confirmDeleteTask(taskID: string) {
+		this.taskToDelete = taskID;
+		this.isConfirmDialogOpen = true;
+	}
+
+	async handleRemoveTask() {
+		if (!this.taskToDelete) return;
 
 		try {
 			const token = localStorage.getItem('token');
@@ -179,7 +183,7 @@ export class ProjectOverview extends LitElement {
 				throw new Error('No authentication token found. Please log in.');
 			}
 
-			const res = await fetch(`http://localhost:8081/api/tasks/${taskID}`, {
+			const res = await fetch(`http://localhost:8081/api/tasks/${this.taskToDelete}`, {
 				method: 'DELETE',
 				headers: {
 					'Content-Type': 'application/json',
@@ -188,7 +192,9 @@ export class ProjectOverview extends LitElement {
 			});
 
 			if (res.ok) {
-				this.tasks = this.tasks.filter(task => task.taskID !== taskID);
+				this.tasks = this.tasks.filter(task => task.id !== this.taskToDelete);
+				this.taskToDelete = null;
+				this.isConfirmDialogOpen = false;
 			} else {
 				console.error('Failed to remove task');
 			}
@@ -196,7 +202,6 @@ export class ProjectOverview extends LitElement {
 			console.error('Error removing task:', error);
 		}
 	}
-
 	getDifficultyColor(difficulty: Task['taskPointID']) {
 		switch (difficulty) {
 			case 5:
@@ -274,12 +279,18 @@ export class ProjectOverview extends LitElement {
 								${task.taskDeadline ? html`<p>Deadline: ${formatDate(task.taskDeadline)}</p>` : ''}
 								<p>Created: ${formatDate(task.taskCreatedAt)}</p>
 								<p style="color: ${this.getDifficultyColor(task.taskPointID)}">Difficulty: ${task.taskPointID}</p>
-								<button class="remove-btn" @click=${() => this.handleRemoveTask(task.taskID)}>Remove</button>
+								<button class="remove-btn" @click=${() => this.confirmDeleteTask(task.taskID)}>Remove</button>
 							</div>
 						`
 					)}
 				</div>
 			</div>
+			<confirm-dialog
+					.open=${this.isConfirmDialogOpen}
+					message="Are you sure you want to delete this task?"
+					@confirm=${this.handleRemoveTask}
+					@cancel=${() => (this.isConfirmDialogOpen = false)}
+				></confirm-dialog>
 			</auth-router>
 		`;
 	}

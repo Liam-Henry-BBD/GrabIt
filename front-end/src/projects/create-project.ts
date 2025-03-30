@@ -62,8 +62,11 @@ export class CreateProject extends LitElement {
 	}
 
 	handleInput(e: Event) {
-		const target = e.target as HTMLInputElement;
+		const target = e.target as HTMLInputElement | HTMLTextAreaElement;
 		const name = target.name as keyof this;
+		if (name === 'description' && target.value.length > 255) {
+			return;
+		}
 		(this[name] as string) = target.value;
 	}
 
@@ -143,11 +146,6 @@ export class CreateProject extends LitElement {
 			collaborators: this.collaborators
 		};
 
-		if(project.projectDescription.length > 500) {
-			alert('Project description should not exceed 500 characters. Please shorten your input.');
-			return;
-		}
-
 		this.apiRequest(this.urls.createProject, 'POST', project)
 			.then(newProject => {
 				this.apiRequest(
@@ -201,7 +199,7 @@ export class CreateProject extends LitElement {
 				<h2>Project Name</h2>
 				<input type="text" name="name" .value=${this.name} @input=${this.handleInput} placeholder="Write your project name here" required />
 				<h2>Project Description</h2>
-				<textarea name="description" .value=${this.description} @input=${this.handleInput} placeholder="Write your project description here" required></textarea>
+				<textarea name="description" .value=${this.description} @input=${this.handleInput} placeholder="Write your project description here" maxlength="255" required></textarea>
 				<h2>Add Collaborators</h2>
 
 				<div class="collaborator-container">
