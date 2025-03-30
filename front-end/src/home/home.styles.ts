@@ -10,6 +10,74 @@ export const homeStyles = css`
 		overflow: hidden;
 	}
 
+	.delete-popup {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		/* background-color: #242423;  */
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		z-index: 1000;
+	}
+
+	.popup-content {
+		background-color: white;
+		padding: 2rem;
+		border-radius: 8px;
+		width: 300px;
+		text-align: center;
+		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+		animation: popupAnimation 0.3s ease-out;
+	}
+
+	.popup-content p {
+		font-size: 1.2rem;
+		margin-bottom: 1rem;
+		color: #333;
+	}
+
+	.popup-buttons {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.popup-buttons button {
+		background-color: #ff5733; 
+		color: white;
+		border: none;
+		padding: 0.5rem 1.5rem;
+		border-radius: 5px;
+		cursor: pointer;
+		transition: background-color 0.3s;
+	}
+
+	.popup-buttons button:hover {
+		background-color: #d43f00; 
+	}
+
+	.popup-buttons button:nth-child(2) {
+		background-color: #6c757d; 
+	}
+
+	.popup-buttons button:nth-child(2):hover {
+		background-color: #5a6268; 
+	}
+
+	@keyframes popupAnimation {
+		0% {
+			transform: scale(0.8);
+			opacity: 0;
+		}
+		100% {
+			transform: scale(1);
+			opacity: 1;
+		}
+	}
+
+
 	.dashboard {
 		margin-top: 5rem;
 		height: calc(100vh - 5rem);
@@ -19,8 +87,14 @@ export const homeStyles = css`
 	}
 
 	.project-del {
-		color: red;
-		font-size: 8px;
+		border-radius: 0.7rem;
+		background-color: #242423;
+		color: #f93f3f;
+		text-decoration: none;
+		border: 1px solid #f93f3f;
+		cursor: pointer;
+		font-weight: bold;
+		font-size: 1rem;
 	}
 
 	.sidebar {
