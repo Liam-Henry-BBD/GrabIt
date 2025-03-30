@@ -1,6 +1,7 @@
 package com.grabit.app.service;
 
 import com.grabit.app.enums.Roles;
+import com.grabit.app.enums.Status;
 import com.grabit.app.exceptions.BadRequest;
 import com.grabit.app.exceptions.NotFound;
 import com.grabit.app.model.*;
@@ -20,13 +21,17 @@ public class TaskCollaboratorService {
     private final TaskRepository taskRepository;
     private final ProjectCollaboratorRepository projectCollaboratorRepository;
     private final RoleRepository roleRepository;
+    private final TaskStatusRepository taskStatusRepository;
 
     public TaskCollaboratorService(TaskCollaboratorRepository taskCollaboratorRepository,
                                    TaskRepository taskRepository,
                                    RoleRepository roleRepository,
-                                   ProjectCollaboratorRepository projectCollaboratorRepository) {
+                                   ProjectCollaboratorRepository projectCollaboratorRepository,
+                                   TaskStatusRepository taskStatusRepository
+                                   ) {
         this.taskCollaboratorRepository = taskCollaboratorRepository;
         this.taskRepository = taskRepository;
+        this.taskStatusRepository = taskStatusRepository;
         this.roleRepository = roleRepository;
         this.projectCollaboratorRepository = projectCollaboratorRepository;
     }
@@ -92,7 +97,15 @@ public class TaskCollaboratorService {
                 taskCollaborator.getUser().getUserID(),
                 taskCollaborator.getRole().getRoleID(),
                 task.getTaskID());
-    }
+
+
+        if(taskCollaborator.getRole().getRoleID() == Roles.TASK_GRABBER.getRole()) {
+            TaskStatus newStatus = taskStatusRepository.findById((int) Status.GRABBED.getStatus())
+                .orElseThrow(() -> new NotFound("Task status not found."));
+            task.setTaskStatus(newStatus);
+            taskRepository.save(task);
+        }
+    }   
 
     public TaskCollaborator getTaskCollaboratorByID(Integer taskCollabID, User user) {
 

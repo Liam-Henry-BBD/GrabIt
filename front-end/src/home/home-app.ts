@@ -1,12 +1,12 @@
 import { html, LitElement, TemplateResult } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import '../components/header';
 import '../auth/activities/auth-router';
 import './components/cards/project-card';
 import './components/empty-app';
 import { homeStyles } from './home.styles';
 import sendRequest from '../services/requests';
-import { c } from 'vite/dist/node/types.d-aGj9QkWt';
+import { RouterLocation } from '@vaadin/router';
 
 interface Project {
 	projectID: number;
@@ -38,6 +38,33 @@ export class DashboardComponent extends LitElement {
 	@state() private isDeletePopupVisible: boolean = false;
 	@state() private projectToDelete: Project | null = null;
 
+	@property({ type: Number }) currentProjectID = 0;
+	
+	onAfterEnter(location: RouterLocation) {
+		console.log('after...');
+		this.currentProjectID = location.params['projectID'] as number;
+	}
+
+	onAfterLeave(location: RouterLocation) {
+		console.log('leave after...');
+		this.currentProjectID = location.params['projectID'] as number;
+	}
+
+	onBeforeEnter(location: RouterLocation) {
+		console.log('before...');
+		this.currentProjectID = location.params['projectID'] as number;
+	}
+
+	onBeforeLeave(location: RouterLocation) {
+		console.log('leave...');
+		this.currentProjectID = location.params['projectID'] as number;
+	}
+
+	constructor(location: RouterLocation) {
+		super()
+		console.log(window.location);
+	}
+
 	connectedCallback() {
 		super.connectedCallback();
 		this.apiRequest(this.urls.getProjects, 'GET', (data: any) => {
@@ -45,6 +72,7 @@ export class DashboardComponent extends LitElement {
 			this.filteredProjects = [...data];
 			this.createProjectGroupByRoleComponent(data);
 		});
+		console.log("run");
 	}
 
 	async apiRequest<T>(url: string, method: string, callback: (data: T) => void): Promise<void> {
@@ -83,6 +111,11 @@ export class DashboardComponent extends LitElement {
 		this.requestUpdate();
 	}
 
+	logout() {
+		localStorage.removeItem("token");
+		window.location.href = "/";
+	}
+
 	private async confirmDeleteProject(): Promise<void> {
 		if (this.projectToDelete) {
 			await this.deleteProject(this.projectToDelete.projectID);
@@ -92,11 +125,10 @@ export class DashboardComponent extends LitElement {
 
 	async deleteProject(projectID: number) {
 		try {
-			const response = await sendRequest('/projects/' + projectID, {
-				method: 'DELETE'
+			 await sendRequest("/projects/" + projectID, {
+				method: "DELETE"
 			});
-			window.location.reload();
-		} catch (error) {
+		} finally {
 			window.location.reload();
 		}
 	}
@@ -115,12 +147,6 @@ export class DashboardComponent extends LitElement {
 			'my projects': response.filter(project => project.collaboratorRole === 1).map(createProjectComponent),
 			collaborating: response.filter(project => project.collaboratorRole === 2).map(createProjectComponent)
 		};
-	}
-
-	private formatDate(dateString: string): string {
-		if (!dateString) return 'Not set';
-		const date = new Date(dateString);
-		return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 	}
 
 	private handleFilterProjects(event: Event): void {
@@ -175,7 +201,7 @@ export class DashboardComponent extends LitElement {
 								</ul>
 							`;
 						})}
-						<a href="http://localhost:8000" class="logout-link">Logout</a>
+						<button @click=${this.logout} class="logout-link">Logout</button>
 					</nav>
 					<main>
 						<slot></slot>

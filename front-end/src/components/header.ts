@@ -11,18 +11,65 @@ export class HeaderApp extends LitElement {
 		this.picture = user.picture;
 	}
 
+	logout() {
+		localStorage.removeItem("token");
+		window.location.href = "/";
+	}
+
+	@state()
+	isToggle: boolean = false;
+
+	toggleMenu() {
+		this.isToggle = !this.isToggle;
+	}
+
+
 	render() {
 		return html`
 			<header class="header">
 				<img id="logo" width="140" src="/src/home/home_images/GI_logo-white.png" alt="Logo" @click=${() => (window.location.href = 'http://localhost:8000')} />
 				<span class="profile-container">
-					<img id="profile-icon" src=${this.picture ? this.picture : ''} alt="Profile Icon" />
+					<img id="profile-icon" @click=${this.toggleMenu} src=${this.picture ? this.picture : ""} alt="Profile Icon" />
+					${
+						this.isToggle ? 
+							html`<section class="icon-menu">
+								<button>Change theme</button>
+								<button @click=${this.logout}>Logout</button>
+							</section>` : ''
+					}
 				</span>
 			</header>
 		`;
 	}
 
 	static styles = css`
+
+		.profile-container {
+			position: relative;
+			width: 150px;
+		}
+
+		.icon-menu {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			position: absolute;
+			background-color: #f9a03f;
+			width: 130px;
+			/* border-radius: 10px; */
+		}
+
+		.icon-menu button {
+			width: 90%;
+			border: none;
+			background-color: #131313 ;
+			border-radius: 5px;
+			padding: .4em .2em;
+			margin: .2em .2em;
+			color: #fff;
+		}
+
 		.logo {
 			display: flex;
 			justify-content: center;
@@ -74,7 +121,7 @@ export class HeaderApp extends LitElement {
 			right: 0;
 			height: 5rem;
 			z-index: 1000;
-			overflow: hidden;
+			/* overflow: hidden; */
 			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 		}
 

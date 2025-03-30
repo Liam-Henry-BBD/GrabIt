@@ -4,6 +4,14 @@ export const createTaskStyles = css`
 	:host {
 		display: block;
 	}
+
+	.matcher {
+		cursor: pointer;
+		text-decoration: underline;
+		font-size: .7rem;
+		display: block;
+	}
+
 	.modal {
 		position: fixed;
 		inset: 0;
@@ -27,7 +35,7 @@ export const createTaskStyles = css`
 		justify-content: space-between;
 		padding: 1rem;
 		border-bottom: 1px solid #f9a03f;
-	}
+	}	
 	h2 {
 		color: #f9a03f;
 	}
@@ -56,6 +64,7 @@ export const createTaskStyles = css`
 		background-color: rgba(171, 233, 241, 0.1);
 		margin-top: 10px;
 		color: #f7f0f0;
+		outline: none;
 	}
 	.difficulty-buttons {
 		display: flex;

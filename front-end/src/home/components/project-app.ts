@@ -10,6 +10,8 @@ import { completeTask, grabTask, rejectTaskReview, requestTaskReview } from '../
 
 import '../components/cards/review-card';
 import '../components/cards/grab-card';
+import '../components/cards/project-card'
+import '../components/cards/available-card'
 
 @customElement('project-app')
 export class ProjectApp extends CtLit {
@@ -127,7 +129,8 @@ export class ProjectApp extends CtLit {
 							.filter(task => task.taskStatusID == 1)
 							.map(task => {
 								const allowedToGrab = this.project.collaboratorRole != 1;
-								return html`<project-card .visible=${allowedToGrab} .handleTaskAction=${this.handleGrabTask} .task=${task} .action=${'Grab task'}></project-card>`;
+								const canAssignGrabber = this.project.collaboratorRole == 1;
+								return html`<available-card .canAssign=${canAssignGrabber}  .visible=${allowedToGrab} .handleTaskAction=${this.handleGrabTask} .task=${task} .action=${'Grab task'}></available-card >`;
 							})}
 					</article>
 

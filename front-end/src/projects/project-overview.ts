@@ -159,8 +159,24 @@ export class ProjectOverview extends LitElement {
 
 			if (res.ok) {
 				const createdTask = await res.json();
-				this.tasks = [...this.tasks, createdTask];
+				console.log(createdTask);
+				this.tasks = [...this.tasks, {
+					active: true,
+					createdAt: Date.now(),
+					difficulty: newTask.difficulty,
+					id: "",
+					projectDescription: this.project.projectDescription,
+					projectName: this.project.projectName,
+					projectID: this.project.projectID,
+					taskCreatedAt: Date.now(),
+					taskDescription: newTask.taskDescription,
+					taskID: "",
+					taskName: newTask.taskName,
+					taskPointID: 10,
+					taskDeadline: newTask.taskDeadline,
+				}];
 				this.isModalOpen = false;
+				
 			} else {
 				console.error('Failed to create task.');
 			}

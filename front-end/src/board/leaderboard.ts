@@ -29,9 +29,27 @@ export class Leaderboard extends CtLit {
 	}
 
 	get filteredLeaderboard() {
-		if (!this.searchValue) return this.leaderboardData;
+		if (!this.searchValue) return [];
 		return this.leaderboardData.filter(user => user.githubID.toLowerCase().includes(this.searchValue.toLowerCase()));
 	}
+
+    getSVG() {
+        return html`<svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-award h-5 w-5 text-[#F9A03F]"
+            >
+                <path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"></path>
+                <circle cx="12" cy="8" r="6"></circle>
+            </svg>`;
+    }
 
 	createPositionCardComponents(listOfColaboratorsWithScores: any[]) {
 		if (listOfColaboratorsWithScores.length === 0) return html`<p>No results found</p>`;
@@ -82,16 +100,41 @@ export class Leaderboard extends CtLit {
 
 			<auth-router>
 				<main class="leaderboard__container">
-				<h1>🏆 Leaderboard</h1>
+                    <section class="main-content">
+                    <a href= 'http://localhost:8000/home/${this.projectID}'> Back</a>
 
-					<a href= 'http://localhost:8000/home/${this.projectID}'> ← Back to Project</a>
+                    <h1> Leaderboard</h1>
 
-					<h2><em>${this.projectDetails?.projectName || 'Loading...'}</em></h2>
-					<article>
-						<p><em>${this.projectDetails?.projectDescription || 'Loading...'}</em></p>
-					</article>
 
-					<section class="leaderboard">${this.createPositionCardComponents(this.filteredLeaderboard)}</section>
+                    <h2>${this.projectDetails?.projectName || 'Loading...'}</h2>
+                    <article>
+                        <p>${this.projectDetails?.projectDescription || 'Loading...'}</p>
+                    </article>
+                    </section>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Pos</th>
+                                <th>Name</th>
+                                <th>Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${
+                                this.filteredLeaderboard.map(board => {
+                                    return html`
+                                    <tr>
+                                        <td> <section>${board.position === 1 ? html`🏆` : this.getSVG()} ${board.position}</section> </td>
+                                        <td>${board.githubID}</td>
+                                        <td>${board.totalScore}</td>
+                                     </tr>`;
+                                    })
+                                }
+                        </tbody>
+                    </table>
+
+					<!-- <section class="leaderboard">${this.createPositionCardComponents(this.filteredLeaderboard)}</section> -->
 				</main>
 			</auth-router>
 		`;

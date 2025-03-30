@@ -37,8 +37,8 @@ export const leaderboardStyles = css`
 	}
 
 	h1 {
-		text-align: center;
-		margin: 0; 
+		/* text-align: center; */
+		margin: 10px 0; 
 		color: white;
 	}
 
@@ -55,6 +55,11 @@ export const leaderboardStyles = css`
 		align-self: end;
 	}
 
+    .main-content {
+        width: 80%;
+        margin: auto;
+    }
+
 	.leaderboard__container {
 		min-height: 100vh;
 		padding: 1.5rem;
@@ -69,36 +74,83 @@ export const leaderboardStyles = css`
 		background-color: #f9a03f;
 		color: #242423;
 		padding: 0.5rem;
-		border-radius: 1rem;
+		border-radius: .4rem;
 		text-decoration: none;
+        padding-inline: 15px;
 		left: 0;
-
-
 	}
+
+    td section {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        /* justify-content: center; */
+    }
+    
+    /* Table styles */
+    .data-table {
+            width: 80%;
+            border-collapse: collapse;
+            background-color: white;
+            overflow: hidden;
+            margin: auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .data-table thead {
+            background-color: #242423;
+            color: white;
+        }
+        
+        .data-table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .data-table td {
+            padding: 1rem;
+            color: #ffffff;
+            background-color: #464443;
+        }
+        
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* Alternating row colors */
+        .data-table tbody tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        
+        /* Hover effect */
+        .data-table tbody tr:hover {
+            background-color: #edf2f7;
+        }
 
 
 	article {
-		text-align: center;
-		margin: 0.5rem;
+		margin: 0;
 	}
 	
 	h2 {
-		text-align: center;
 		color: #f9a03f;
 	}
 
 	h1 {
 		font-size: 2rem;
-		display: flex;
+        margin: 20px 0;
+		/* display: flex;
 		align-items: center;
-		justify-content: center;
+		justify-content: center; */
 		gap: 0.5rem;
 	}
 
 	h2 {
 		font-size: 1.6rem;
-		margin-top: 0.5rem;
+		margin: 0;
 		font-weight: 500;
+        text-decoration: none;
 	}
 
 	.leaderboard__user {

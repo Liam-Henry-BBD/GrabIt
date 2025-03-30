@@ -97,7 +97,12 @@ export const homeStyles = css`
 		border: 1px solid #f93f3f;
 		cursor: pointer;
 		font-weight: bold;
-		font-size: 1rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 20px;
+		height: 20px;
+		font-size: .5rem;
 	}
 
 	.sidebar {
@@ -187,6 +192,8 @@ export const homeStyles = css`
 		margin: 0;
 	}
 
+	
+
 	.logout-link {
 		background-color: #f9a03f;
 		color: #242423;
@@ -195,13 +202,19 @@ export const homeStyles = css`
 		text-decoration: none;
 		font-size: 0.9rem;
 		font-weight: bold;
-		border-radius: 0.7rem;
+		border-radius: 0.4rem;
 		justify-self: end;
-		margin-top: 20rem;
+		bottom: 10px;
+		width: 200px;
+		position: fixed;
+		cursor: pointer;
+		border: none;
 	}
+
 	nav {
 		height: 100vh;
 	}
+	
 	.logout-link:hover {
 		border-radius: 0.7rem;
 		background-color: #242423;
@@ -215,12 +228,17 @@ export const homeStyles = css`
 		align-items: center;
 		gap: 0.75rem;
 		padding: 0.3rem 0.75rem;
-		font-size: 1rem;
+		font-size:.9em;
 		font-weight: 500;
 		border-radius: 5px;
 		cursor: pointer;
 		transition: background-color 0.2s;
 		color: #ffffff;
+		margin-left: 5px;
+
+	}
+	.project-list {
+		padding-left: 1.5rem;
 	}
 	.project-list {
 		padding-left: 1.5rem;
@@ -341,6 +359,13 @@ export const homeStyles = css`
 	.project-item a {
 		text-decoration: none;
 		color: #ffffff;
+	}
+
+	.active-project {
+		background-color: #9a9a9a1d;
+	}
+	.active-project .active {
+		color: #e68900;
 	}
 
 	@media (max-width: 1024px) {

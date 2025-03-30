@@ -5,6 +5,7 @@ async function sendRequest(endpoint: string, options: RequestInit = {}) {
         localStorage.removeItem('token');
         return;
     }
+
     const headers = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
@@ -16,13 +17,13 @@ async function sendRequest(endpoint: string, options: RequestInit = {}) {
         ...options,
         headers
     });
-    
+
     if (!response.ok && response.status === 401) {
         localStorage.removeItem('token');
         window.location.href = '/login';
         return;
     }
-
+    
     return response.json();
 }
 
