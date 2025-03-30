@@ -205,7 +205,7 @@ export class CreateProject extends LitElement {
 				<h2>Add Collaborators</h2>
 
 				<div class="collaborator-container">
-					<input type="text" name="collaboratorEmail" .value=${this.collaboratorEmail} @input=${this.handleInput} placeholder="Enter the collaborator's email" />
+					<input type="text" name="collaboratorEmail" .value=${this.collaboratorEmail} @input=${this.handleInput} placeholder="Enter the collaborator's username" />
 					<button type="button" @click=${this.handleAddCollaborator}>Search</button>
 				</div>
 					${this.renderCollaboratorList()}

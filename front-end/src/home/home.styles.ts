@@ -16,15 +16,13 @@ export const homeStyles = css`
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background-color: rgba(0, 0, 0, 0.8); 
+		background-color: rgba(0, 0, 0, 0.8);
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		z-index: 1000;
-		
-		
 	}
-	
+
 	.popup-content {
 		background-color: #242423;
 		padding: 2rem;
@@ -46,11 +44,10 @@ export const homeStyles = css`
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		
 	}
 
 	.popup-buttons button {
-		background-color: #ff5733; 
+		background-color: #ff5733;
 		color: #242423;
 		font-weight: bold;
 		border: none;
@@ -62,15 +59,15 @@ export const homeStyles = css`
 	}
 
 	.popup-buttons button:hover {
-		background-color: #f9a03f; 
+		background-color: #f9a03f;
 	}
 
 	.popup-buttons button:nth-child(2) {
-		background-color: #b3b3b3; 
+		background-color: #b3b3b3;
 	}
 
 	.popup-buttons button:nth-child(2):hover {
-		background-color: #f9a03f; 
+		background-color: #f9a03f;
 	}
 
 	@keyframes popupAnimation {
@@ -83,7 +80,6 @@ export const homeStyles = css`
 			opacity: 1;
 		}
 	}
-
 
 	.dashboard {
 		margin-top: 5rem;
@@ -193,6 +189,7 @@ export const homeStyles = css`
 
 	.project-item {
 		display: flex;
+		padding-left: 1rem;
 		align-items: center;
 		gap: 0.75rem;
 		padding: 0.3rem 0.75rem;
@@ -203,7 +200,11 @@ export const homeStyles = css`
 		transition: background-color 0.2s;
 		color: #ffffff;
 	}
+	.project-list {
 
+		padding-left: 1.5rem;
+	}
+	
 	.project-item:hover {
 		background-color: rgba(255, 255, 255, 0.1);
 	}
@@ -373,6 +374,5 @@ export const homeStyles = css`
 		.burger-menu {
 			display: block;
 		}
-	
 	}
 `;
