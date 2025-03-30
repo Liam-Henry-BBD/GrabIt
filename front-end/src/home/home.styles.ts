@@ -16,54 +16,61 @@ export const homeStyles = css`
 		left: 0;
 		right: 0;
 		bottom: 0;
-		/* background-color: #242423;  */
+		background-color: rgba(0, 0, 0, 0.8); 
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		z-index: 1000;
+		
+		
 	}
-
+	
 	.popup-content {
-		background-color: white;
+		background-color: #242423;
 		padding: 2rem;
 		border-radius: 8px;
 		width: 300px;
 		text-align: center;
 		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 		animation: popupAnimation 0.3s ease-out;
+		border: 0.2rem solid rgba(80, 137, 145, 5);
 	}
 
 	.popup-content p {
-		font-size: 1.2rem;
-		margin-bottom: 1rem;
-		color: #333;
+		font-size: 1.5rem;
+		margin-bottom: 3rem;
+		color: white;
 	}
 
 	.popup-buttons {
 		display: flex;
 		justify-content: space-between;
+		align-items: center;
+		
 	}
 
 	.popup-buttons button {
 		background-color: #ff5733; 
-		color: white;
+		color: #242423;
+		font-weight: bold;
 		border: none;
 		padding: 0.5rem 1.5rem;
-		border-radius: 5px;
+		border-radius: 1rem;
 		cursor: pointer;
 		transition: background-color 0.3s;
+		font-size: 1rem;
 	}
 
 	.popup-buttons button:hover {
-		background-color: #d43f00; 
+		background-color: #f9a03f; 
 	}
 
 	.popup-buttons button:nth-child(2) {
-		background-color: #6c757d; 
+		background-color: #b3b3b3; 
 	}
 
 	.popup-buttons button:nth-child(2):hover {
-		background-color: #5a6268; 
+		background-color: #f9a03f; 
 	}
 
 	@keyframes popupAnimation {

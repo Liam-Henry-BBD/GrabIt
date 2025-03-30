@@ -85,9 +85,8 @@ export class DashboardComponent extends LitElement {
 
     private async confirmDeleteProject(): Promise<void> {
         if (this.projectToDelete) {
-            // Send request to delete the project
             await this.deleteProject(this.projectToDelete.projectID);
-            this.hideDeletePopup(); // Close the popup after deletion
+            this.hideDeletePopup(); 
         }
     }
 
