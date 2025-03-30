@@ -187,6 +187,28 @@ export const homeStyles = css`
 		margin: 0;
 	}
 
+	.logout-link {
+		background-color: #f9a03f;
+		color: #242423;
+		padding: 0.5rem 0.5rem;
+		text-align: center;
+		text-decoration: none;
+		font-size: 0.9rem;
+		font-weight: bold;
+		border-radius: 0.7rem;
+		justify-self: end;
+		margin-top: 20rem;
+	}
+	nav {
+		height: 100vh;
+	}
+	.logout-link:hover {
+		border-radius: 0.7rem;
+		background-color: #242423;
+		color: #f9a03f;
+		text-decoration: none;
+		border: 1px solid #f9a03f;
+	}
 	.project-item {
 		display: flex;
 		padding-left: 1rem;
@@ -201,10 +223,9 @@ export const homeStyles = css`
 		color: #ffffff;
 	}
 	.project-list {
-
 		padding-left: 1.5rem;
 	}
-	
+
 	.project-item:hover {
 		background-color: rgba(255, 255, 255, 0.1);
 	}

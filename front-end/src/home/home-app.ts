@@ -175,6 +175,7 @@ export class DashboardComponent extends LitElement {
 								</ul>
 							`;
 						})}
+						<a href="http://localhost:8000" class="logout-link">Logout</a>
 					</nav>
 					<main>
 						<slot></slot>

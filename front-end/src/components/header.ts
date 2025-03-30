@@ -1,60 +1,32 @@
-import { css, customElement, html, LitElement, state } from "@conectate/ct-lit";
-import { getUser } from "../services/user.service";
+import { css, customElement, html, LitElement, state } from '@conectate/ct-lit';
+import { getUser } from '../services/user.service';
 
-
-@customElement("header-app")
+@customElement('header-app')
 export class HeaderApp extends LitElement {
-
 	@state() picture: string | null = null;
 
 	async connectedCallback() {
 		super.connectedCallback();
-		const user = await getUser()
+		const user = await getUser();
 		this.picture = user.picture;
 	}
 
 	render() {
 		return html`
 			<header class="header">
-				<img id="logo" width="140" src="/src/home/home_images/GI_logo-white.png" alt="Logo" @click=${() => window.location.href = 'http://localhost:8000'}>
+				<img id="logo" width="140" src="/src/home/home_images/GI_logo-white.png" alt="Logo" @click=${() => (window.location.href = 'http://localhost:8000')} />
 				<span class="profile-container">
-					<img id="profile-icon" src=${this.picture ? this.picture : ""} alt="Profile Icon" />
-					<a href="http://localhost:8000" class="logout-link">Logout</a>
+					<img id="profile-icon" src=${this.picture ? this.picture : ''} alt="Profile Icon" />
 				</span>
 			</header>
 		`;
 	}
-	
 
 	static styles = css`
 		.logo {
 			display: flex;
 			justify-content: center;
 			align-items: center;
-		}
-
-
-		.logout-link {
-			background-color: #f9a03f;
-			color: #242423;
-			padding: 0.5rem 0.5rem;
-			text-decoration: none;
-			font-size: 0.9rem;
-			font-weight: bold;
-			border-radius: 0.7rem;
-			margin: 0; 
-			position: absolute; 
-			top: 50%; 
-			right: 0%; 
-			transform: translate(-50%, -50%); 
-		}
-
-		.logout-link:hover {
-			border-radius: 0.7rem;
-			background-color: #242423;
-			color: #f9a03f;
-			text-decoration: none;
-			border: 1px solid #f9a03f;
 		}
 
 		@media (max-width: 1024px) {
@@ -66,10 +38,13 @@ export class HeaderApp extends LitElement {
 			}
 			#profile-icon {
 				position: fixed;
+				margin-left: auto;
+				place-self: end;
+				top: 1rem;
 				right: 0;
 			}
 		}
-		
+
 		.logo button {
 			border: none;
 			padding-inline: 20px;
@@ -82,11 +57,11 @@ export class HeaderApp extends LitElement {
 			background-color: inherit;
 			text-decoration: underline;
 		}
-		
+
 		.logo a {
 			margin-top: 7px;
 		}
-		
+
 		.header {
 			display: flex;
 			justify-content: space-between;
@@ -104,7 +79,7 @@ export class HeaderApp extends LitElement {
 		}
 
 		#profile-icon {
-			margin-right: 10rem;
+			margin-right: 3rem;
 			margin-left: 3rem;
 			height: 3rem;
 			width: 3rem;
