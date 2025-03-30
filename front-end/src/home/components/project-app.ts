@@ -102,8 +102,6 @@ export class ProjectApp extends CtLit {
 		}
 	}
 
-    
-
 	static styles = projectAppStyles;
 
 	render() {
@@ -115,7 +113,7 @@ export class ProjectApp extends CtLit {
 				</article>
 				<article>
 					<section class="article-buttons">
-						${this.project.collaboratorRole == 1 ?  html`<a href="/project/${this.projectID}" class="new-project-body">Manage Tasks</a>`: ''}
+						${this.project.collaboratorRole == 1 ? html`<a href="/project/${this.projectID}" class="new-project-body">Manage Tasks</a>` : ''}
 						<a href="/project/${this.projectID}/leaderboard" class="leaderboard-button">Leaderboard</a>
 					</section>
 				</article>
@@ -140,8 +138,14 @@ export class ProjectApp extends CtLit {
 							.filter(task => task.taskStatusID == 2)
 							.map(task => {
 								const allowedToGrab = this.project.collaboratorRole != 1 && task.userID == this.currentUser.userID;
-                                const canCollab = this.project.collaboratorRole == 1 || task.userID == this.currentUser.userID;
-								return html`<grab-card .collab=${canCollab} .visible=${allowedToGrab} .handleTaskAction=${this.handleRequestReview} .task=${task} .action=${'Request review'}></grab-card>`;
+								const canCollab = this.project.collaboratorRole == 1 || task.userID == this.currentUser.userID;
+								return html`<grab-card
+									.collab=${canCollab}
+									.visible=${allowedToGrab}
+									.handleTaskAction=${this.handleRequestReview}
+									.task=${task}
+									.action=${'Request review'}
+								></grab-card>`;
 							})}
 					</article>
 

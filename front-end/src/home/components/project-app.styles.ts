@@ -92,6 +92,7 @@ export const projectAppStyles = css`
 	}
 	.project-desc {
 		width: 60%;
+		color: #F9A03F;
 	}
 	.column-space span {
 		margin: 0.5rem;
