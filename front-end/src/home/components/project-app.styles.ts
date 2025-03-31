@@ -91,8 +91,8 @@ export const projectAppStyles = css`
 		align-items: center;
 	}
 	.project-desc {
-		width: 60%;
-		color: #F9A03F;
+		width: 75%;
+		color: white;
 	}
 	.column-space span {
 		margin: 0.5rem;
